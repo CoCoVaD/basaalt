@@ -11,15 +11,6 @@ ifdef::env-github[]
 endif::[]
 //-------------------------------------
 
-:cocovad: https://github.com/CoCoVaD/website[CoCoVaD chair]
-:cfp: https://www.sosym.org/theme_sections/cfp/cfp-SoSyM-TS-Requirements-Formalisation-2023.pdf
-
-//------------------------------------ Badges --------
-:baseURL: https://github.com/CoCoVaD/k3c
-//image:{baseURL}/actions/workflows/main.yml/badge.svg[Deployed] 
-image:https://img.shields.io/github/license/:jmbruel/:https://github.com/CoCoVaD/k3c[GitHub]
-//------------------------------------ Badges --------
-
 The BASAALT (Behaviour Analysis & Simulation All Along systems Life Time) systems engineering method, 
 and its supporting language, FORM-L (FOrmal Requirements Modelling Language), are advocated in our submission to the link:{cfp}[SoSyM Theme Section] on "Requirements Formalisation: From Text to Model-based." 
 
