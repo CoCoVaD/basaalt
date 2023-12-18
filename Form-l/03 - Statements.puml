@@ -1,0 +1,13 @@
+@startuml
+!include D:/Form-L/Langage/Meta Model/Definitions.puml
+hide empty members
+remove @unlinked
+title "Statements"
+'footer Page 3
+
+Statement <|-- Declaration
+Statement <|-- Redeclaration
+Statement <|-- Definition
+Statement <|-- Instruction
+
+@enduml

@@ -1,0 +1,52 @@
+@startuml
+!include D:/Form-L/Langage/Meta Model/Definitions.puml
+hide empty members
+remove @unlinked
+title "Defined Classes"
+'footer Page 6
+
+Class <|-- dClass
+Class <|-- pdClass
+
+' Extension
+abstract class "Extension\nClass" as xClass << (C, LightGreen ) >>
+dClass <|-- xClass
+
+' Non-Valued Extension
+class "Non-Valued\nExtension\nClass" as nxClass << (C, LightGreen ) >>
+xClass <|-- nxClass
+nClass <|-- nxClass
+class "Non-Valued Class" as nClass2 << (C, LightGreen ) >>
+nxClass <..{ nClass2 : < 1..n\nbeing\nextended
+
+' Valued Extension
+abstract class "Valued\nExtension\nClass" as vxClass << (C, LightGreen ) >>
+xClass <|-- vxClass
+vClass <|-- vxClass
+abstract class "Valued Class" as vClass2 << (C, LightGreen ) >>
+vxClass <.. vClass2 : < 1\nbeing\nextended
+vxClass <..{ nClass2 : < 0..n\nbeing\nextended
+
+abstract class "Class" as Class2 << (C, LightGreen ) >>
+
+' Enumeration
+dClass <|-- enumeratedClass
+class "Discrete\nStates" as states << (f, LightGrey) >>
+enumeratedClass <.. states : < 1
+abstract class "Valued\nClass" as vClass3 << (C, LightGreen ) >>
+vClass3 <|-- enumeratedClass
+
+' Set
+dClass <|-- setClass
+class "Set\nIndicator" as setIndicator << (f, LightGrey) >>
+vClass3 <|-- setClass
+setClass <.. Class2 : < 1 class of\nset members
+setClass <.. setIndicator : < 1
+
+class setIndicator {
+  -- Options --
+  + constraints on cardinal
+  + determiner of members
+  + variability of members
+}
+@enduml

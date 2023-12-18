@@ -1,0 +1,50 @@
+@startuml
+'header FORM-L Meta-Model
+!include D:/Form-L/Langage/Meta Model/Definitions.puml
+hide empty members
+remove @unlinked
+title "Variables"
+'footer Page 10
+
+Variable <|-- Boolean
+booleanClass <.up. Boolean : > instance\nof 1
+
+Variable <|-- Statechart
+enumeratedClass <.up. Statechart : > instance\nof 1
+
+Variable <|-- Integer
+integerClass <.up. Integer : > instance\nof 1
+
+Variable <|-- Real
+realClass <.up. Real : > instance\nof 1
+
+Real <|-- Quantity : <font:monospaced><i><b>quantity</b></i></font> and <font:monospaced><i><b>unit</b></i></font>\nare defined
+quantityClass <.left. Quantity : > instance\nof 1
+
+Variable <|-- String
+stringClass <.up. String : > instance\nof 1
+
+class Variable { 
+  -- Own Attributes --
+  +<font:monospaced><i><b>value, next, default
+  -<font:monospaced><i><b>previous
+}
+
+class Statechart { 
+  -- Attributes --
+  +<font:monospaced><i><b>memory
+}
+
+class Real { 
+  -- Own Attributes --
+  +<font:monospaced><i><b>quantity, unit, scale, offset
+  +<font:monospaced><i><b>derivative, derivative[n]
+  -<font:monospaced><i><b>integral, integral[n]
+  -<font:monospaced><i><b>inPIntegral, inPIntegral[n]
+}
+
+nClass <.. Variable : < instance\nof 0..n
+abstractPropertyClass x.. Variable : < not an\ninstance of\nany
+setClass x.. Variable : < not an\ninstance of\nany
+eventClass x.. Variable : < not an\ninstance of\nany
+@enduml

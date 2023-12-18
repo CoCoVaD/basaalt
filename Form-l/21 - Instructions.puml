@@ -1,0 +1,51 @@
+@startuml
+'header FORM-L Meta-Model
+title "Instructions - Elementary and Coordinated Instructions"
+'footer Page 21
+hide empty members
+
+abstract class Instruction  << (I, Magenta) >>
+class "Elementary\nInstruction" as eInstruction  << (I, Magenta) >>
+class "Temporal-Set\nExclusion Chain" as TSChain  << (I, Magenta) >>
+class "Set-Temporal\nExclusion Chain" as STChain  << (I, Magenta) >>
+abstract class "Coordinated\nInstruction" as Coordination  << (I, Magenta) >>
+
+Instruction <|-- Coordination
+Instruction <|--- eInstruction
+Instruction <|--right-- TSChain
+Instruction <|--left-- STChain
+
+' Elementary Instructions
+class "Temporal\nLocator" as When << (f, LightSkyBlue) >>
+class "Selector" as Who << (f, Violet) >>
+abstract class "Action" as What  << (f, LightSalmon) >>
+eInstruction *.. When : < 0..1
+eInstruction *...{ Who : < 0..n
+eInstruction *.. What : < 1
+
+' Coordinated Instructions
+class "Temporal\nLocator" as When2 << (f, LightSkyBlue) >>
+class "Selector" as Who2 << (f, Violet) >>
+class Sequence  << (I, Magenta) >>
+class Concurrence  << (I, Magenta) >>
+class Iteration  << (I, Magenta) >>
+abstract class Selection  << (I, Magenta) >>
+class "Deterministic\nSelection" as dSelection << (I, Magenta) >>
+class "Probabilistic\nSelection" as pSelection << (I, Magenta) >>
+abstract class "Instruction" as Instructions  << (I, Magenta) >>
+
+Coordination *.. When2 : < 0..1
+Coordination *..{ Who2 : < 0..n
+Coordination <|-- Iteration
+Coordination <|-- Selection
+Selection <|-- dSelection
+Selection <|--- pSelection
+Coordination <|-- Sequence
+Coordination <|--- Concurrence
+
+Sequence *..{ Instructions : < 2..n
+Concurrence *..{ Instructions : < 2..n
+Iteration *.. Instructions : < 1
+Selection *..{ Instructions : < 2..n
+
+@enduml

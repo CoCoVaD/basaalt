@@ -15,3 +15,5 @@ The BASAALT (Behaviour Analysis & Simulation All Along systems Life Time) system
 and its supporting language, FORM-L (FOrmal Requirements Modelling Language), are advocated in our submission to the link:{cfp}[SoSyM Theme Section] on "Requirements Formalisation: From Text to Model-based." 
 
 NOTE: The full documentation is available in a PDF report link:BASAALT-and-FORM-L.pdf[here (v.5.4)].
+
+NOTE: The metamodel is available link:Form-l/main.adoc[here].

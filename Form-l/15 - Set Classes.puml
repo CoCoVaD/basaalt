@@ -1,0 +1,35 @@
+@startuml
+'header FORM-L Meta-Model
+'footer Page 15
+!include D:/Form-L/Langage/Meta Model/Definitions.puml
+hide empty members
+remove @unlinked
+title "Set Classes"
+
+abstract class setClass { 
+  -- Options --
+  + constraint on cardinal\n(finite list of integers and integer intervals)
+}
+
+
+dClass <|-- setClass
+vClass <|-- setClass
+
+nClass }.up. setClass : > extends\n0..n
+eventClass  x.up. setClass: > extends\n0
+variableClass x.up. setClass : > extends\n0
+setClass <.. setClass : < extends\n0..1
+abstractPropertyClass x.up. setClass : > extends\n0
+
+
+setClass <|--- soClass
+setClass <|--- svClass
+
+'abstract class setClass
+
+class soClass { 
+  -- Own Options --
+  + determiner of members
+  + variablity of members
+}
+@enduml

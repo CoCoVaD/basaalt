@@ -1,0 +1,63 @@
+@startuml
+' !include D:/Form-L/Langage/Meta Model/Definitions.puml
+hide empty members
+remove @unlinked
+'header FORM-L Meta-Model
+title "Notations\nThe relationships shown here are of course not the real ones"
+'footer Page 0
+
+class "Meta-Class" as metaclass  << (C, LightGreen ) >>
+note right of metaclass
+The colour of the circle indicates the 
+broad category of the meta-class.
+The letter in the circle indicates its sub-category.
+Italics indicate an abstract meta-class.
+end note
+
+metaclass <..{ nItem : Contribution, from multiple contributorq to receiver
+note right of nItem
+Deep yellow and X are for non-FORM-L meta-classes.
+end note
+
+nItem <.. Item : < Contribution, from 0 or 1 contributor to receiver
+note right of Item
+Light yellow and M are for top-level meta-classes.
+end note
+
+
+Item <|-- bItem : Inheritance, from sub-meta-class to super-meta-class
+
+note right of bItem
+Light green is for classes and objects.
+C is for classes, O for objects, P for pre-defined classes.
+end note
+
+
+'bItem .. tItem
+note right of tItem
+Light blue and T are for temporal items.
+end note
+
+tItem o.. iItem : < Instanciation, from instance to single class 
+note right of iItem
+Salmon and I are for interface items.
+end note
+
+iItem }o.. oItem : < Instanciation, from instance to multiple classes 
+note right of oItem
+Orange and O are for organisational items.
+end note
+
+oItem  *..{ "0..n" Statement : Composition, from multiple components to container < 
+note right of Statement
+Magenta is for statements.
+D is for declarations, R for redeclarations, 
+d for definition blocks and I for instructions.
+end note
+
+Statement *.. Expression : Composition, from 0 or 1 component to container <
+note right of Expression
+Grey or f are for expressions and fragments.
+end note
+
+@enduml

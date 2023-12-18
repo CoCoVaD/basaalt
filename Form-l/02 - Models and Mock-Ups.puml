@@ -1,0 +1,35 @@
+@startuml
+!include D:/Form-L/Langage/Meta Model/Definitions.puml
+hide empty members
+remove @unlinked
+title "Mock-ups and Models"
+'footer Page 2
+
+class "FORM-L Model\nthat is extended\nor used as Library" as xModel << (O, Gold) >>
+
+class rModel {
+   +<font:monospaced><i><b><color: Green >main</font> behavioural item: Object or Class of interest
+   +<font:monospaced><i><b><color: Green >external</font> behavioural items: Objects and Classes 
+   constituting the environment of the behavioural item of interest
+}
+
+class Mockup {
+   +<font:monospaced><i><b><color: Green >main</font> behavioural item of Root Model
+   +<font:monospaced><i><b><color: Green >external</font> behavioural items of Root Model
+}
+
+Model <|-- fModel
+fModel <|-up- rModel
+Model <|-- nModel
+
+Mockup *.. "1" rModel
+Mockup *..{ Model: < 0..n\n(independent complements\nto the Root Model)
+Mockup *..{ "0..n" Binding
+Binding  }.right.{ Model : each Binding ensures\ninformation exchange\nbetween 2..n Models
+
+fModel *..{ "0..n" pModel : < contents
+
+fModel *..{ Statement : < 0..n 
+fModel *.left.{ "0..n" xModel : < contents
+pModel *..{ Statement : < 0..n
+@enduml

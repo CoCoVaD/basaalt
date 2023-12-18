@@ -1,0 +1,49 @@
+@startuml
+
+class "Non-valued Class" as nClass << (C, LightGreen ) >>
+
+!include D:/Form-L/Langage/Meta Model/Definitions.puml
+hide empty members
+remove @unlinked
+title "Classes and Instances"
+'footer Page 7
+
+note right of Class
+  An <font:monospaced><i><b>attribute</b></i></font> is a piece of information about a
+  behavioural item that is built-in the FORM-L language.
+  Those with a round bullet may receive assignments 
+  (see Actions) to control the behaviour of the item.
+  Those with a square bullet are automatically
+  computed and cannot be assigned.
+end note
+
+abstract class Class { 
+  -- Attributes --
+  +<font:monospaced><i><b>clock
+  +<font:monospaced><i><b>justification
+  -- Options --
+  +<font:monospaced><i><b><color: Green >main, external, abstract, private
+  +determiner, parameters
+  -- Features --
+  +features
+}
+
+ 
+Class <|-- nClass
+Class <|-- variableClass
+Class <|-- eventClass
+Class <|-- setClass
+Class <|-- abstractPropertyClass
+
+
+nClass }o.up. nObject : > instance\nof 1..n
+nClass }o.up. Variable : > instance\nof 0..n
+variableClass o.. Variable : < instance of 1
+nClass }o.up. Event : > instance\nof 0..n
+eventClass o.. Event : < instance of 1
+nClass }o.up. Set : > instance\nof 0..n
+setClass o.. Set : < instance of 1
+nClass }o.up. genericProperty : > instance\nof 0..n
+abstractPropertyClass o.. genericProperty : < instance of 1
+
+@enduml

@@ -1,0 +1,75 @@
+@startuml
+!include D:/Form-L/Langage/Meta Model/Definitions.puml
+hide empty members
+remove @unlinked
+title "Objects"
+'footer Page 8
+
+Object <|-- nObject
+Object <|-- vObject
+vObject <|-- Variable
+vObject <|-- Event
+vObject <|-- Set
+vObject <|-- genericProperty
+
+abstract class Object { 
+  -- Attributes --
+  -<font:monospaced><i><b>identity, eNew, eDelete
+  -<font:monospaced><i><b>values, allValues
+  +<font:monospaced><i><b>clock, justification
+  -- Options --
+  +<font:monospaced><i><b><color: Green >main, external, private
+  +<font:monospaced><i><b><color: Green >constant values
+  +<font:monospaced><i><b><color: Green >fixed values
+  +determiner
+  -- Features --
+  +features
+}
+
+note left of Object
+  <font:monospaced><i><b>values</b></i></font> gathers the <font:monospaced><i><b>value</b></i></font> 
+  of all direct and indirect features 
+  that have that attribute: properties
+  states are not included.
+  With <font:monospaced><i><b>allValues</b></i></font>,  properties states  
+  are included.
+end note
+
+abstract class valObject { 
+  -- Options --
+  +<font:monospaced><i><b><color: Green >constant, fixed
+}
+
+abstract class Variable { 
+  -- Own Attributes --
+  +<font:monospaced><i><b>value, next, default
+  -<font:monospaced><i><b>previous
+}
+
+class Event { 
+  -- Own Attributes --
+  +<font:monospaced><i><b>occurrence
+  +<font:monospaced><i><b>rate, default
+  -<font:monospaced><i><b>previous
+  -<font:monospaced><i><b>value, inPValue
+}
+
+abstract class Set { 
+  -- Own Attributes --
+  +<font:monospaced><i><b>value, next, default
+  -<font:monospaced><i><b>previous
+}
+
+abstract class genericProperty { 
+  -- Own Attributes --
+  + <font:monospaced><i><b>substitution, concretisation
+  -<font:monospaced><i><b>untested, satisfaction, violation
+  -<font:monospaced><i><b>eSatisfaction, eSatisfaction.rate
+  -<font:monospaced><i><b>eViolation, eViolation.rate
+  -<font:monospaced><i><b>inPUntested, inPSatisfaction, inPViolation
+  -<font:monospaced><i><b>eInPSatisfaction, eInPViolation
+  -<font:monospaced><i><b>satisfied, violated
+  -<font:monospaced><i><b>pfd
+}
+
+@enduml

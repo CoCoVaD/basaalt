@@ -1,0 +1,32 @@
+@startuml
+'header FORM-L Meta-Model
+!include D:/Form-L/Langage/Meta Model/Definitions.puml
+hide empty members
+remove @unlinked
+title "Events"
+'footer Page 12
+
+'class "Event\nClass" as cEvent << (C, LightGreen) >>
+'class "Non-Valued\nClass" as nClass << (C, LightGreen) >>
+'abstract class "Variable\nClass" as vClass << (C, LightGreen) >>
+'class "Set\nClass" as sClass << (C, LightGreen ) >>
+'abstract class "Property\nClass" as pClass << (C, LightGreen) >>
+
+'class "Event" as oEvent << (O, LightGreen) >>
+
+class Event { 
+  -- Attributes --
+  +signalled presence or absence of foreground <font:monospaced><i><b>occurrence</font>s
+  +<font:monospaced><i><b>rate</font> of background occurrences
+  +<font:monospaced><i><b>default</font> rate
+  -<font:monospaced><i><b>value</font>: set of past occurrences
+  -<font:monospaced><i><b>previous</font>: <font:monospaced><i><b>value</font> at the preceding instant
+  -<font:monospaced><i><b>inPValue</font>: set of past occurrences within a time period
+}
+
+eventClass <.. Event : < instance\nof 1
+nClass <.. Event : < instance\nof 0..n
+variableClass x.. Event : < not an\ninstance of\nany
+setClass x.. Event : < not an\ninstance of\nany
+abstractPropertyClass x.. Event : < not an\ninstance of\nany
+@enduml

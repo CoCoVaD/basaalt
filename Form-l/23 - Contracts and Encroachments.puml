@@ -1,0 +1,52 @@
+@startuml
+'header FORM-L Meta-Model
+title "Contracts and Encroachments"
+'footer Page 23
+hide empty members
+
+abstract class "Interface\nItem" as iItem << (I, Salmon) >>
+abstract class Contract << (I, Salmon) >>
+class Encroachment << (I, Salmon) >>
+iItem <|-left- Contract
+iItem <|-right- Encroachment
+
+' Contracts
+class "Broadcast\nContract" as bContract << (I, Salmon) >>
+class "Agreement\nContract" as aContract << (I, Salmon) >>
+Contract <|-- bContract
+Contract <|-- aContract
+
+' Broadcast Contracts
+class "Beneficiary, i.e.,\nany Behavioural Item\nacknowledging (declaring),\nthe Interface" as Beneficiary << (B, LightGreen) >> 
+bContract  ..{ Beneficiary : > 0..n
+
+' Agreement Contracts
+class "Party (designated\nBehavioural Item),\nwhich must acknowledge\n(declare) the Interface" as Party << (B, LightGreen) >> 
+class "Party\nSection" as pSection << (I, Salmon) >> 
+Party *.. pSection : < 1
+
+abstract class Statement  << (S, Magenta) >>
+pSection  *.right.{ Statement : < 0..n
+
+class "Beneficiaries and\nother Parties\nof the Interface" as Parties << (I, Salmon) >>
+circle "." as c1
+circle "." as c2
+pSection }..> Parties : > 0..n deliverables\n(Variables, Events, Sets)
+pSection }.. c1 : > 0..n\nGuarantees
+c1 ..> Parties : > Assumptions
+pSection }.. c2 : > 0..n\nAssumptions
+c2 ..> Parties : > Collective\nGuarantees
+
+' Encroachments
+class Origin << (B, LightGreen) >>
+class Target << (B, LightGreen) >>
+Encroachment  *.. Origin : < 1
+Encroachment  *.. Target : < 1
+Party <|-up- Origin 
+Party <|-up- Target 
+Origin .right.> Target : > constrains behaviour,\nwith precedence over Target's own definition
+class "Party\nSection" as pSection << (I, Salmon) >>
+bContract  *.. Party : < 1
+aContract  *..{ Party : < 2..n
+
+@enduml

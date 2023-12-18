@@ -1,0 +1,27 @@
+@startuml
+'header FORM-L Meta-Model
+!include D:/Form-L/Langage/Meta Model/Definitions.puml
+hide empty members
+remove @unlinked
+title "Event Classes"
+'footer Page 11
+
+class "Defined Event Class" as dEvent << (C, LightGreen) >>
+
+dClass <|-- dEvent
+eventClass <|-- dEvent
+nClass }.up. dEvent : < extends 0..n
+eventClass  <.up. dEvent: < extends 1
+variableClass x.up. dEvent : < extends 0
+setClass x.up. dEvent : < extends 0
+abstractPropertyClass x.up. dEvent : < extends 0
+
+circle or
+pdClass <|-- or
+dClass <|-- or
+or -- eventClass
+
+class "Class\nEvent" as pEvent << (P, LightGreen) >>
+eventClass <|-- pEvent
+pdClass <|-- pEvent
+@enduml

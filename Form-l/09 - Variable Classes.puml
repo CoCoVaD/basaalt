@@ -1,0 +1,44 @@
+@startuml
+'header FORM-L Meta-Model
+'footer Page 9
+!include D:/Form-L/Langage/Meta Model/Definitions.puml
+hide empty members
+remove @unlinked
+title "Variable Classes"
+
+abstract class "Variable\nClass" as cVariable2 << (C, LightGreen) >>
+variableClass <|-right- dVariableClass
+cVariable2 <.up. dVariableClass : < extends\n1
+eventClass x.up. dVariableClass : < extends\n0
+setClass x.up. dVariableClass : < extends\n0
+abstractPropertyClass x.up. dVariableClass : < extends\n0
+nClass }.up. dVariableClass : < extends\n0..n
+
+variableClass <|-- booleanClass
+booleanClass <|-- pClassBoolean
+pVariableClass <|-up- pClassBoolean
+booleanClass <.. booleanClass : < extends\n0..1
+
+variableClass <|-- integerClass
+integerClass <|-- pClassInteger
+pVariableClass <|-up- pClassInteger
+integerClass <.. integerClass : < extends\n0..1
+
+variableClass <|-- stringClass
+stringClass <|-- pClassString
+pVariableClass <|-up- pClassString
+stringClass <.. stringClass : < extends\n0..1
+
+variableClass <|-- realClass
+realClass <|-- pClassReal
+pVariableClass <|-up- pClassReal
+realClass <.. realClass : < extends\n0..1
+
+realClass <|-- quantityClass
+dVariableClass <|-up- quantityClass
+quantityClass <.. quantityClass : < extends\n0..1
+
+dVariableClass <|-up-- enumeratedClass
+variableClass <|-- enumeratedClass
+enumeratedClass <.. enumeratedClass : < extends\n0..1
+@enduml

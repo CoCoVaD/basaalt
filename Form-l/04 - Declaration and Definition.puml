@@ -1,0 +1,27 @@
+@startuml
+!include D:/Form-L/Langage/Meta Model/Definitions.puml
+hide empty members
+remove @unlinked
+title "Declaration, Redeclaration and Definition"
+'footer Page 4
+
+abstract class Item {
+  +Name
+  +Natural language description
+}
+
+Item *..{ "1..n" Declaration : existence\nand nature of <
+Item *..{ "0..n" Redeclaration : modification of\nthe nature of <
+Item *.right.{ "0..n" Definition : composition and\nbehaviour of <
+Declaration *.. Definition : < 0..1
+Redeclaration *.. Definition : < 0..1
+
+
+Definition <|-- gDefinition
+Definition <|-- sDefinition
+Definition <|-- mDefinition
+
+mDefinition *..{ Statement : < 0--n
+sDefinition *..  Statement : < 1
+gDefinition *.. "1" Expression
+@enduml

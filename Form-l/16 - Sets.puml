@@ -1,0 +1,42 @@
+@startuml
+'header FORM-L Meta-Model
+'footer Page 16
+!include D:/Form-L/Langage/Meta Model/Definitions.puml
+hide empty members
+remove @unlinked
+title "Sets"
+
+class Set { 
+  -- Options --
+  + constraint on cardinal (finite list of integers and integer intervals)
+  -- Attributes --
+  +<font:monospaced><i><b>value</font> is membership
+}
+
+class oSet { 
+  Finite, non-ordered 
+  collection of objects
+  of the same class
+  -- Own Options --
+  + determiner of members
+  + variablity of members
+}
+
+class vSet { 
+  Finite, non-ordered 
+  collection of values
+  and value intervals
+  of the same type
+}
+
+soClass <.. oSet : < instance of 1
+svClass <.. vSet : < instance of 1
+
+Set <|-up- oSet
+Set <|-up- vSet
+
+nClass <.. Set : < instance\nof 0..n
+variableClass x.. Set : < not an\ninstance of\nany
+eventClass x.. Set : < not an\ninstance of\nany
+abstractPropertyClass x.. Set : < not an\ninstance of\nany
+@enduml

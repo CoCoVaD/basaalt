@@ -1,0 +1,64 @@
+@startuml
+'header FORM-L Meta-Model
+title "Values"
+'footer Page 24
+hide empty members
+
+abstract class Value << (f, LightGrey) >>
+class "Instantaneous\nValue" as iValue << (f, LightGrey) >>
+class "Function\nof Time Only" as tValue  << (f, LightGrey) >>
+class "Function of Time\nand other Parameters" as fValue  << (f, LightGrey) >>
+class Literal << (f, LightGrey) >>
+
+Value <|-- iValue
+iValue <|-- Literal
+fValue <|-- tValue
+Value <|-- fValue
+
+abstract class "Valued Object" as vObject << (O, LightGreen ) >>
+fValue <..{ vObject : < 1..n parameters
+
+abstract class vObject {
+  <font:monospaced><b><i>value</font> attribute
+}
+vObject::attribute <.. tValue 
+
+class "Event Value" as Event << (f, LightGrey) >>
+class "Boolean\nValue" as Boolean << (f, LightGrey) >>
+class "Automaton\nValue" as Statechart << (f, LightGrey) >>
+class "Integer\nValue" as Integer << (f, LightGrey) >>
+class "Real\nValue" as Real << (f, LightGrey) >>
+class "Quantity Value" as Quantity << (f, LightGrey) >>
+class "String\nValue" as String << (f, LightGrey) >>
+class "Set Value" as Set << (f, LightGrey) >>
+class "Property Values" as Property << (f, LightGrey) >>
+
+Value <|-up- Boolean
+Value <|-up- Statechart
+Value <|-up- Integer
+Value <|-up- Real
+Real <|-up- Quantity
+Value <|-up- String
+Value <|-up- Event
+Value <|-up- Set
+Property::Boolean ..> Boolean
+Property::Event ..> Event
+
+class "Functions of Time Only" as tValue2  << (f, LightGrey) >>
+tValue2 <|-left- Property::Boolean
+tValue2 <|-left- Property::Event
+
+class Event {
+  Set of past occurrences
+}
+
+class Set {
+  Membership
+}
+
+class Property {
+  Event attributes
+  --
+  Boolean attributes
+}
+@enduml

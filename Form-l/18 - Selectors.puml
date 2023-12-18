@@ -1,0 +1,71 @@
+@startuml
+header FORM-L Meta-Model
+title "Selectors"
+'footer Page 18
+hide empty members
+
+class Selector << (f, Violet) >>
+class "Random Selection\nof aSingle Set Member" as rSelector << (f, Violet) >>
+class "Selector for\nBoolean Expressions" as bSelector << (f, Violet) >>
+class "Universal\nBoolean Expression" as ubSelector << (f, Violet) >>
+class "Existential\nBoolean Expression" as xbSelector << (f, Violet) >>
+class "Subset Selection" as sSelector << (f, Violet) >>
+class "Selector for\nConstraint Application" as cSelector << (f, Violet) >>
+class "Universal\nConstraint Application" as ucSelector << (f, Violet) >>
+class "Existential\nConstraint Application" as xcSelector << (f, Violet) >>
+
+Selector <|-- rSelector
+Selector <|-- bSelector
+bSelector <|-- ubSelector
+bSelector <|--- xbSelector
+Selector <|-- sSelector
+Selector <|-- cSelector
+cSelector <|-- ucSelector
+cSelector <|-- xcSelector
+
+class rSelector {
+  <font:monospaced><b><i><color: Magenta>any in </color></i><u>set
+  --
+  <font:monospaced><b><i><color: Magenta>any in </color></i><u>set</u><i><color: Magenta> such that </color></i><u>bool
+}
+
+class sSelector {
+  <font:monospaced><b><i><color: Magenta>all </color></i><u>x</u><i><color: Magenta> of </color></i><u>set</u><i><color: Magenta> such that </color></i><u>bool
+}
+
+class ubSelector {
+  <font:monospaced><b><i><color: LimeGreen>whether <font:monospaced><b><i><color: Magenta>all </color></i><u>x</u><i><color: Magenta> of </color></i><u>set</u><i><color: LimeGreen> satisfy </color></i><u>bool
+}
+
+class xbSelector {
+  <font:monospaced><b><i><color: LimeGreen>whether <font:monospaced><b><i><color: Magenta>some </color></i><u>x</u><i><color: Magenta> of </color></i><u>set</u><i><color: LimeGreen> satisfy </color></i><u>bool
+}
+
+class ucSelector {
+  <font:monospaced><b><i><color: Magenta>for all </color></i><u>x</u><i><color: Magenta> of </color></i><u>set
+  <font:monospaced><b><i><color: Brown>ensure </color></i>...
+  --
+  <font:monospaced><b><i><color: Magenta>for all </color></i><u>x</u><i><color: Magenta> of </color></i><u>set</u><i><color: Magenta> such that </color></i><u>bool
+  <font:monospaced><b><i><color: Brown>ensure </color></i>...
+  --
+  <font:monospaced><b><i><color: Magenta>for all </color></i><u>x</u><i><color: Magenta> of </color></i><u>set
+  <font:monospaced><b><i><color: Brown>achieve </color></i>...
+  --
+  <font:monospaced><b><i><color: Magenta>for all </color></i><u>x</u><i><color: Magenta> of </color></i><u>set</u><i><color: Magenta> such that </color></i><u>bool
+  <font:monospaced><b><i><color: Brown>achieve </color></i>...
+}
+
+class xcSelector {
+  <font:monospaced><b><i><color: Magenta>for some </color></i><u>x</u><i><color: Magenta> of </color></i><u>set
+  <font:monospaced><b><i><color: Brown>ensure </color></i>...
+  --
+  <font:monospaced><b><i><color: Magenta>for some </color></i><u>x</u><i><color: Magenta> of </color></i><u>set</u><i><color: Magenta> such that </color></i><u>bool
+  <font:monospaced><b><i><color: Brown>ensure </color></i>...
+  --
+  <font:monospaced><b><i><color: Magenta>for some </color></i><u>x</u><i><color: Magenta> of </color></i><u>set
+  <font:monospaced><b><i><color: Brown>achieve </color></i>...
+  --
+  <font:monospaced><b><i><color: Magenta>for some </color></i><u>x</u><i><color: Magenta> of </color></i><u>set</u><i><color: Magenta> such that </color></i><u>bool
+  <font:monospaced><b><i><color: Brown>achieve </color></i>...
+}
+@enduml

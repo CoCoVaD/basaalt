@@ -1,0 +1,54 @@
+@startuml
+!include D:/Form-L/Langage/Meta Model/Definitions.puml
+hide empty members
+remove @unlinked
+title "Top-Level FORM-L Modelling Items"
+'footer Page 1
+
+' Top level
+Item <|-- oItem
+Item <|--- tItem
+Item <|-- bItem
+Item <|-- iItem
+
+nItem <|-- nModel
+nItem <|-- Binding
+
+' Organisational items
+oItem <|-- fModel
+oItem <|-- pModel
+oItem <|-- Mockup
+
+' Temporal items
+tItem <|-- DTL
+tItem <|-- CTL
+tItem <|-- STL
+
+' Behavioural items
+bItem  <|-- Class
+bItem  <|-- Object
+Object <|-- vObject
+Object <|-- nObject
+
+vObject <|-- Variable
+vObject <|-- Event
+vObject <|-- Set
+vObject <|-- Property
+
+Variable <|-- Boolean
+Variable <|-- Statechart
+Variable <|-- Integer
+Variable <|-- Real
+Real    <|-- Quantity
+Variable <|-- String
+
+Property <|-- Objective
+Property <|-- Guarantee
+Guarantee <|-- Assumption
+Guarantee <|-- Requirement
+Property <|-- Guard
+
+' Interface items
+iItem <|-- Contract
+iItem <|-- Encroachment
+@enduml

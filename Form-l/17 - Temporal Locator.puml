@@ -1,0 +1,80 @@
+@startuml
+header FORM-L Meta-Model
+title "Temporal Locators"
+'footer Page 17
+hide empty members
+
+abstract class "Temporal Item" as tItem << (T, LightSkyBlue) >>
+class "Sliding\nTemporal Item" as sItem << (T, LightSkyBlue) >>
+class "Continuous\nTemporal Item" as cItem << (T, LightSkyBlue) >>
+class "Discrete\nTemporal Item" as dItem << (T, LightSkyBlue) >>
+tItem <|-- dItem
+tItem <|--- cItem
+tItem <|---- sItem
+
+abstract class "Temporal Locator" as TL << (f, LightSkyBlue) >>
+'tItem .. TL
+class "DTL: Discrete\nTemporal Locator" as DTL << (f, LightSkyBlue) >>
+class "CTL: Continuous\nTemporal Locator" as  CTL << (f, LightSkyBlue) >>
+class "Basic CTL" as BasicCTL << (f, LightSkyBlue) >>
+class "Combined or\nTransformed CTL" as CombinedCTL << (f, LightSkyBlue) >>
+class "STL: Sliding\nTemporal Locator" as STL << (f, LightSkyBlue) >>
+'dItem <.. DTL : < 1
+'cItem <.. CTL : < 1
+'sItem <.. STL : < 1
+
+class DTL { 
+  Finite number of instants
+}
+
+class CTL { 
+  Finite number of time periods
+}
+
+class STL { 
+  All time periods of a given duration
+'  satisfying an optional
+'  filtering condition
+}
+
+TL <|-- DTL
+TL <|-- CTL
+CTL <|-- BasicCTL
+CTL <|-- CombinedCTL
+TL <|-- STL
+
+class "Event\nExpression" as When  << (f, LightGreen) >>
+DTL <.. "1" When : < when
+
+circle "one of" as BoundariesCTL
+circle "[   ]" as b1
+circle "]   ]" as b2
+circle "[   [" as b3
+circle "]   [" as b4
+class "Event\nExpression" as EventCTL  << (f, LightGreen) >>
+circle "one of" as Ending
+class "Quantity\nExpression" as QuantityCTL  << (f, LightGreen) >>
+class "Duration\nExpression" as DurationCTL  << (f, LightGreen) >>
+QuantityCTL <|-- DurationCTL
+BasicCTL <.. BoundariesCTL : < 1 boundary\nspecification
+BasicCTL <.. EventCTL : < 1 opening\nevent
+BasicCTL <.. Ending : < 1
+Ending .. EventCTL : < 1 closing\nevent
+Ending .. DurationCTL : < 1 duration\nspecification
+BoundariesCTL ..  b1
+BoundariesCTL ..  b2
+BoundariesCTL ..  b3
+BoundariesCTL ..  b4
+
+circle "CTL operator" as CTLOperator
+CombinedCTL <.. CTLOperator : < 1 
+class "CTL" as CTL2 << (f, LightSkyBlue) >>
+CombinedCTL <..{ CTL2 : < 1..2 
+CTL .. CTL2 
+
+circle "[   ]" as BoundariesSTL
+class "Boolean\nExpression" as Filter  << (f, LightGreen) >>
+STL <.. BoundariesSTL : < 1 boundary\nspecification
+STL <.. DurationCTL : < 1 fixed or\nconstant duration
+STL <.. Filter : < 0..1 filtering\ncondition
+@enduml

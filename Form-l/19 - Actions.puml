@@ -1,0 +1,45 @@
+@startuml
+header FORM-L Meta-Model
+title "Actions"
+'footer Page 19
+hide empty members
+
+abstract class Action  << (f, LightSalmon) >>
+class Assignment  << (f, LightSalmon) >>
+class Signal  << (f, LightSalmon) >>
+abstract class Constraint  << (f, LightSalmon) >>
+class Deletion  << (f, LightSalmon) >>
+
+Action <|-- Assignment
+Action <|-- Signal
+Action <|-- Deletion
+Action <|-- Constraint
+
+' Assignment
+class Attribute  << (f, LightSalmon) >>
+class Expression  << (f, LightGreen) >>
+Assignment <... "1" Attribute : < attribute\nconcerned
+Assignment <... "1" Expression : < value to be\nassigned
+
+' Signal
+class "Event\nExpression" as sEvent  << (f, LightGreen) >>
+class "Integer\nExpression" as sCount  << (f, LightGreen) >>
+Signal <.. "1" sEvent : < event\nconcerned
+Signal <.. "1" sCount : < number of\noccurrences\nto be signalled
+
+' Constraint
+class "Boolean\nExpression" as Condition  << (f, LightGreen) >>
+class "Event\nExpression" as cEvent  << (f, LightGreen) >>
+class "Integer\nExpression" as cCount  << (f, LightGreen) >>
+circle "one of" as oneOf
+Constraint <.. oneOf : < 1
+diamond occurrences
+oneOf .. Condition : < Boolean\ncondition\nto be\nsatisfied
+oneOf .. occurrences : < event-based\ncondition\nto be\nsatisfied
+occurrences .. "1" cEvent: < event\nconcerned
+occurrences .. "1" cCount: < expected\nnumber of\noccurrences
+
+' Deletion
+class "Set\nExpression" as Set  << (f, LightGreen) >>
+Deletion <.. "1" Set : < of dynamic objects\nto be deleted
+@enduml

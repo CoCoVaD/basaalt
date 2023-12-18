@@ -1,0 +1,58 @@
+@startuml
+header FORM-L Meta-Model
+title "Constraints"
+'footer Page 20
+hide empty members
+
+abstract class Constraint  << (f, LightSalmon) >>
+abstract class "Run-Time\nConstraint" as rtConstraint  << (f, LightSalmon) >>
+abstract class "A Posteriori\nConstraint" as apConstraint  << (f, LightSalmon) >>
+Constraint <|-- rtConstraint
+Constraint <|-- apConstraint
+
+abstract class "Achievement\nRun-Time\nConstraint" as artConstraint  << (f, LightSalmon) >>
+abstract class "Universal\nRun-Time\nConstraint" as urtConstraint  << (f, LightSalmon) >>
+abstract class "Existential\nRun-Time\nConstraint" as ertConstraint  << (f, LightSalmon) >>
+abstract class "Invariance\nRun-Time\nConstraint" as irtConstraint  << (f, LightSalmon) >>
+rtConstraint <|-- irtConstraint
+rtConstraint <|-- artConstraint
+rtConstraint <|-- urtConstraint
+rtConstraint <|-- ertConstraint
+
+class "Universal\nRun-Time\nInvariance\nConstraint" as urtiConstraint  << (f, LightSalmon) >>
+class "Existential\nRun-Time\nInvariance\nConstraint" as ertiConstraint  << (f, LightSalmon) >>
+class "Universal\nRun-Time\nAchievement\nConstraint" as urtaConstraint  << (f, LightSalmon) >>
+class "Existential\nRun-Time\nAchievement\nConstraint" as ertaConstraint  << (f, LightSalmon) >>
+
+urtConstraint <|-- urtiConstraint
+irtConstraint <|-- urtiConstraint
+ertConstraint <|-- ertiConstraint
+irtConstraint <|-- ertiConstraint
+urtConstraint <|-- urtaConstraint
+artConstraint <|-- urtaConstraint
+ertConstraint <|-- ertaConstraint
+artConstraint <|-- ertaConstraint
+
+abstract class "Achievement\nA Posteriori\nConstraint" as aapConstraint  << (f, LightSalmon) >>
+abstract class "Universal\nA Posteriori\nConstraint" as uapConstraint  << (f, LightSalmon) >>
+abstract class "Existential\nA Posteriori\nConstraint" as eapConstraint  << (f, LightSalmon) >>
+abstract class "Invariance\nA Posteriori\nConstraint" as iapConstraint  << (f, LightSalmon) >>
+apConstraint <|-- iapConstraint
+apConstraint <|-- aapConstraint
+apConstraint <|-- uapConstraint
+apConstraint <|-- eapConstraint
+
+class "Universal\nA Posteriori\nInvariance\nConstraint" as uapiConstraint  << (f, LightSalmon) >>
+class "Existential\nA Posteriori\nInvariance\nConstraint" as eapiConstraint  << (f, LightSalmon) >>
+class "Universal\nA Posteriori\nAchievement\nConstraint" as uapaConstraint  << (f, LightSalmon) >>
+class "Existential\nA Posteriori\nAchievement\nConstraint" as eapaConstraint  << (f, LightSalmon) >>
+
+uapConstraint <|-- uapiConstraint
+iapConstraint <|-- uapiConstraint
+eapConstraint <|-- eapiConstraint
+iapConstraint <|-- eapiConstraint
+uapConstraint <|-- uapaConstraint
+aapConstraint <|-- uapaConstraint
+eapConstraint <|-- eapaConstraint
+aapConstraint <|-- eapaConstraint
+@enduml

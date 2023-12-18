@@ -1,0 +1,45 @@
+@startuml
+'header FORM-L Meta-Model
+'footer Page 13
+abstract class "Pre-Defined Property Class" as pPropertyClass << (P, LightGreen ) >>
+!include D:/Form-L/Langage/Meta Model/Definitions.puml
+hide empty members
+remove @unlinked
+title "Property Classes"
+
+
+abstractPropertyClass <|-- propertyClass
+propertyClass <|-- pClassProperty
+pPropertyClass <|-up- pClassProperty
+propertyClass  <.. propertyClass: < extends\n0..1
+
+abstractPropertyClass <|-- objectiveClass
+objectiveClass <|-- pClassObjective
+pPropertyClass <|-up- pClassObjective
+objectiveClass  <.. objectiveClass: < extends\n0..1
+
+abstractPropertyClass <|-- guaranteeClass
+guaranteeClass <|-- pClassGuarantee
+pPropertyClass <|-up- pClassGuarantee
+guaranteeClass  <.. guaranteeClass: < extends\n0..1
+
+guaranteeClass <|-- assumptionClass
+assumptionClass <|-- pClassAssumption
+pPropertyClass <|-up- pClassAssumption
+assumptionClass  <.. assumptionClass: < extends\n0..1
+
+guaranteeClass <|-- requirementClass
+requirementClass <|-- pClassRequirement
+pPropertyClass <|-up- pClassRequirement
+requirementClass  <.. requirementClass: < extends\n0..1
+
+abstractPropertyClass <|-- guardClass
+guardClass <|-- pClassGuard
+pPropertyClass <|-up- pClassGuard
+guardClass  <.. guardClass: < extends\n0..1
+
+nClass }.. abstractPropertyClass : < extends\n0..n
+variableClass x.. abstractPropertyClass : < extends\n0
+setClass x.. abstractPropertyClass : < extends\n0
+eventClass x.. abstractPropertyClass : < extends\n0
+@enduml

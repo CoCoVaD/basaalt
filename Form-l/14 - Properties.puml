@@ -1,0 +1,58 @@
+@startuml
+'header FORM-L Meta-Model
+!include D:/Form-L/Langage/Meta Model/Definitions.puml
+hide empty members
+remove @unlinked
+title "Properties"
+'footer Page 14
+
+'class "Property\nClass" as cProperty << (C, LightGreen) >>
+'class "Non-Valued\nClass" as nClass << (C, LightGreen) >>
+'class "Variable\nClass" as vClass << (C, LightGreen) >>
+'class "Set\nClass" as sClass << (C, LightGreen ) >>
+'class "Event\nClass" as eClass << (C, LightGreen) >>
+'class "Property" as oProperty << (O, LightGreen ) >>
+abstract class "Property under DTL" as dtlProperty << (O, LightGreen ) >>
+abstract class "Property under CTL" as ctlProperty << (O, LightGreen ) >>
+abstract class "Property under STL" as stlProperty << (O, LightGreen ) >>
+genericProperty <|-- dtlProperty
+genericProperty <|-- ctlProperty
+genericProperty <|-- stlProperty
+
+abstract class genericProperty { 
+  -- Own Attributes --
+  + <font:monospaced><i><b>substitution, concretisation
+  -<font:monospaced><i><b>pfd
+}
+
+abstract class dtlProperty { 
+  -- Own Univocal Attributes --
+  -<font:monospaced><i><b>eSatisfaction, eViolation
+  -<font:monospaced><i><b>eSatisfaction.rate, eViolation.rate
+  -- Own Non-Univocal Attributes --
+  -<font:monospaced><i><b>untested, satisfaction, violation
+  -<font:monospaced><i><b>satisfied, violated
+ }
+
+abstract class ctlProperty { 
+  -- Own Univocal Attributes --
+  -<font:monospaced><i><b>eInPSatisfaction, eInPViolation
+  -- Own Non-Univocal Attributes --
+  -<font:monospaced><i><b>inPUntested, inPSatisfaction, inPViolation
+  -<font:monospaced><i><b>untested, satisfaction, violation
+  -<font:monospaced><i><b>eSatisfaction, Violation
+  -<font:monospaced><i><b>eeSatisfaction.rate, eViolation.rate
+  -<font:monospaced><i><b>satisfied, violated
+}
+
+abstract class stlProperty { 
+  Expressed as a combination of
+  properties under DTL and/or CTL 
+}
+
+abstractPropertyClass <.. genericProperty : < instance\nof 1
+nClass <.. genericProperty : < instance\nof 0..n
+variableClass x.. genericProperty : < not an\ninstance of\nany
+setClass x.. genericProperty : < not an\ninstance of\nany
+eventClass x.. genericProperty : < not an\ninstance of\nany
+@enduml

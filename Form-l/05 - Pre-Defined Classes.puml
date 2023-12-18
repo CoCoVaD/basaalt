@@ -1,0 +1,28 @@
+@startuml
+!include D:/Form-L/Langage/Meta Model/Definitions.puml
+hide empty members
+remove @unlinked
+title "Pre-Defined Classes"
+'footer Page 5
+
+Class <|-- pdClass
+Class <|-- dClass
+
+pdClass <|-- pVariableClass
+pdClass <|-- pClassEvent
+pdClass <|-- pClassObject
+pdClass <|-- pPropertyClass
+
+pVariableClass <|-- pClassBoolean
+pVariableClass <|-- pClassInteger
+pVariableClass <|-- pClassReal
+pVariableClass <|-- pClassString
+
+pPropertyClass <|--- pClassProperty
+pPropertyClass <|--- pClassAssumption
+pPropertyClass <|--- pClassRequirement
+pPropertyClass <|--- pClassObjective
+pPropertyClass <|--- pClassGuarantee
+pPropertyClass <|--- pClassGuard
+
+@enduml

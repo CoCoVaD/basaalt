@@ -1,0 +1,65 @@
+@startuml
+'header FORM-L Meta-Model
+title "Instructions - Exclusion Chains"
+'footer Page 22
+hide empty members
+
+abstract class Instruction  << (I, Magenta) >>
+class "Elementary\nInstruction" as eInstruction  << (I, Magenta) >>
+class "Temporal-Set\nExclusion Chain" as TSChain  << (I, Magenta) >>
+class "Set-Temporal\nExclusion Chain" as STChain  << (I, Magenta) >>
+abstract class "Coordinated\nInstruction" as Coordination  << (I, Magenta) >>
+
+Instruction <|-- eInstruction
+Instruction <|-- Coordination
+Instruction <|-left- TSChain
+Instruction <|-right- STChain
+
+' Temporal-Set Exclusion Chain
+diamond Tsa
+class "Temporal Locator" as When << (f, LightSkyBlue) >>
+diamond SA
+abstract class "Action" as WhatTS  << (f, LightSalmon) >>
+class "Selector" as WhoTS << (f, Violet) >>
+class "Selector" as WhoST << (f, Violet) >>
+
+TSChain *..{ WhoTS : < 0..n
+TSChain *.. Tsa : < 1
+Tsa *.. When : < 1
+Tsa *.. SA : < 1 
+Tsa <.. Tsa : followed\nby 0..1
+SA *..{ WhoTS : < 1
+SA *.. WhatTS : < 1
+SA <.. SA : followed\nby 0..1
+
+' Set-Temporal Exclusion Chain
+'class "Selector" as WhoST << (f, Violet) >>
+diamond TA
+class "Temporal Locator" as When << (f, LightSkyBlue) >>
+abstract class "Action" as WhatST  << (f, LightSalmon) >>
+
+STChain *.. WhoST : < 1
+STChain *.. TA
+STChain <.. STChain : followed\nby 0..1
+TA *.. When : < 0..1
+TA *.. WhatST : < 1
+TA <.. TA : followed\nby 0..1
+
+class When {
+  +First instruction of the chain (1): 
+  {method}<font:monospaced><i><b><color: SkyBlue>DTL</color></b></i></font> or <font:monospaced><i><b><color: SkyBlue>CTL</color></b></i></font> or <font:monospaced><i><b><color: SkyBlue>STL
+  +{method}No following instruction in case of <font:monospaced><i><b><color: SkyBlue>STL</color></b></i></font>
+  +Following instructions of the chain (0..n): 
+  {method}<font:monospaced><i><b><color: SkyBlue>otherwise DTL</color></b></i></font> or <font:monospaced><i><b><color: SkyBlue>otherwise CTL
+  +Closing instruction of the chain (0..1): 
+  {method}<font:monospaced><i><b><color: SkyBlue>otherwise
+} 
+class WhoST {
+  +First instruction of the chain (1..n): 
+  {method}<font:monospaced><i><b><color: Magenta>for all </color></b></i></font>/<font:monospaced><i><b><color: Magenta> for some</color></b></i></font> x <font:monospaced><i><b><color: Magenta>of</color></b></i></font> set <font:monospaced><i><b><color: Magenta>such that
+  +Following instructions of the chain (1): 
+  {method}<font:monospaced><i><b><color: Magenta>for all </color></b></i></font>/<font:monospaced><i><b><color: Magenta> for some other such that</color></b></i></font>
+  +Closing instruction of the chain (0..1): 
+  {method}<font:monospaced><i><b><color: Magenta>for all </color></b></i></font>/<font:monospaced><i><b><color: Magenta> for some other</color></b></i></font>
+} 
+@enduml
