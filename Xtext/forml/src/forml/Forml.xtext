@@ -1,0 +1,146 @@
+grammar forml.Forml with org.eclipse.xtext.common.Terminals
+
+generate forml "http://www.Forml.forml"
+
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+Models:
+	models+=Model*
+	// If the list is not empty, verify one and only one 
+	// Model (the Root Model) is not extended
+;
+	
+Model:
+	'Model' 
+	name=ID 
+	comments+=STRING*
+	('extends' extendedModels+=ExtendedModel (',' extendedModels+=ExtendedModel)*)? 
+	(block=Block | ';')
+	///  Verify that Model is not in extension closure
+	/// Warning if 'name' begins with a lower case, with a quick fix
+	//  Warning if a block is provided with no 'endName', with a quick fix
+	//  Verify that if a block is provided with an 'endName', 
+	//  	it is equal to 'name', with a quick fix
+;
+
+ExtendedModel:
+	model=[Model]
+	comments+=STRING*
+;
+
+Block:
+	':' statements+=Statement
+|	{Block} (beginEnd?='begin' statements+=Statement* 'end' endName=ID? ';')
+;
+
+Statement:
+(	class=Class
+|	object=Object
+|	partialModel=PartialModel
+//|	instruction=Instruction
+)	comments+=STRING*
+;
+
+Class:
+	preDefinedClass=PredefinedClass
+|	definedClass=DefinedClass
+;
+
+Determiner: '#' | '@' | '~' | '^' | '!' | '?';
+
+PredefinedClass:
+	'Boolean'  | 'Integer'    | 'Real'      | 'String'      | 'Event'
+|	'Property' | 'Assumption' | 'Objective' | 'Requirement' | 'Guarantee'
+|	'Guard'    | 'Object'
+;
+
+DefinedClass:
+	((main?='main' | external?='external')? & (private?='private')? & (abstract?='abstract')?)
+	(definedClass?='Class' | enumeration?='Enumeration' states=States)
+//|	quantityClass=QuantityClass
+//|	setClass=SetClass
+	(determiner=Determiner)? name=ID
+	comments+=STRING*
+	('extends' extendedClasses+=ExtendedClass (',' extendedClasses+=ExtendedClass)*)? 
+	';'
+	//  Verify that 'name' is not in the closure of 'extendedClasses'
+	/// Warning if 'name' begins with a lower case, with a quick fix
+;
+
+ExtendedClass:
+(	preDefinedClass=PredefinedClass
+|	definedClass=[Class]
+)	comments+=STRING*
+;
+
+States:
+	'[' states+=State
+(	list?=',' states+=State (',' states+=State)* 
+|	product?='&' states+=State ('&' states+=State)+
+)	']'
+;
+
+State:
+(	states=States 				// Composite state on the fly
+|	enumeration=[DefinedClass]	// Composite state on existing enumeration
+)?	name=ID
+	comments+=STRING*
+	// Verify that the 'DefinedClass' is an Enumeration
+;
+ 
+Object:
+	(main?='main'? | (external?='external'? & private?='private'? & (constant?='constant' | fixed?='fixed')?))
+	class=ObjectClasses
+	(determiner=Determiner)? name=ID
+	comments+=STRING*
+	('is' value=Value)?
+	';'
+	// Verify that the same 'name' is not declared with different types
+	/// Warning if 'name' begins with an upper case, with a quick fix
+;
+
+
+ObjectClasses:
+	classes+=ObjectClass (',' classes+=ObjectClass)*
+;
+
+ObjectClass:
+(	preDefined=PredefinedClass
+|	definedClass=[DefinedClass]
+)	comments+=STRING*
+;
+
+Value:
+	{Value} true?='true'?
+|	{Value} false?='false'?
+|	{Value} real=Float?
+|	{Value} string=STRING?
+;
+
+PartialModel:
+	'partial' 'Model' 
+	name=ID 
+	comments+=STRING*
+	(block=Block? | ';')
+	/// Warning if 'name' begins with a lower case, with a quick fix
+	// Warning if a block is provided with no 'endName', with a quick fix
+	// Verify that if a block is provided with an 'endName', 
+	// 	it is equal to 'name', with a quick fix
+;
+
+Float:  
+(	whole=INT ('.' (decimal=INT | exp=EXPONENT)?)?
+|	'.' (decimal=INT | exp=EXPONENT)
+|	exp=EXPONENT
+)
+;
+
+@Override
+terminal ID: ('a'..'z'|'A'..'Z'|'_'|'°') ('a'..'z'|'A'..'Z'|'_'|'°'|'0'..'9')*;
+
+terminal EXPONENT: ('0'..'9')+ ('E' | 'e') ('+' | '-')? ('0'..'9')+;
+
+@Override
+terminal INT returns ecore::EInt: ('0'..'9')+;
+
+
