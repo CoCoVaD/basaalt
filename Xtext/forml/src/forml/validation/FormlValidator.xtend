@@ -77,14 +77,27 @@ class FormlValidator extends AbstractFormlValidator {
  */
 	public static val NO_MODEL_END_NAME = ISSUE_PREFIX + "NoModelEndName"
 	@Check
-	def checkModelEndName(Model model) {
+	def checkModelEndNameExists(Model model) {
 		if (model.block !== null)
 			if (model.block.endName === null)
-			warning(
-				"No model end name", 
-				FormlPackage.eINSTANCE.model_Name,
-				NO_MODEL_END_NAME,
-				model.name)
+				warning(
+					"No model end name", 
+					FormlPackage.eINSTANCE.model_Name,
+					NO_MODEL_END_NAME,
+					model.name)
+	}
+
+	public static val INCORRECT_MODEL_END_NAME = ISSUE_PREFIX + "IncorrectModelEndName"
+	@Check
+	def checkModelEndName(Model model) {
+		if (model.block !== null)
+			if (model.block.endName != model.name)
+				warning(
+					"Model end name (" + model.block.endName + ") different from model name (" + model.name +")", 
+					FormlPackage.eINSTANCE.model_Name,
+					INCORRECT_MODEL_END_NAME,
+					model.name,
+					model.block.endName)
 	}
 
 /**

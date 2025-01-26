@@ -69,11 +69,11 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 	}
 
 	@Fix(FormlValidator.INCORRECT_OBJECT_NAME)
-	def deCapitalizeObjectName(Issue issue, IssueResolutionAcceptor acceptor) 
+	def unCapitalizeObjectName(Issue issue, IssueResolutionAcceptor acceptor) 
 	// Textual modification
 	{	acceptor.accept(
 			issue, 
-			"De-capitalize name", 			// label
+			"Un-capitalize name", 			// label
 			"Change '" + issue.data.get(0) + "' to '" + issue.data.get(0).toFirstLower + "'", 
 			"downcase.png"				// icon
 		) [	context |
@@ -101,4 +101,17 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 		)
 	}
 
+	@Fix(FormlValidator.INCORRECT_MODEL_END_NAME)
+	def changeModelEndName(Issue issue, IssueResolutionAcceptor acceptor) 
+	// Model modification
+	{	acceptor.accept(
+			issue, 
+			"Change end name", 			// label
+			"Proposed end name: '" + issue.data.get(0) + "'", 
+			"",							// no icon for now
+			[ element, context |
+				(element as Model).block.endName = issue.data.get(0)
+			]
+		)
+	}
 }

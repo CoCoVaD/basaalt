@@ -18,11 +18,11 @@ Model:
 	comments+=STRING*
 	('extends' extendedModels+=ExtendedModel (',' extendedModels+=ExtendedModel)*)? 
 	(block=Block | ';')
-	///  Verify that Model is not in extension closure
+	/// Verify that Model is not in extension closure
 	/// Warning if 'name' begins with a lower case, with a quick fix
-	//  Warning if a block is provided with no 'endName', with a quick fix
-	//  Verify that if a block is provided with an 'endName', 
-	//  	it is equal to 'name', with a quick fix
+	/// Warning if a block is provided with no 'endName', with a quick fix
+	/// Verify that if a block is provided with an 'endName', 
+	/// 	it is equal to 'name', with a quick fix
 ;
 
 ExtendedModel:
