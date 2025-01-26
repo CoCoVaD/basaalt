@@ -30,33 +30,72 @@ class FormlValidator extends AbstractFormlValidator {
 	public static val INCORRECT_MODEL_NAME = ISSUE_PREFIX + "IncorrectModelName"
 	@Check
 	def checkModelNameStartsWithUppercase (Model model) {
-		if (model.name.charAt(0).lowerCase)
+		val char degree     = '°'	// This is necessary to prevent Xtext from
+		val char underscore = '_'	// converting char literals into strings
+		if (model.name.charAt(0) == degree || model.name.charAt(0) == underscore)
 			warning(
-				"Model names should not begin with a lower case letter", 
+				"Model names should begin neither with a ° nor with an _", 
 				FormlPackage.eINSTANCE.model_Name,
 				INCORRECT_MODEL_NAME,
 				model.name)
 	}
 
-	public static val INCORRECT_PARTIAL_MODEL_NAME = ISSUE_PREFIX + "IncorrectPartialModelName"
+	public static val UNCAPITALIZED_MODEL_NAME = ISSUE_PREFIX + "UncapitalizedModelName"
 	@Check
-	def checkPartialModelNameStartsWithUppercase (PartialModel model) {
+	def checkModelNameDoesNotStartsWithLowercase (Model model) {
 		if (model.name.charAt(0).lowerCase)
 			warning(
-				"Partial model names should not begin with a lower case letter", 
-				FormlPackage.eINSTANCE.partialModel_Name,
-				INCORRECT_PARTIAL_MODEL_NAME,
+				"Model names should not begin with a lower case letter", 
+				FormlPackage.eINSTANCE.model_Name,
+				UNCAPITALIZED_MODEL_NAME,
 				model.name)
 	}
 
+	public static val INCORRECT_PARTIAL_MODEL_NAME = ISSUE_PREFIX + "IncorrectPartialModelName"
+	@Check
+	def checkPartialModelNameStartsWithUppercase (PartialModel partialModel) {
+		val char degree     = '°'	// This is necessary to prevent Xtext from
+		val char underscore = '_'	// converting char literals into strings
+		if (partialModel.name.charAt(0) == degree || partialModel.name.charAt(0) == underscore)
+			warning(
+				"Partial model names should begin neither with a ° nor with an _", 
+				FormlPackage.eINSTANCE.partialModel_Name,
+				INCORRECT_PARTIAL_MODEL_NAME,
+				partialModel.name)
+	}
+
+	public static val UNCAPITALIZED_PARTIAL_MODEL_NAME = ISSUE_PREFIX + "UncapitalizedPartialModelName"
+	@Check
+	def checkPartialModelNameDoesNotStartWithLowercase (PartialModel partialModel) {
+		if (partialModel.name.charAt(0).lowerCase)
+			warning(
+				"Partial model names should not begin with a lower case letter", 
+				FormlPackage.eINSTANCE.partialModel_Name,
+				UNCAPITALIZED_PARTIAL_MODEL_NAME,
+				partialModel.name)
+	}
+
+
 	public static val INCORRECT_CLASS_NAME = ISSUE_PREFIX + "IncorrectClassName"
 	@Check
-	def checkClassNameStartsWithUppercase (DefinedClass definedClass) {
+	def checkClassNameStartsWithUppercase (DefinedClass definedlass) {
+		val char degree     = '°'	// This is necessary to prevent Xtext from
+		val char underscore = '_'	// converting char literals into strings
+		if (definedlass.name.charAt(0) == degree || definedlass.name.charAt(0) == underscore)
+			warning(
+				"Class names should begin neither with a ° nor with an _", 
+				FormlPackage.eINSTANCE.definedClass_Name,
+				INCORRECT_CLASS_NAME,
+				definedlass.name)
+	}
+	public static val UNCAPITALIZED_CLASS_NAME = ISSUE_PREFIX + "UncapitalizedClassName"
+	@Check
+	def checkClassNameDoesNotStartWithLowercase (DefinedClass definedClass) {
 		if (definedClass.name.charAt(0).lowerCase)
 			warning(
 				"Class names should not begin with a lower case letter", 
 				FormlPackage.eINSTANCE.definedClass_Name,
-				INCORRECT_CLASS_NAME,
+				UNCAPITALIZED_CLASS_NAME,
 				definedClass.name)
 	}
 
@@ -98,6 +137,56 @@ class FormlValidator extends AbstractFormlValidator {
 					INCORRECT_MODEL_END_NAME,
 					model.name,
 					model.endName)
+	}
+	
+	public static val NO_PARTIAL_MODEL_END_NAME = ISSUE_PREFIX + "NoPartialModelEndName"
+	@Check
+	def checkPartialModelEndNameExists(PartialModel partialModel) {
+		if (partialModel.block)
+			if (partialModel.endName === null)
+				warning(
+					"No partial model end name", 
+					FormlPackage.eINSTANCE.partialModel_Name,
+					NO_PARTIAL_MODEL_END_NAME,
+					partialModel.name)
+	}
+
+	public static val INCORRECT_PARTIAL_MODEL_END_NAME = ISSUE_PREFIX + "IncorrectPartialModelEndName"
+	@Check
+	def checkPartialModelEndName(PartialModel partialModel) {
+		if (partialModel.block)
+			if (partialModel.endName != partialModel.name)
+				warning(
+					"Partial model end name (" + partialModel.endName + ") different from partial model name (" + partialModel.name +")", 
+					FormlPackage.eINSTANCE.partialModel_EndName,
+					INCORRECT_PARTIAL_MODEL_END_NAME,
+					partialModel.name,
+					partialModel.endName)
+	}
+	
+	public static val NO_CLASS_END_NAME = ISSUE_PREFIX + "NoClassEndName"
+	@Check
+	def checkClassEndNameExists(DefinedClass definedClass) {
+		if (definedClass.block)
+			if (definedClass.endName === null)
+				warning(
+					"No class end name", 
+					FormlPackage.eINSTANCE.definedClass_Name,
+					NO_CLASS_END_NAME,
+					definedClass.name)
+	}
+
+	public static val INCORRECT_CLASS_END_NAME = ISSUE_PREFIX + "IncorrectClassEndName"
+	@Check
+	def checkClassEndName(DefinedClass definedClass) {
+		if (definedClass.block)
+			if (definedClass.endName != definedClass.name)
+				warning(
+					"Partial model end name (" + definedClass.endName + ") different from partial model name (" + definedClass.name +")", 
+					FormlPackage.eINSTANCE.definedClass_EndName,
+					INCORRECT_CLASS_END_NAME,
+					definedClass.name,
+					definedClass.endName)
 	}
 
 /**

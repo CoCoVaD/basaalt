@@ -23,8 +23,9 @@ Model:
 	)
 	/// Verify that Model is not in extension closure
 	/// Warning if 'name' begins with a lower case, with a quick fix
-	/// Warning if a block is provided with no 'endName', with a quick fix
-	/// Verify that if a block is provided with an 'endName', 
+	/// Warning if 'name' begins with a ° or an _
+	/// Warning if a begin-end block is not provided with an 'endName', with a quick fix
+	/// Verify that if a begin-end block is provided with an 'endName', 
 	/// 	it is equal to 'name', with a quick fix
 ;
 
@@ -42,17 +43,19 @@ ModelStatement:
 )	comments+=STRING*
 ;
 
-Block:
-	':' statements+=Statement
-|	{Block} (beginEnd?='begin' statements+=Statement* 'end' endName=ID? ';')
-;
-
-Statement:
-(	class=Class
-|	object=Object
-//|	contract=Contract
-//|	instruction=Instruction
-)	comments+=STRING*
+PartialModel:
+	'partial' 'Model' 
+	name=ID 
+	comments+=STRING*
+	(	':' statements+=ModelStatement
+	|	 block?='begin' statements+=ModelStatement* 'end' endName=ID? ';' 
+	|	';'
+	)
+	/// Warning if 'name' begins with a lower case, with a quick fix
+	/// Warning if 'name' begins with a ° or an _
+	/// Warning if a begin-end block is not provided with an 'endName', with a quick fix
+	/// Verify that if a begin-end block is provided with an 'endName', 
+	/// 	it is equal to 'name', with a quick fix
 ;
 
 Class:
@@ -76,9 +79,16 @@ DefinedClass:
 	(determiner=Determiner)? name=ID
 	comments+=STRING*
 	('extends' extendedClasses+=ExtendedClass (',' extendedClasses+=ExtendedClass)*)? 
-	';'
+	(	':' statements+=ClassStatement
+	|	 block?='begin' statements+=ClassStatement* 'end' endName=ID? ';' 
+	|	';'
+	)
 	//  Verify that 'name' is not in the closure of 'extendedClasses'
 	/// Warning if 'name' begins with a lower case, with a quick fix
+	/// Warning if 'name' begins with a ° or an _
+	/// Warning if a begin-end block is not provided with an 'endName', with a quick fix
+	/// Verify that if a begin-end block is provided with an 'endName', 
+	/// 	it is equal to 'name', with a quick fix
 ;
 
 ExtendedClass:
@@ -100,6 +110,14 @@ State:
 )?	name=ID
 	comments+=STRING*
 	// Verify that the 'DefinedClass' is an Enumeration
+;
+
+ClassStatement:
+(	class=Class
+|	object=Object
+//|	contract=Contract
+//|	instruction=Instruction
+)	comments+=STRING*
 ;
  
 Object:
@@ -129,17 +147,6 @@ Value:
 |	{Value} false?='false'?
 |	{Value} real=Float?
 |	{Value} string=STRING?
-;
-
-PartialModel:
-	'partial' 'Model' 
-	name=ID 
-	comments+=STRING*
-	(block=Block? | ';')
-	/// Warning if 'name' begins with a lower case, with a quick fix
-	// Warning if a block is provided with no 'endName', with a quick fix
-	// Verify that if a block is provided with an 'endName', 
-	// 	it is equal to 'name', with a quick fix
 ;
 
 Float:  
