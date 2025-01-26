@@ -96,7 +96,7 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 			"Proposed end name: '" + issue.data.get(0) + "'", 
 			"",							// no icon for now
 			[ element, context |
-				(element as Model).block.endName = issue.data.get(0)
+				(element as Model).endName = issue.data.get(0)
 			]
 		)
 	}
@@ -106,11 +106,11 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 	// Model modification
 	{	acceptor.accept(
 			issue, 
-			"Change end name", 			// label
-			"Proposed end name: '" + issue.data.get(0) + "'", 
+			"Change end name '" + issue.data.get(1) + "'", 			// label
+			"Proposed end name '" + issue.data.get(0) + "'", 
 			"",							// no icon for now
 			[ element, context |
-				(element as Model).block.endName = issue.data.get(0)
+				(element as Model).endName = issue.data.get(0)
 			]
 		)
 	}

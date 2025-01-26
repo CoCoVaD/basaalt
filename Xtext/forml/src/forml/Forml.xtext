@@ -17,7 +17,10 @@ Model:
 	name=ID 
 	comments+=STRING*
 	('extends' extendedModels+=ExtendedModel (',' extendedModels+=ExtendedModel)*)? 
-	(block=Block | ';')
+	(	':' statements+=ModelStatement
+	|	 block?='begin' statements+=ModelStatement* 'end' endName=ID? ';' 
+	|	';'
+	)
 	/// Verify that Model is not in extension closure
 	/// Warning if 'name' begins with a lower case, with a quick fix
 	/// Warning if a block is provided with no 'endName', with a quick fix
@@ -30,6 +33,15 @@ ExtendedModel:
 	comments+=STRING*
 ;
 
+ModelStatement:
+(	partialModel=PartialModel	
+|	class=Class
+|	object=Object
+//|	contract=Contract
+//|	instruction=Instruction
+)	comments+=STRING*
+;
+
 Block:
 	':' statements+=Statement
 |	{Block} (beginEnd?='begin' statements+=Statement* 'end' endName=ID? ';')
@@ -38,7 +50,7 @@ Block:
 Statement:
 (	class=Class
 |	object=Object
-|	partialModel=PartialModel
+//|	contract=Contract
 //|	instruction=Instruction
 )	comments+=STRING*
 ;
