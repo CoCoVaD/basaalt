@@ -77,16 +77,15 @@ class FormlValidator extends AbstractFormlValidator {
  */
 	public static val NO_MODEL_END_NAME = ISSUE_PREFIX + "NoModelEndName"
 	@Check
-	def checkModelEndName (Model model) {
+	def checkModelEndName(Model model) {
 		if (model.block !== null)
 			if (model.block.endName === null)
 			warning(
-				"Model names should not begin with a lower case letter", 
+				"No model end name", 
 				FormlPackage.eINSTANCE.model_Name,
-				INCORRECT_MODEL_NAME,
+				NO_MODEL_END_NAME,
 				model.name)
 	}
-
 
 /**
  * Extension cycles 
