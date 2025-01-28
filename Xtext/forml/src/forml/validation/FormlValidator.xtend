@@ -24,7 +24,7 @@ class FormlValidator extends AbstractFormlValidator {
 	protected static val ISSUE_PREFIX = 'forml.'
 
 /**
- * Names 
+ * Name 
  *
  */
 	public static val INCORRECT_MODEL_NAME = ISSUE_PREFIX + "IncorrectModelName"
@@ -111,7 +111,7 @@ class FormlValidator extends AbstractFormlValidator {
 	}
 
 /**
- * End names 
+ * No end name
  *
  */
 	public static val NO_MODEL_END_NAME = ISSUE_PREFIX + "NoModelEndName"
@@ -120,23 +120,10 @@ class FormlValidator extends AbstractFormlValidator {
 		if (model.block)
 			if (model.endName === null)
 				warning(
-					"No model end name", 
-					FormlPackage.eINSTANCE.model_Name,
+					"No end name", 
+					FormlPackage.eINSTANCE.model_BlockEnd,
 					NO_MODEL_END_NAME,
 					model.name)
-	}
-
-	public static val INCORRECT_MODEL_END_NAME = ISSUE_PREFIX + "IncorrectModelEndName"
-	@Check
-	def checkModelEndName(Model model) {
-		if (model.block)
-			if (model.endName != model.name)
-				warning(
-					"Model end name (" + model.endName + ") different from model name (" + model.name +")", 
-					FormlPackage.eINSTANCE.model_EndName,
-					INCORRECT_MODEL_END_NAME,
-					model.name,
-					model.endName)
 	}
 	
 	public static val NO_PARTIAL_MODEL_END_NAME = ISSUE_PREFIX + "NoPartialModelEndName"
@@ -145,23 +132,10 @@ class FormlValidator extends AbstractFormlValidator {
 		if (partialModel.block)
 			if (partialModel.endName === null)
 				warning(
-					"No partial model end name", 
-					FormlPackage.eINSTANCE.partialModel_Name,
+					"No end name", 
+					FormlPackage.eINSTANCE.partialModel_BlockEnd,
 					NO_PARTIAL_MODEL_END_NAME,
 					partialModel.name)
-	}
-
-	public static val INCORRECT_PARTIAL_MODEL_END_NAME = ISSUE_PREFIX + "IncorrectPartialModelEndName"
-	@Check
-	def checkPartialModelEndName(PartialModel partialModel) {
-		if (partialModel.block)
-			if (partialModel.endName != partialModel.name)
-				warning(
-					"Partial model end name (" + partialModel.endName + ") different from partial model name (" + partialModel.name +")", 
-					FormlPackage.eINSTANCE.partialModel_EndName,
-					INCORRECT_PARTIAL_MODEL_END_NAME,
-					partialModel.name,
-					partialModel.endName)
 	}
 	
 	public static val NO_CLASS_END_NAME = ISSUE_PREFIX + "NoClassEndName"
@@ -170,10 +144,52 @@ class FormlValidator extends AbstractFormlValidator {
 		if (definedClass.block)
 			if (definedClass.endName === null)
 				warning(
-					"No class end name", 
-					FormlPackage.eINSTANCE.definedClass_Name,
+					"No end name", 
+					FormlPackage.eINSTANCE.definedClass_BlockEnd,
 					NO_CLASS_END_NAME,
 					definedClass.name)
+	}
+	
+	public static val NO_OBJECT_END_NAME = ISSUE_PREFIX + "NoObjectEndName"
+	@Check
+	def checkObjectEndNameExists(Object object) {
+		if (object.block)
+			if (object.endName === null)
+				warning(
+					"No end name", 
+					FormlPackage.eINSTANCE.object_BlockEnd,
+					NO_OBJECT_END_NAME,
+					object.name)
+	}
+
+/**
+ * End name different from name 
+ *
+ */
+	public static val INCORRECT_MODEL_END_NAME = ISSUE_PREFIX + "IncorrectModelEndName"
+	@Check
+	def checkModelEndName(Model model) {
+		if (model.block)
+			if (model.endName != model.name)
+				error(
+					"End name (" + model.endName + ") different from name (" + model.name +")", 
+					FormlPackage.eINSTANCE.model_EndName,
+					INCORRECT_MODEL_END_NAME,
+					model.name,
+					model.endName)
+	}
+
+	public static val INCORRECT_PARTIAL_MODEL_END_NAME = ISSUE_PREFIX + "IncorrectPartialModelEndName"
+	@Check
+	def checkPartialModelEndName(PartialModel partialModel) {
+		if (partialModel.block)
+			if (partialModel.endName != partialModel.name)
+				error(
+					"End name (" + partialModel.endName + ") different from name (" + partialModel.name +")", 
+					FormlPackage.eINSTANCE.partialModel_EndName,
+					INCORRECT_PARTIAL_MODEL_END_NAME,
+					partialModel.name,
+					partialModel.endName)
 	}
 
 	public static val INCORRECT_CLASS_END_NAME = ISSUE_PREFIX + "IncorrectClassEndName"
@@ -181,25 +197,38 @@ class FormlValidator extends AbstractFormlValidator {
 	def checkClassEndName(DefinedClass definedClass) {
 		if (definedClass.block)
 			if (definedClass.endName != definedClass.name)
-				warning(
-					"Partial model end name (" + definedClass.endName + ") different from partial model name (" + definedClass.name +")", 
+				error(
+					"End name (" + definedClass.endName + ") different from name (" + definedClass.name +")", 
 					FormlPackage.eINSTANCE.definedClass_EndName,
 					INCORRECT_CLASS_END_NAME,
 					definedClass.name,
 					definedClass.endName)
 	}
 
+	public static val INCORRECT_OBJECT_END_NAME = ISSUE_PREFIX + "IncorrectObjectEndName"
+	@Check
+	def checkOjectEndName(Object object) {
+		if (object.block)
+			if (object.endName != object.name)
+				error(
+					"End name (" + object.endName + ") different from name (" + object.name +")", 
+					FormlPackage.eINSTANCE.object_EndName,
+					INCORRECT_OBJECT_END_NAME,
+					object.name,
+					object.endName)
+	}
+
 /**
  * Extension cycles 
  *
  */
-	def void collectExtensions(HashSet<Model> collectedExtendedModels, HashSet<Model> visitedModels, Model m) {
+	def void collectExtendedModels(HashSet<Model> collectedModels, HashSet<Model> visitedModels, Model m) {
 		if (!visitedModels.contains(m)) {
 			visitedModels.add(m)
-			if (!collectedExtendedModels.contains(m)) collectedExtendedModels.add(m)
+			if (!collectedModels.contains(m)) collectedModels.add(m)
 			if (m.extendedModels !== null)
 				for (extendedModel : m.extendedModels) 
-					collectExtensions(collectedExtendedModels, visitedModels, extendedModel.model)
+					collectExtendedModels(collectedModels, visitedModels, extendedModel.model)
 		}		
 	}
  
@@ -208,15 +237,41 @@ class FormlValidator extends AbstractFormlValidator {
 		if (m.extendedModels === null)
 			return // nothing to check
 			
-		val HashSet<Model> collectedExtendedModels = newHashSet
+		val HashSet<Model> collectedModels = newHashSet
 		val HashSet<Model> visitedModels = newHashSet
 		for (extendedModel : m.extendedModels) 
-			collectExtensions(collectedExtendedModels, visitedModels, extendedModel.model)
+			collectExtendedModels(collectedModels, visitedModels, extendedModel.model)
 		
-		if (collectedExtendedModels.contains(m)) 
+		if (collectedModels.contains(m)) 
 			error(
-				"Cycle in hierarchy extension of Model '" + m.name + "'",
+				"Cycle in hierarchy extension of model '" + m.name + "'",
 				FormlPackage.eINSTANCE.model_ExtendedModels)
 	}
 	
+	def void collectExtendedClasses(HashSet<DefinedClass> collectedClasses, HashSet<DefinedClass> visitedClasses, DefinedClass c) {
+		if (!visitedClasses.contains(c)) {
+			visitedClasses.add(c)
+			if (!collectedClasses.contains(c)) collectedClasses.add(c)
+			if (c.extendedClasses !== null)
+				for (extendedClass : c.extendedClasses) 
+					if (extendedClass.definedClass !== null)
+						collectExtendedClasses(collectedClasses, visitedClasses, extendedClass.definedClass)
+		}		
+	}
+ 
+	@Check
+	def checkClasslNotInExtensionClosure(DefinedClass c) {
+		if (c.extendedClasses === null)
+			return // nothing to check
+			
+		val HashSet<DefinedClass> collectedClasses = newHashSet
+		val HashSet<DefinedClass> visitedClasses = newHashSet
+		for (extendedClass : c.extendedClasses) 
+			collectExtendedClasses(collectedClasses, visitedClasses, extendedClass.definedClass)
+		
+		if (collectedClasses.contains(c)) 
+			error(
+				"Cycle in hierarchy extension of class '" + c.name + "'",
+				FormlPackage.eINSTANCE.definedClass_ExtendedClasses)
+	}
 }

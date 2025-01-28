@@ -18,7 +18,7 @@ Model:
 	comments+=STRING*
 	('extends' extendedModels+=ExtendedModel (',' extendedModels+=ExtendedModel)*)? 
 	(	':' statements+=ModelStatement
-	|	 block?='begin' statements+=ModelStatement* 'end' endName=ID? ';' 
+	|	 block?='begin' statements+=ModelStatement* blockEnd?='end' endName=ID? ';' 
 	|	';'
 	)
 	/// Verify that Model is not in extension closure
@@ -48,7 +48,7 @@ PartialModel:
 	name=ID 
 	comments+=STRING*
 	(	':' statements+=ModelStatement
-	|	 block?='begin' statements+=ModelStatement* 'end' endName=ID? ';' 
+	|	 block?='begin' statements+=ModelStatement* blockEnd?='end' endName=ID? ';' 
 	|	';'
 	)
 	/// Warning if 'name' begins with a lower case, with a quick fix
@@ -79,11 +79,11 @@ DefinedClass:
 	(determiner=Determiner)? name=ID
 	comments+=STRING*
 	('extends' extendedClasses+=ExtendedClass (',' extendedClasses+=ExtendedClass)*)? 
-	(	':' statements+=ClassStatement
-	|	 block?='begin' statements+=ClassStatement* 'end' endName=ID? ';' 
+	(	':' statements+=Statement
+	|	 block?='begin' statements+=Statement* blockEnd?='end' endName=ID? ';' 
 	|	';'
 	)
-	//  Verify that 'name' is not in the closure of 'extendedClasses'
+	///  Verify that 'name' is not in the closure of 'extendedClasses'
 	/// Warning if 'name' begins with a lower case, with a quick fix
 	/// Warning if 'name' begins with a ° or an _
 	/// Warning if a begin-end block is not provided with an 'endName', with a quick fix
@@ -93,7 +93,7 @@ DefinedClass:
 
 ExtendedClass:
 (	preDefinedClass=PredefinedClass
-|	definedClass=[Class]
+|	definedClass=[DefinedClass]
 )	comments+=STRING*
 ;
 
@@ -112,7 +112,7 @@ State:
 	// Verify that the 'DefinedClass' is an Enumeration
 ;
 
-ClassStatement:
+Statement:
 (	class=Class
 |	object=Object
 //|	contract=Contract
@@ -125,12 +125,17 @@ Object:
 	class=ObjectClasses
 	(determiner=Determiner)? name=ID
 	comments+=STRING*
-	('is' value=Value)?
-	';'
-	// Verify that the same 'name' is not declared with different types
+	(	is?='is' value=Value ';' valueComments+=STRING*
+	|	':' statements+=Statement
+	|	 block?='begin' statements+=Statement* blockEnd?='end' endName=ID? ';' 
+	|	';'
+	)
 	/// Warning if 'name' begins with an upper case, with a quick fix
+	/// Warning if a begin-end block is not provided with an 'endName', with a quick fix
+	/// Verify that if a begin-end block is provided with an 'endName', 
+	/// 	it is equal to 'name', with a quick fix
+	// Verify that the same 'name' is not declared with different types
 ;
-
 
 ObjectClasses:
 	classes+=ObjectClass (',' classes+=ObjectClass)*

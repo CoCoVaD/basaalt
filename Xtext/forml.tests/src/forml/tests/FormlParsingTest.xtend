@@ -480,4 +480,36 @@ class FormlParsingTest {
 		val errors = result.eResource.errors
 		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
 	}
+	
+	@Test
+	def void Test08_03() {
+		val result = parseHelper.parse('''
+			Model TestModel begin 
+				Class Client;
+				external Client client1 begin
+					Integer i is 0;
+					Boolean b;
+					Class C;
+				end client1;
+				main Object bps;
+			end TestModel;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
+	def void Test08_04() {
+		val result = parseHelper.parse('''
+			Model TestModel begin 
+				Class Client;
+				external Client client1 : Integer i is 0;
+				main Object bps;
+			end TestModel;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
 }

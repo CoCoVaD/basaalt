@@ -11,6 +11,7 @@ import forml.validation.FormlValidator
 import forml.forml.Model
 import forml.forml.PartialModel
 import forml.forml.DefinedClass
+import forml.forml.Object
 
 /**
  * Custom quickfixes.
@@ -19,7 +20,7 @@ import forml.forml.DefinedClass
  */
 class FormlQuickfixProvider extends DefaultQuickfixProvider {
 /**
- * Names 
+ * Name 
  *
  */
 	@Fix(FormlValidator.UNCAPITALIZED_MODEL_NAME)
@@ -83,7 +84,7 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 	}
 	
 /**
- * End names 
+ * No end name
  *
  */
 	@Fix(FormlValidator.NO_MODEL_END_NAME)
@@ -99,7 +100,53 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 			]
 		)
 	}
+	
+	@Fix(FormlValidator.NO_PARTIAL_MODEL_END_NAME)
+	def addPartialModelEndName(Issue issue, IssueResolutionAcceptor acceptor) 
+	// Model modification
+	{	acceptor.accept(
+			issue, 
+			"Add end name", 			// label
+			"Proposed end name '" + issue.data.get(0) + "'", 
+			"",							// no icon for now
+			[ element, context |
+				(element as PartialModel).endName = issue.data.get(0)
+			]
+		)
+	}
+	
+	@Fix(FormlValidator.NO_CLASS_END_NAME)
+	def addClassEndName(Issue issue, IssueResolutionAcceptor acceptor) 
+	// Model modification
+	{	acceptor.accept(
+			issue, 
+			"Add end name", 			// label
+			"Proposed end name '" + issue.data.get(0) + "'", 
+			"",							// no icon for now
+			[ element, context |
+				(element as DefinedClass).endName = issue.data.get(0)
+			]
+		)
+	}
 
+	@Fix(FormlValidator.NO_OBJECT_END_NAME)
+	def addObjectEndName(Issue issue, IssueResolutionAcceptor acceptor) 
+	// Model modification
+	{	acceptor.accept(
+			issue, 
+			"Add end name", 			// label
+			"Proposed end name '" + issue.data.get(0) + "'", 
+			"",							// no icon for now
+			[ element, context |
+				(element as Object).endName = issue.data.get(0)
+			]
+		)
+	}
+
+/**
+ * End name different from name
+ *
+ */
 	@Fix(FormlValidator.INCORRECT_MODEL_END_NAME)
 	def changeModelEndName(Issue issue, IssueResolutionAcceptor acceptor) 
 	// Model modification
@@ -119,25 +166,11 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 	// Model modification
 	{	acceptor.accept(
 			issue, 
-			"Change model name '" + issue.data.get(0) + "' to '" + issue.data.get(1) + "'", // label
-			"Proposed new model name '" + issue.data.get(1) + "'", 
+			"Change name '" + issue.data.get(0) + "' to '" + issue.data.get(1) + "'", // label
+			"Proposed name '" + issue.data.get(1) + "'", 
 			"",							// no icon for now
 			[ element, context |
 				(element as Model).name = issue.data.get(1)
-			]
-		)
-	}
-	
-	@Fix(FormlValidator.NO_PARTIAL_MODEL_END_NAME)
-	def addPartialModelEndName(Issue issue, IssueResolutionAcceptor acceptor) 
-	// Model modification
-	{	acceptor.accept(
-			issue, 
-			"Add end name", 			// label
-			"Proposed end name '" + issue.data.get(0) + "'", 
-			"",							// no icon for now
-			[ element, context |
-				(element as PartialModel).endName = issue.data.get(0)
 			]
 		)
 	}
@@ -161,25 +194,11 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 	// Model modification
 	{	acceptor.accept(
 			issue, 
-			"Change model name '" + issue.data.get(0) + "' to '" + issue.data.get(1) + "'", // label
-			"Proposed new model name '" + issue.data.get(1) + "'", 
+			"Change name '" + issue.data.get(0) + "' to '" + issue.data.get(1) + "'", // label
+			"Proposed new name '" + issue.data.get(1) + "'", 
 			"",							// no icon for now
 			[ element, context |
 				(element as PartialModel).name = issue.data.get(1)
-			]
-		)
-	}
-	
-	@Fix(FormlValidator.NO_CLASS_END_NAME)
-	def addClassEndName(Issue issue, IssueResolutionAcceptor acceptor) 
-	// Model modification
-	{	acceptor.accept(
-			issue, 
-			"Add end name", 			// label
-			"Proposed end name '" + issue.data.get(0) + "'", 
-			"",							// no icon for now
-			[ element, context |
-				(element as DefinedClass).endName = issue.data.get(0)
 			]
 		)
 	}
@@ -203,11 +222,39 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 	// Model modification
 	{	acceptor.accept(
 			issue, 
-			"Change model name '" + issue.data.get(0) + "' to '" + issue.data.get(1) + "'", // label
-			"Proposed new model name '" + issue.data.get(1) + "'", 
+			"Change name '" + issue.data.get(0) + "' to '" + issue.data.get(1) + "'", // label
+			"Proposed new name '" + issue.data.get(1) + "'", 
 			"",							// no icon for now
 			[ element, context |
 				(element as DefinedClass).name = issue.data.get(1)
+			]
+		)
+	}
+
+	@Fix(FormlValidator.INCORRECT_OBJECT_END_NAME)
+	def changeObjectEndName(Issue issue, IssueResolutionAcceptor acceptor) 
+	// Model modification
+	{	acceptor.accept(
+			issue, 
+			"Change end name '" + issue.data.get(1) + "' to '" + issue.data.get(0) + "'", 	// label
+			"Proposed new end name '" + issue.data.get(0) + "'", 
+			"",							// no icon for now
+			[ element, context |
+				(element as Object).endName = issue.data.get(0)
+			]
+		)
+	}
+
+	@Fix(FormlValidator.INCORRECT_OBJECT_END_NAME)
+	def changeObjectName(Issue issue, IssueResolutionAcceptor acceptor) 
+	// Model modification
+	{	acceptor.accept(
+			issue, 
+			"Change name '" + issue.data.get(0) + "' to '" + issue.data.get(1) + "'", // label
+			"Proposed new name '" + issue.data.get(1) + "'", 
+			"",							// no icon for now
+			[ element, context |
+				(element as Object).name = issue.data.get(1)
 			]
 		)
 	}
