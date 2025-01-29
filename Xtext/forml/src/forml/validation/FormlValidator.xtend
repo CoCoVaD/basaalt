@@ -169,14 +169,17 @@ class FormlValidator extends AbstractFormlValidator {
 	public static val INCORRECT_MODEL_END_NAME = ISSUE_PREFIX + "IncorrectModelEndName"
 	@Check
 	def checkModelEndName(Model model) {
-		if (model.block)
-			if (model.endName != model.name)
+		if (model.block) {
+			val name = model.name
+			val endName = model.endName
+			if (model.endName != name)
 				error(
-					"End name (" + model.endName + ") different from name (" + model.name +")", 
+					"End name (" + endName + ") different from name (" + name + ")", 
 					FormlPackage.eINSTANCE.model_EndName,
 					INCORRECT_MODEL_END_NAME,
-					model.name,
-					model.endName)
+					name,
+					endName)
+		}			
 	}
 
 	public static val INCORRECT_PARTIAL_MODEL_END_NAME = ISSUE_PREFIX + "IncorrectPartialModelEndName"

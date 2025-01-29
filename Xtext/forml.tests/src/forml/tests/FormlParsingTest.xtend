@@ -14,6 +14,7 @@ import org.junit.jupiter.api.^extension.ExtendWith
 
 @ExtendWith(InjectionExtension)
 @InjectWith(FormlInjectorProvider)
+
 class FormlParsingTest {
 	@Inject
 	ParseHelper<Models> parseHelper
