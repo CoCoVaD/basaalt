@@ -1,29 +1,22 @@
 package forml.validation
 
-// 29 January 2025
-
 import org.eclipse.xtext.validation.Check
 import static extension java.lang.Character.*
 
 import forml.forml.FormlPackage
+import forml.validation.FormlValidator
 import forml.forml.Model
 import forml.forml.PartialModel
 import forml.forml.DefinedClass
 import forml.forml.Object
 
-/**
- * This class contains custom validators for names. 
- *
- * It checks that
- * 	- template names (models, partial models and classes) begin with an upper case letter
- * 	- instance names (objects) and contract names begin with a lower case letter, or with a ° or an _
- */
-
 class FormlNameValidator extends AbstractFormlValidator {
-	
-	protected static val ISSUE_PREFIX = 'forml.'
-
-	public static val INCORRECT_MODEL_NAME = ISSUE_PREFIX + "IncorrectModelName"
+/*
+ * Checks that model, partial model and class names start with an upper case letter
+ * Checks that object names start with a lower case letter, or a ° or an _
+ * 
+ */
+	public static val INCORRECT_MODEL_NAME = FormlValidator.ISSUE_PREFIX + "IncorrectModelName"
 	@Check
 	def checkModelNameStartsWithUppercase (Model model) {
 		val char degree     = '°'	// This is necessary to prevent Xtext from
@@ -36,7 +29,7 @@ class FormlNameValidator extends AbstractFormlValidator {
 				model.name)
 	}
 
-	public static val UNCAPITALIZED_MODEL_NAME = ISSUE_PREFIX + "UncapitalizedModelName"
+	public static val UNCAPITALIZED_MODEL_NAME = FormlValidator.ISSUE_PREFIX + "UncapitalizedModelName"
 	@Check
 	def checkModelNameDoesNotStartsWithLowercase (Model model) {
 		if (model.name.charAt(0).lowerCase)
@@ -47,7 +40,7 @@ class FormlNameValidator extends AbstractFormlValidator {
 				model.name)
 	}
 
-	public static val INCORRECT_PARTIAL_MODEL_NAME = ISSUE_PREFIX + "IncorrectPartialModelName"
+	public static val INCORRECT_PARTIAL_MODEL_NAME = FormlValidator.ISSUE_PREFIX + "IncorrectPartialModelName"
 	@Check
 	def checkPartialModelNameStartsWithUppercase (PartialModel partialModel) {
 		val char degree     = '°'	// This is necessary to prevent Xtext from
@@ -60,7 +53,7 @@ class FormlNameValidator extends AbstractFormlValidator {
 				partialModel.name)
 	}
 
-	public static val UNCAPITALIZED_PARTIAL_MODEL_NAME = ISSUE_PREFIX + "UncapitalizedPartialModelName"
+	public static val UNCAPITALIZED_PARTIAL_MODEL_NAME = FormlValidator.ISSUE_PREFIX + "UncapitalizedPartialModelName"
 	@Check
 	def checkPartialModelNameDoesNotStartWithLowercase (PartialModel partialModel) {
 		if (partialModel.name.charAt(0).lowerCase)
@@ -71,8 +64,7 @@ class FormlNameValidator extends AbstractFormlValidator {
 				partialModel.name)
 	}
 
-
-	public static val INCORRECT_CLASS_NAME = ISSUE_PREFIX + "IncorrectClassName"
+	public static val INCORRECT_CLASS_NAME = FormlValidator.ISSUE_PREFIX + "IncorrectClassName"
 	@Check
 	def checkClassNameStartsWithUppercase (DefinedClass definedlass) {
 		val char degree     = '°'	// This is necessary to prevent Xtext from
@@ -84,7 +76,7 @@ class FormlNameValidator extends AbstractFormlValidator {
 				INCORRECT_CLASS_NAME,
 				definedlass.name)
 	}
-	public static val UNCAPITALIZED_CLASS_NAME = ISSUE_PREFIX + "UncapitalizedClassName"
+	public static val UNCAPITALIZED_CLASS_NAME = FormlValidator.ISSUE_PREFIX + "UncapitalizedClassName"
 	@Check
 	def checkClassNameDoesNotStartWithLowercase (DefinedClass definedClass) {
 		if (definedClass.name.charAt(0).lowerCase)
@@ -95,16 +87,14 @@ class FormlNameValidator extends AbstractFormlValidator {
 				definedClass.name)
 	}
 
-	public static val INCORRECT_OBJECT_NAME = ISSUE_PREFIX + "IncorrectObjectName"
+	public static val CAPITALIZED_OBJECT_NAME = FormlValidator.ISSUE_PREFIX + "IncorrectObjectName"
 	@Check
 	def checkObjectNameDoesNotStartsWithUppercase (Object object) {
 		if (object.name.charAt(0).upperCase)
 			warning(
 				"Object names should not begin with an upper case letter", 
 				FormlPackage.eINSTANCE.object_Name,
-				INCORRECT_OBJECT_NAME,
+				CAPITALIZED_OBJECT_NAME,
 				object.name)
 	}
-
-	
 }

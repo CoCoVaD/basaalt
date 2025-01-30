@@ -36,7 +36,7 @@ ExtendedModel:
 
 ModelStatement:
 (	partialModel=PartialModel	
-|	class=Class
+|	definedClass=DefinedClass
 |	object=Object
 //|	contract=Contract
 //|	instruction=Instruction

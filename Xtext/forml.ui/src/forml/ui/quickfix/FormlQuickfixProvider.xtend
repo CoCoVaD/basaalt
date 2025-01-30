@@ -9,6 +9,7 @@ import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider
 import org.eclipse.xtext.ui.editor.quickfix.Fix
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.validation.Issue
+
 import forml.validation.FormlNameValidator
 import forml.validation.FormlEndNameValidator
 import forml.forml.Model
@@ -71,7 +72,7 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 		  ]
 	}
 
-	@Fix(FormlNameValidator.INCORRECT_OBJECT_NAME)
+	@Fix(FormlNameValidator.CAPITALIZED_OBJECT_NAME)
 	def unCapitalizeObjectName(Issue issue, IssueResolutionAcceptor acceptor) 
 	// Textual modification
 	{	acceptor.accept(

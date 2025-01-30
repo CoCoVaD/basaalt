@@ -5,20 +5,18 @@ package forml.validation
 import org.eclipse.xtext.validation.Check
 
 import forml.forml.FormlPackage
+import forml.validation.FormlValidator
 import forml.forml.Model
 import forml.forml.PartialModel
 import forml.forml.DefinedClass
 import forml.forml.Object
 
 class FormlEndNameValidator extends AbstractFormlValidator {
-	
-	protected static val ISSUE_PREFIX = 'forml.'
-
 /**
  * No end name
  *
  */
-	public static val NO_MODEL_END_NAME = ISSUE_PREFIX + "NoModelEndName"
+	public static val NO_MODEL_END_NAME = FormlValidator.ISSUE_PREFIX + "NoModelEndName"
 	@Check
 	def checkModelEndNameExists(Model model) {
 		if (model.block)
@@ -30,7 +28,7 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 					model.name)
 	}
 	
-	public static val NO_PARTIAL_MODEL_END_NAME = ISSUE_PREFIX + "NoPartialModelEndName"
+	public static val NO_PARTIAL_MODEL_END_NAME = FormlValidator.ISSUE_PREFIX + "NoPartialModelEndName"
 	@Check
 	def checkPartialModelEndNameExists(PartialModel partialModel) {
 		if (partialModel.block)
@@ -42,7 +40,7 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 					partialModel.name)
 	}
 	
-	public static val NO_CLASS_END_NAME = ISSUE_PREFIX + "NoClassEndName"
+	public static val NO_CLASS_END_NAME = FormlValidator.ISSUE_PREFIX + "NoClassEndName"
 	@Check
 	def checkClassEndNameExists(DefinedClass definedClass) {
 		if (definedClass.block)
@@ -54,7 +52,7 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 					definedClass.name)
 	}
 	
-	public static val NO_OBJECT_END_NAME = ISSUE_PREFIX + "NoObjectEndName"
+	public static val NO_OBJECT_END_NAME = FormlValidator.ISSUE_PREFIX + "NoObjectEndName"
 	@Check
 	def checkObjectEndNameExists(Object object) {
 		if (object.block)
@@ -70,7 +68,7 @@ class FormlEndNameValidator extends AbstractFormlValidator {
  * End name different from name 
  *
  */
-	public static val INCORRECT_MODEL_END_NAME = ISSUE_PREFIX + "IncorrectModelEndName"
+	public static val INCORRECT_MODEL_END_NAME = FormlValidator.ISSUE_PREFIX + "IncorrectModelEndName"
 	@Check
 	def checkModelEndName(Model model) {
 		if (model.block) {
@@ -86,7 +84,7 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 		}			
 	}
 
-	public static val INCORRECT_PARTIAL_MODEL_END_NAME = ISSUE_PREFIX + "IncorrectPartialModelEndName"
+	public static val INCORRECT_PARTIAL_MODEL_END_NAME = FormlValidator.ISSUE_PREFIX + "IncorrectPartialModelEndName"
 	@Check
 	def checkPartialModelEndName(PartialModel partialModel) {
 		if (partialModel.block)
@@ -99,7 +97,7 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 					partialModel.endName)
 	}
 
-	public static val INCORRECT_CLASS_END_NAME = ISSUE_PREFIX + "IncorrectClassEndName"
+	public static val INCORRECT_CLASS_END_NAME = FormlValidator.ISSUE_PREFIX + "IncorrectClassEndName"
 	@Check
 	def checkClassEndName(DefinedClass definedClass) {
 		if (definedClass.block)
@@ -112,7 +110,7 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 					definedClass.endName)
 	}
 
-	public static val INCORRECT_OBJECT_END_NAME = ISSUE_PREFIX + "IncorrectObjectEndName"
+	public static val INCORRECT_OBJECT_END_NAME = FormlValidator.ISSUE_PREFIX + "IncorrectObjectEndName"
 	@Check
 	def checkOjectEndName(Object object) {
 		if (object.block)
