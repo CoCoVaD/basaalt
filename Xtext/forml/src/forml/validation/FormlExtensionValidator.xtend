@@ -23,7 +23,7 @@ class FormlExtensionValidator extends AbstractFormlValidator {
  
 	public static val CYCLE_WITH_EXTENDED_MODELS = FormlValidator.ISSUE_PREFIX + "CycleWithExtendedModels"
 	@Check
-	def checkModelNotInExtensionClosure(Model m) {
+	def checkModelIsNotInExtensionClosure(Model m) {
 		if (m.extendedModels === null)
 			return // nothing to check
 			
@@ -34,7 +34,7 @@ class FormlExtensionValidator extends AbstractFormlValidator {
 		
 		if (collectedModels.contains(m)) 
 			error(
-				"Cycle in hierarchy extension of model '" + m.name + "'",
+				"Cycle in hierarchy extension of model " + m.name,
 				FormlPackage.eINSTANCE.model_ExtendedModels,
 				CYCLE_WITH_EXTENDED_MODELS)
 	}
@@ -52,7 +52,7 @@ class FormlExtensionValidator extends AbstractFormlValidator {
  
 	public static val CYCLE_WITH_EXTENDED_CLASSES = FormlValidator.ISSUE_PREFIX + "CycleWithExtendedClasses"
 	@Check
-	def checkClasslNotInExtensionClosure(DefinedClass c) {
+	def checkClassIsNotInExtensionClosure(DefinedClass c) {
 		if (c.extendedClasses === null)
 			return // nothing to check
 			
@@ -63,7 +63,7 @@ class FormlExtensionValidator extends AbstractFormlValidator {
 		
 		if (collectedClasses.contains(c)) 
 			error(
-				"Cycle in hierarchy extension of class '" + c.name + "'",
+				"Cycle in hierarchy extension of class " + c.name,
 				FormlPackage.eINSTANCE.definedClass_ExtendedClasses,
 				CYCLE_WITH_EXTENDED_CLASSES)
 	}

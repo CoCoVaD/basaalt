@@ -76,7 +76,7 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 			val endName = model.endName
 			if (model.endName != name)
 				error(
-					"End name (" + endName + ") different from name (" + name + ")", 
+					"End name " + endName + " different from name " + name, 
 					FormlPackage.eINSTANCE.model_EndName,
 					INCORRECT_MODEL_END_NAME,
 					name,
@@ -90,7 +90,7 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 		if (partialModel.block)
 			if (partialModel.endName != partialModel.name)
 				error(
-					"End name (" + partialModel.endName + ") different from name (" + partialModel.name +")", 
+					"End name " + partialModel.endName + " different from name " + partialModel.name, 
 					FormlPackage.eINSTANCE.partialModel_EndName,
 					INCORRECT_PARTIAL_MODEL_END_NAME,
 					partialModel.name,
@@ -103,7 +103,7 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 		if (definedClass.block)
 			if (definedClass.endName != definedClass.name)
 				error(
-					"End name (" + definedClass.endName + ") different from name (" + definedClass.name +")", 
+					"End name " + definedClass.endName + " different from name " + definedClass.name, 
 					FormlPackage.eINSTANCE.definedClass_EndName,
 					INCORRECT_CLASS_END_NAME,
 					definedClass.name,
@@ -116,7 +116,7 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 		if (object.block)
 			if (object.endName != object.name)
 				error(
-					"End name (" + object.endName + ") different from name (" + object.name +")", 
+					"End name " + object.endName + " different from name " + object.name, 
 					FormlPackage.eINSTANCE.object_EndName,
 					INCORRECT_OBJECT_END_NAME,
 					object.name,

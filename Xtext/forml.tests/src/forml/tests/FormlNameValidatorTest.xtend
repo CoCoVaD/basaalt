@@ -22,32 +22,35 @@ class FormlNameValidatorTest {
 	ParseHelper<Models> parseHelper
 	@Inject extension ValidationTestHelper
 	
+	/*
+	 * Model names
+	 */
 	@Test
-	def void TestCheckModelNameStartsWithUppercase_01() {
+	def void TestModelNameIsNotDegree () {
+		val models = parseHelper.parse('''
+			Model °;
+		''')
+		models.assertWarning (
+			FormlPackage.eINSTANCE.model,
+			FormlNameValidator.INCORRECT_MODEL_NAME,
+			"Models should not be named °"
+		)
+	}
+	
+	@Test
+	def void TestModelNameFirstCharIsNotDegree () {
 		val models = parseHelper.parse('''
 			Model °ModelName;
 		''')
 		models.assertWarning (
 			FormlPackage.eINSTANCE.model,
-			FormlNameValidator.INCORRECT_MODEL_NAME,
-			"Model names should begin neither with a ° nor with an _"
+			FormlNameValidator.MODEL_NAME_FIRST_CHAR_IS_DEGREE,
+			"Model names should not begin with a °"
 		)
 	}
 	
 	@Test
-	def void TestCheckModelNameStartsWithUppercase_02() {
-		val models = parseHelper.parse('''
-			Model _ModelName;
-		''')
-		models.assertWarning (
-			FormlPackage.eINSTANCE.model,
-			FormlNameValidator.INCORRECT_MODEL_NAME,
-			"Model names should begin neither with a ° nor with an _"
-		)
-	}
-	
-	@Test
-	def void TestCheckModelNameStartsWithUppercase_03() {
+	def void TestModelNameFirstCharIsNotLowerCase () {
 		val models = parseHelper.parse('''
 			Model modelName;
 		''')
@@ -58,8 +61,25 @@ class FormlNameValidatorTest {
 		)
 	}
 	
+	/*
+	 * Partial model names
+	 */
 	@Test
-	def void TestCheckPartialModelNameStartsWithUppercase_01() {
+	def void TestPartialModelNameIsNotDegree () {
+		val models = parseHelper.parse('''
+			Model TestModel begin
+				partial Model °;
+			end TestModel;
+		''')
+		models.assertWarning (
+			FormlPackage.eINSTANCE.partialModel,
+			FormlNameValidator.INCORRECT_PARTIAL_MODEL_NAME,
+			"Partial models should not be named °"
+		)
+	}
+	
+	@Test
+	def void TestPartialModelNameFirstCharIsNotDegree () {
 		val models = parseHelper.parse('''
 			Model TestModel begin
 				partial Model °PartialModelName;
@@ -67,27 +87,12 @@ class FormlNameValidatorTest {
 		''')
 		models.assertWarning (
 			FormlPackage.eINSTANCE.partialModel,
-			FormlNameValidator.INCORRECT_PARTIAL_MODEL_NAME,
-			"Partial model names should begin neither with a ° nor with an _"
+			FormlNameValidator.PARTIAL_MODEL_NAME_FIRST_CHAR_IS_DEGREE,
+			"Partial model names should not begin with a °"
 		)
 	}
-	
 	@Test
-	def void TestCheckPartialModelNameStartsWithUppercase_02() {
-		val models = parseHelper.parse('''
-			Model TestModel begin
-				partial Model _PartialModelName;
-			end TestModel;
-		''')
-		models.assertWarning (
-			FormlPackage.eINSTANCE.partialModel,
-			FormlNameValidator.INCORRECT_PARTIAL_MODEL_NAME,
-			"Partial model names should begin neither with a ° nor with an _"
-		)
-	}
-	
-	@Test
-	def void TestCheckPartialkModelNameStartsWithUppercase_03() {
+	def void TestPartialkModelNameFirstCharIsNotLowerCase () {
 		val models = parseHelper.parse('''
 			Model TestModel begin
 				partial Model partialModelName;
@@ -100,8 +105,25 @@ class FormlNameValidatorTest {
 		)
 	}
 	
+	/*
+	 * Class names
+	 */
 	@Test
-	def void TestCheckClassNameStartsWithUppercase_01() {
+	def void TestClassNameIsNotDegree () {
+		val models = parseHelper.parse('''
+			Model TestModel begin
+				Class °;
+			end TestModel;
+		''')
+		models.assertWarning (
+			FormlPackage.eINSTANCE.definedClass,
+			FormlNameValidator.INCORRECT_CLASS_NAME,
+			"Classes should not be named °"
+		)
+	}
+	
+	@Test
+	def void TestClassNameFirstCharIsNotDegree () {
 		val models = parseHelper.parse('''
 			Model TestModel begin
 				Class °ClassName;
@@ -109,27 +131,13 @@ class FormlNameValidatorTest {
 		''')
 		models.assertWarning (
 			FormlPackage.eINSTANCE.definedClass,
-			FormlNameValidator.INCORRECT_CLASS_NAME,
-			"Class names should begin neither with a ° nor with an _"
+			FormlNameValidator.CLASS_NAME_FIRST_CHAR_IS_DEGREE,
+			"Class names should not begin with a °"
 		)
 	}
 	
 	@Test
-	def void TestCheckClassNameStartsWithUppercase_02() {
-		val models = parseHelper.parse('''
-			Model TestModel begin
-				Class _ClassName;
-			end TestModel;
-		''')
-		models.assertWarning (
-			FormlPackage.eINSTANCE.definedClass,
-			FormlNameValidator.INCORRECT_CLASS_NAME,
-			"Class names should begin neither with a ° nor with an _"
-		)
-	}
-	
-	@Test
-	def void TestCheckClassNameStartsWithUppercase_03() {
+	def void TestClassNameFirstCharIsNotLowerCase () {
 		val models = parseHelper.parse('''
 			Model TestModel begin
 				Class className;
@@ -142,8 +150,11 @@ class FormlNameValidatorTest {
 		)
 	}
 	
+	/*
+	 * Object names
+	 */
 	@Test
-	def void TestCheckObjectNameStartsWithUppercase_01() {
+	def void TestObjectNameFirstCharIsNotUpperCase_01 () {
 		val models = parseHelper.parse('''
 			Model TestModel begin
 				Integer Int;
@@ -157,7 +168,7 @@ class FormlNameValidatorTest {
 	}
 	
 	@Test
-	def void TestCheckObjectNameStartsWithUppercase_02() {
+	def void TestObjectNameFirstCharIsNotUpperCase_02 () {
 		val models = parseHelper.parse('''
 			Model TestModel begin
 				Class DefinedClass;

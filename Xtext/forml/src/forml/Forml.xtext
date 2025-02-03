@@ -154,7 +154,7 @@ Value:
 |	{Value} string=STRING?
 ;
 
-Float:  
+Float hidden():  
 (	whole=INT ('.' (decimal=INT | exp=EXPONENT)?)?
 |	'.' (decimal=INT | exp=EXPONENT)
 |	exp=EXPONENT
@@ -162,7 +162,7 @@ Float:
 ;
 
 @Override
-terminal ID: ('a'..'z'|'A'..'Z'|'_'|'°') ('a'..'z'|'A'..'Z'|'_'|'°'|'0'..'9')*;
+terminal ID: ('a'..'z'|'A'..'Z'|'°') ('a'..'z'|'A'..'Z'|'_'|'°'|'0'..'9')*;
 
 terminal EXPONENT: ('0'..'9')+ ('E' | 'e') ('+' | '-')? ('0'..'9')+;
 

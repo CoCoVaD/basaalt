@@ -27,63 +27,94 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
  * Name 
  *
  */
+	@Fix(FormlNameValidator.MODEL_NAME_FIRST_CHAR_IS_DEGREE)
+	def deleteFirstCharOfModelName(Issue issue, IssueResolutionAcceptor acceptor) 
+	// Model modification
+	{	acceptor.accept(
+			issue, 
+			"Delete name first character", 			// label
+			"Change " + issue.data.get(0) + " to " + issue.data.get(0).substring(1), 
+			""										// icon
+		) [	element, context |
+				(element as Model).name = issue.data.get(0).substring(1)
+		  ]
+	}
+
 	@Fix(FormlNameValidator.UNCAPITALIZED_MODEL_NAME)
 	def capitalizeModelName(Issue issue, IssueResolutionAcceptor acceptor) 
-	// Textual modification
+	// Model modification
 	{	acceptor.accept(
 			issue, 
 			"Capitalize name", 			// label
-			"Change '" + issue.data.get(0) + "' to '" + issue.data.get(0).toFirstUpper + "'", 
+			"Change " + issue.data.get(0) + " to " + issue.data.get(0).toFirstUpper, 
 			"upcase.png"				// icon
-		) [	context |
-			val xtextDocument = context.xtextDocument
-			val firstLetter = xtextDocument.get(issue.offset, 1)
-			xtextDocument.replace(issue.offset, 1, firstLetter.toUpperCase)
+		) [	element, context |
+				(element as Model).name = issue.data.get(0).toFirstUpper
+		  ]
+	}
+
+	@Fix(FormlNameValidator.PARTIAL_MODEL_NAME_FIRST_CHAR_IS_DEGREE)
+	def deleteFirstCharOfPartialModelName(Issue issue, IssueResolutionAcceptor acceptor) 
+	// Model modification
+	{	acceptor.accept(
+			issue, 
+			"Delete name first character", 			// label
+			"Change " + issue.data.get(0) + " to " + issue.data.get(0).substring(1), 
+			""										// icon
+		) [	element, context |
+				(element as PartialModel).name = issue.data.get(0).substring(1)
 		  ]
 	}
 
 	@Fix(FormlNameValidator.UNCAPITALIZED_PARTIAL_MODEL_NAME)
 	def capitalizePartialModelName(Issue issue, IssueResolutionAcceptor acceptor) 
-	// Textual modification
+	// Model modification
 	{	acceptor.accept(
 			issue, 
 			"Capitalize name", 			// label
-			"Change '" + issue.data.get(0) + "' to '" + issue.data.get(0).toFirstUpper + "'", 
+			"Change " + issue.data.get(0) + " to " + issue.data.get(0).toFirstUpper, 
 			"upcase.png"				// icon
-		) [	context |
-			val xtextDocument = context.xtextDocument
-			val firstLetter = xtextDocument.get(issue.offset, 1)
-			xtextDocument.replace(issue.offset, 1, firstLetter.toUpperCase)
+		) [	element, context |
+				(element as PartialModel).name = issue.data.get(0).toFirstUpper
+		  ]
+	}
+
+	@Fix(FormlNameValidator.CLASS_NAME_FIRST_CHAR_IS_DEGREE)
+	def deleteFirstCharOfClassName(Issue issue, IssueResolutionAcceptor acceptor) 
+	// Model modification
+	{	acceptor.accept(
+			issue, 
+			"Delete name first character", 			// label
+			"Change " + issue.data.get(0) + " to " + issue.data.get(0).substring(1), 
+			""										// icon
+		) [	element, context |
+				(element as DefinedClass).name = issue.data.get(0).substring(1)
 		  ]
 	}
 	
 @Fix(FormlNameValidator.UNCAPITALIZED_CLASS_NAME)
 	def capitalizeClassName(Issue issue, IssueResolutionAcceptor acceptor) 
-	// Textual modification
+	// Model modification
 	{	acceptor.accept(
 			issue, 
 			"Capitalize name", 			// label
-			"Change '" + issue.data.get(0) + "' to '" + issue.data.get(0).toFirstUpper + "'", 
+			"Change " + issue.data.get(0) + " to " + issue.data.get(0).toFirstUpper, 
 			"upcase.png"				// icon
-		) [	context |
-			val xtextDocument = context.xtextDocument
-			val firstLetter = xtextDocument.get(issue.offset, 1)
-			xtextDocument.replace(issue.offset, 1, firstLetter.toUpperCase)
+		) [	element, context |
+				(element as DefinedClass).name = issue.data.get(0).toFirstUpper
 		  ]
 	}
 
 	@Fix(FormlNameValidator.CAPITALIZED_OBJECT_NAME)
 	def unCapitalizeObjectName(Issue issue, IssueResolutionAcceptor acceptor) 
-	// Textual modification
+	// Model modification
 	{	acceptor.accept(
 			issue, 
 			"Un-capitalize name", 			// label
-			"Change '" + issue.data.get(0) + "' to '" + issue.data.get(0).toFirstLower + "'", 
+			"Change " + issue.data.get(0) + " to " + issue.data.get(0).toFirstLower, 
 			"downcase.png"				// icon
-		) [	context |
-			val xtextDocument = context.xtextDocument
-			val firstLetter = xtextDocument.get(issue.offset, 1)
-			xtextDocument.replace(issue.offset, 1, firstLetter.toLowerCase)
+		) [	element, context |
+				(element as Object).name = issue.data.get(0).toFirstLower
 		  ]
 	}
 	
@@ -97,7 +128,7 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 	{	acceptor.accept(
 			issue, 
 			"Add end name", 			// label
-			"Proposed end name '" + issue.data.get(0) + "'", 
+			"Proposed end name: " + issue.data.get(0), 
 			"",							// no icon for now
 			[ element, context |
 				(element as Model).endName = issue.data.get(0)
@@ -111,7 +142,7 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 	{	acceptor.accept(
 			issue, 
 			"Add end name", 			// label
-			"Proposed end name '" + issue.data.get(0) + "'", 
+			"Proposed end name: " + issue.data.get(0), 
 			"",							// no icon for now
 			[ element, context |
 				(element as PartialModel).endName = issue.data.get(0)
@@ -125,7 +156,7 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 	{	acceptor.accept(
 			issue, 
 			"Add end name", 			// label
-			"Proposed end name '" + issue.data.get(0) + "'", 
+			"Proposed end name: " + issue.data.get(0), 
 			"",							// no icon for now
 			[ element, context |
 				(element as DefinedClass).endName = issue.data.get(0)
@@ -139,7 +170,7 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 	{	acceptor.accept(
 			issue, 
 			"Add end name", 			// label
-			"Proposed end name '" + issue.data.get(0) + "'", 
+			"Proposed end name: " + issue.data.get(0), 
 			"",							// no icon for now
 			[ element, context |
 				(element as Object).endName = issue.data.get(0)
@@ -156,8 +187,8 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 	// Model modification
 	{	acceptor.accept(
 			issue, 
-			"Change end name '" + issue.data.get(1) + "' to '" + issue.data.get(0) + "'", 	// label
-			"Proposed new end name '" + issue.data.get(0) + "'", 
+			"Change end name " + issue.data.get(1) + " to " + issue.data.get(0), 	// label
+			"Proposed new end name: " + issue.data.get(0), 
 			"",							// no icon for now
 			[ element, context |
 				(element as Model).endName = issue.data.get(0)
@@ -170,8 +201,8 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 	// Model modification
 	{	acceptor.accept(
 			issue, 
-			"Change name '" + issue.data.get(0) + "' to '" + issue.data.get(1) + "'", // label
-			"Proposed name '" + issue.data.get(1) + "'", 
+			"Change name " + issue.data.get(0) + " to " + issue.data.get(1), // label
+			"Proposed name: " + issue.data.get(1), 
 			"",							// no icon for now
 			[ element, context |
 				(element as Model).name = issue.data.get(1)
@@ -184,8 +215,8 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 	// Model modification
 	{	acceptor.accept(
 			issue, 
-			"Change end name '" + issue.data.get(1) + "' to '" + issue.data.get(0) + "'", 	// label
-			"Proposed new end name '" + issue.data.get(0) + "'", 
+			"Change end name " + issue.data.get(1) + " to " + issue.data.get(0), 	// label
+			"Proposed new end name: " + issue.data.get(0), 
 			"",							// no icon for now
 			[ element, context |
 				(element as PartialModel).endName = issue.data.get(0)
@@ -198,8 +229,8 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 	// Model modification
 	{	acceptor.accept(
 			issue, 
-			"Change name '" + issue.data.get(0) + "' to '" + issue.data.get(1) + "'", // label
-			"Proposed new name '" + issue.data.get(1) + "'", 
+			"Change name " + issue.data.get(0) + " to " + issue.data.get(1), // label
+			"Proposed new name: " + issue.data.get(1), 
 			"",							// no icon for now
 			[ element, context |
 				(element as PartialModel).name = issue.data.get(1)
@@ -212,8 +243,8 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 	// Model modification
 	{	acceptor.accept(
 			issue, 
-			"Change end name '" + issue.data.get(1) + "' to '" + issue.data.get(0) + "'", 	// label
-			"Proposed new end name '" + issue.data.get(0) + "'", 
+			"Change end name " + issue.data.get(1) + " to " + issue.data.get(0), 	// label
+			"Proposed new end name: " + issue.data.get(0), 
 			"",							// no icon for now
 			[ element, context |
 				(element as DefinedClass).endName = issue.data.get(0)
@@ -226,8 +257,8 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 	// Model modification
 	{	acceptor.accept(
 			issue, 
-			"Change name '" + issue.data.get(0) + "' to '" + issue.data.get(1) + "'", // label
-			"Proposed new name '" + issue.data.get(1) + "'", 
+			"Change name " + issue.data.get(0) + " to " + issue.data.get(1), // label
+			"Proposed new name: " + issue.data.get(1), 
 			"",							// no icon for now
 			[ element, context |
 				(element as DefinedClass).name = issue.data.get(1)
@@ -240,8 +271,8 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 	// Model modification
 	{	acceptor.accept(
 			issue, 
-			"Change end name '" + issue.data.get(1) + "' to '" + issue.data.get(0) + "'", 	// label
-			"Proposed new end name '" + issue.data.get(0) + "'", 
+			"Change end name " + issue.data.get(1) + " to " + issue.data.get(0), 	// label
+			"Proposed new end name: " + issue.data.get(0), 
 			"",							// no icon for now
 			[ element, context |
 				(element as Object).endName = issue.data.get(0)
@@ -254,8 +285,8 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 	// Model modification
 	{	acceptor.accept(
 			issue, 
-			"Change name '" + issue.data.get(0) + "' to '" + issue.data.get(1) + "'", // label
-			"Proposed new name '" + issue.data.get(1) + "'", 
+			"Change name " + issue.data.get(0) + " to " + issue.data.get(1), // label
+			"Proposed new name: " + issue.data.get(1), 
 			"",							// no icon for now
 			[ element, context |
 				(element as Object).name = issue.data.get(1)

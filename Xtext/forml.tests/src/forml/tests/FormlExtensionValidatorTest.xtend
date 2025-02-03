@@ -21,7 +21,7 @@ class FormlExtensionValidatorTest {
 	@Inject extension ValidationTestHelper
 	
 	@Test
-	def void TestCheckModelExtension_01() {
+	def void TestModelExtension_01() {
 		val models = parseHelper.parse('''
 			Model ModelName extends ModelName;
 		''')
@@ -29,11 +29,11 @@ class FormlExtensionValidatorTest {
 		models.assertError (
 			FormlPackage.eINSTANCE.model,
 			FormlExtensionValidator.CYCLE_WITH_EXTENDED_MODELS,
-			"Cycle in hierarchy extension of model '" + name + "'")
+			"Cycle in hierarchy extension of model " + name)
 	}
 	
 	@Test
-	def void TestCheckModelExtension_02() {
+	def void TestModelExtension_02() {
 		val models = parseHelper.parse('''
 			Model Model1 extends Model2;
 			Model Model2 extends Model1;
@@ -43,15 +43,15 @@ class FormlExtensionValidatorTest {
 		models.assertError (
 			FormlPackage.eINSTANCE.model,
 			FormlExtensionValidator.CYCLE_WITH_EXTENDED_MODELS,
-			"Cycle in hierarchy extension of model '" + name1 + "'")
+			"Cycle in hierarchy extension of model " + name1)
 		models.assertError (
 			FormlPackage.eINSTANCE.model,
 			FormlExtensionValidator.CYCLE_WITH_EXTENDED_MODELS,
-			"Cycle in hierarchy extension of model '" + name2 + "'")
+			"Cycle in hierarchy extension of model " + name2)
 	}
 	
 	@Test
-	def void TestCheckModelExtension_03() {
+	def void TestModelExtension_03() {
 		val models = parseHelper.parse('''
 			Model Model1 extends Model2;
 			Model Model2 extends Model3;
@@ -63,19 +63,19 @@ class FormlExtensionValidatorTest {
 		models.assertError (
 			FormlPackage.eINSTANCE.model,
 			FormlExtensionValidator.CYCLE_WITH_EXTENDED_MODELS,
-			"Cycle in hierarchy extension of model '" + name1 + "'")
+			"Cycle in hierarchy extension of model " + name1)
 		models.assertError (
 			FormlPackage.eINSTANCE.model,
 			FormlExtensionValidator.CYCLE_WITH_EXTENDED_MODELS,
-			"Cycle in hierarchy extension of model '" + name2 + "'")
+			"Cycle in hierarchy extension of model " + name2)
 		models.assertError (
 			FormlPackage.eINSTANCE.model,
 			FormlExtensionValidator.CYCLE_WITH_EXTENDED_MODELS,
-			"Cycle in hierarchy extension of model '" + name3 + "'")
+			"Cycle in hierarchy extension of model " + name3)
 	}
 	
 	@Test
-	def void TestCheckClassExtension_01() {
+	def void TestClassExtension_01() {
 		val models = parseHelper.parse('''
 			Model ModelName begin 
 				Class Class1 extends Class1;
@@ -87,11 +87,11 @@ class FormlExtensionValidatorTest {
 		models.assertError (
 			FormlPackage.eINSTANCE.definedClass,
 			FormlExtensionValidator.CYCLE_WITH_EXTENDED_CLASSES,
-			"Cycle in hierarchy extension of class '" + name + "'")
+			"Cycle in hierarchy extension of class " + name)
 	}
 	
 	@Test
-	def void TestCheckClassExtension_02() {
+	def void TestClassExtension_02() {
 		val models = parseHelper.parse('''
 			Model ModelName begin 
 				Class Class1 extends Class2;
@@ -106,15 +106,15 @@ class FormlExtensionValidatorTest {
 		models.assertError (
 			FormlPackage.eINSTANCE.definedClass,
 			FormlExtensionValidator.CYCLE_WITH_EXTENDED_CLASSES,
-			"Cycle in hierarchy extension of class '" + name1 + "'")
+			"Cycle in hierarchy extension of class " + name1)
 		models.assertError (
 			FormlPackage.eINSTANCE.definedClass,
 			FormlExtensionValidator.CYCLE_WITH_EXTENDED_CLASSES,
-			"Cycle in hierarchy extension of class '" + name2 + "'")
+			"Cycle in hierarchy extension of class " + name2)
 	}
 	
 	@Test
-	def void TestCheckClassExtension_03() {
+	def void TestClassExtension_03() {
 		val models = parseHelper.parse('''
 			Model ModelName begin 
 				Class Class1 extends Class2;
@@ -132,14 +132,14 @@ class FormlExtensionValidatorTest {
 		models.assertError (
 			FormlPackage.eINSTANCE.definedClass,
 			FormlExtensionValidator.CYCLE_WITH_EXTENDED_CLASSES,
-			"Cycle in hierarchy extension of class '" + name1 + "'")
+			"Cycle in hierarchy extension of class " + name1)
 		models.assertError (
 			FormlPackage.eINSTANCE.definedClass,
 			FormlExtensionValidator.CYCLE_WITH_EXTENDED_CLASSES,
-			"Cycle in hierarchy extension of class '" + name2 + "'")
+			"Cycle in hierarchy extension of class " + name2)
 		models.assertError (
 			FormlPackage.eINSTANCE.definedClass,
 			FormlExtensionValidator.CYCLE_WITH_EXTENDED_CLASSES,
-			"Cycle in hierarchy extension of class '" + name3 + "'")
+			"Cycle in hierarchy extension of class " + name3)
 	}
 }
