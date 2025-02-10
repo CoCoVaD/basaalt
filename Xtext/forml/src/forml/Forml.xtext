@@ -152,6 +152,7 @@ Value:
 |	{Value} false?='false'?
 |	{Value} real=Float?
 |	{Value} string=STRING?
+|	{Value} reference=[Object | QualifiedName]?
 ;
 
 Float hidden():  
@@ -160,6 +161,8 @@ Float hidden():
 |	exp=EXPONENT
 )
 ;
+
+QualifiedName hidden(): ID('.' ID)*;
 
 @Override
 terminal ID: ('a'..'z'|'A'..'Z'|'°') ('a'..'z'|'A'..'Z'|'_'|'°'|'0'..'9')*;

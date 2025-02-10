@@ -6,13 +6,14 @@ package forml.tests
 // 29 January 2025
 
 import com.google.inject.Inject
-import forml.forml.Models
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.eclipse.xtext.testing.util.ParseHelper
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
+
+import forml.forml.Models
 
 @ExtendWith(InjectionExtension)
 @InjectWith(FormlInjectorProvider)
