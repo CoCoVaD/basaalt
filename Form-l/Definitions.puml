@@ -1,0 +1,109 @@
+@startuml
+title "Definitions"
+hide empty members
+remove @unlinked
+
+abstract class "Non-FORM-L\nModelling Item" as nItem << (M, Beige) >>
+class "Non-FORM-L\nModel" as nModel << (X, Yellow) >>
+class Binding << (X, Yellow) >>
+
+abstract class "FORM-L\nModelling Item" as Item << (M, Beige) >>
+abstract class "Organisational\nItem" as oItem << (O, Gold) >>
+abstract class "Temporal\nItem" as tItem << (T, LightSkyBlue) >>
+abstract class "Behavioural\nItem" as bItem << (B, LightGreen) >>
+abstract class "Interface\nItem" as iItem << (I, Salmon) >>
+
+class Mockup << (O, Gold) >>
+abstract class Model << (O, Gold) >>
+class "FORM-L\nModel" as fModel << (O, Gold) >>
+class "Partial\nModel" as pModel << (O, Gold) >>
+class "Root Model" as rModel << (O, Gold) >>
+
+class "Discrete\nTemporal Locator" as DTL << (T, LightSkyBlue) >>
+class "Continuous\nTemporal Locator" as CTL << (T, LightSkyBlue) >>
+class "Sliding\nTemporal Locator" as STL << (T, LightSkyBlue) >>
+
+abstract class Class << (C, LightGreen ) >>
+abstract class "Defined\nClass" as dClass << (C, LightGreen ) >>
+class "Non-valued\nClass" as nClass << (C, LightGreen ) >>
+abstract class "Valued\nClass" as vClass << (C, LightGreen ) >>
+
+abstract class "Variable\nClass" as variableClass << (C, LightGreen ) >>
+abstract class "Defined Variable Class" as dVariableClass << (C, LightGreen) >>
+class "Boolean\nClass" as booleanClass << (C, LightGreen) >>
+class "Integer\nClass" as integerClass << (C, LightGreen) >>
+class "Real\nClass" as realClass << (C, LightGreen) >>
+class "Quantity\nClass" as quantityClass << (C, LightGreen) >>
+class "String\nClass" as stringClass << (C, LightGreen) >>
+class "Enumerated\nClass" as enumeratedClass << (C, LightGreen) >>
+class "Event\nClass" as eventClass << (C, LightGreen ) >>
+abstract class "Generic Property\nClass" as abstractPropertyClass << (C, LightGreen ) >>
+class "Property\nClass" as propertyClass << (C, LightGreen ) >>
+class "Objective\nClass" as objectiveClass << (C, LightGreen ) >>
+class "Assumption\nClass" as assumptionClass << (C, LightGreen ) >>
+class "Requirement\nClass" as requirementClass << (C, LightGreen ) >>
+class "Guarantee\nClass" as guaranteeClass << (C, LightGreen ) >>
+class "Guard\nClass" as guardClass << (C, LightGreen ) >>
+
+abstract class "Set\nClass" as setClass << (C, LightGreen ) >>
+class "Set of Objects" as soClass << (C, LightGreen) >>
+class "Set of Values" as svClass << (C, LightGreen) >>
+
+
+abstract class "Pre-Defined\nClass" as pdClass << (P, LightGreen ) >>
+abstract class "Pre-Defined\nVariable\nClass" as pVariableClass << (P, LightGreen ) >>
+class "Class\nBoolean" as pClassBoolean << (P, LightGreen ) >>
+class "Class\nInteger" as pClassInteger << (P, LightGreen ) >>
+class "Class\nReal" as pClassReal << (P, LightGreen ) >>
+class "Class\nString" as pClassString << (P, LightGreen ) >>
+
+class "Class\nEvent" as pClassEvent << (P, LightGreen ) >>
+
+abstract class "Pre-Defined\nProperty\nClass" as pPropertyClass << (P, LightGreen ) >>
+class "Class\nProperty" as pClassProperty << (P, LightGreen ) >>
+class "Class\nObjective" as pClassObjective << (P, LightGreen ) >>
+class "Class\nRequirement" as pClassRequirement << (P, LightGreen ) >>
+class "Class\nAssumption" as pClassAssumption << (P, LightGreen ) >>
+class "Class\nGuarantee" as pClassGuarantee << (P, LightGreen ) >>
+class "Class\nGuard" as pClassGuard << (P, LightGreen ) >>
+class "Class\nObject" as pClassObject << (P, LightGreen ) >>
+
+abstract class Object << (O, LightGreen ) >>
+abstract class "Valued\nObject" as vObject << (O, LightGreen) >>
+class "Non-valued\nObject" as nObject << (O, LightGreen) >>
+abstract class Variable << (O, LightGreen) >>
+class Event     << (O, LightGreen) >>
+abstract class Set       << (O, LightGreen) >>
+abstract class "Generic Property" as genericProperty << (O, LightGreen) >>
+class Property << (O, LightGreen) >>
+class Boolean      << (O, LightGreen) >>
+class "Automaton" as Statechart  << (O, LightGreen) >>
+class Integer      << (O, LightGreen) >>
+class Real         << (O, LightGreen) >>
+class Quantity     << (O, LightGreen) >>
+class String       << (O, LightGreen) >>
+class Assumption    << (O, LightGreen) >>
+class Objective    << (O, LightGreen) >>
+class Requirement    << (O, LightGreen) >>
+class Guarantee    << (O, LightGreen) >>
+class Guard    << (O, LightGreen) >>
+class "Set of Objects" as oSet    << (O, LightGreen) >>
+class "Set of Values" as vSet    << (O, LightGreen) >>
+
+class Contract << (I, Salmon) >>
+class Encroachment << (I, Salmon) >>
+
+abstract class Statement  << (S, Magenta) >>
+class Declaration  << (D, Magenta) >>
+class Redeclaration  << (R, Magenta) >>
+
+abstract class "Definition Block" as Definition << (d, Magenta) >>
+class "Global Definition" as gDefinition << (d, Magenta) >>
+class "Single Statement\nDefinition Block" as sDefinition  << (d, Magenta) >>
+class "Multiple Statements\nDefinition Block" as mDefinition  << (d, Magenta) >>
+
+abstract class Instruction  << (I, Magenta) >>
+
+class Expression  << (f, LightGrey) >>
+
+@enduml
