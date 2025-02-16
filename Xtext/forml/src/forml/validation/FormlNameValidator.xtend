@@ -100,14 +100,14 @@ class FormlNameValidator extends AbstractFormlValidator {
 
 	public static val CLASS_NAME_FIRST_CHAR_IS_DEGREE = FormlValidator.ISSUE_PREFIX + "ClassNameFirstCharIsDegree"
 	@Check
-	def checkClassNameDoesNotStartsWithDegree (DefinedClass definedClass) {
+	def checkClassNameDoesNotStartsWithDegree (DefinedClass dClass) {
 		val char degree = '°'	// This is necessary to prevent conversion of char literals into strings
-		if (definedClass.name.charAt(0) == degree && definedClass.name.length > 1)
+		if (dClass.name.charAt(0) == degree && dClass.name.length > 1)
 			warning(
 				"Class names should not begin with a °", 
 				FormlPackage.eINSTANCE.definedClass_Name,
 				CLASS_NAME_FIRST_CHAR_IS_DEGREE,
-				definedClass.name)
+				dClass.name)
 	}
 	
 	public static val UNCAPITALIZED_CLASS_NAME = FormlValidator.ISSUE_PREFIX + "UncapitalizedClassName"

@@ -1,10 +1,11 @@
 package forml.validation
 
-import forml.forml.DefinedClass
-import forml.forml.FormlPackage
-import forml.forml.Model
 import java.util.HashSet
 import org.eclipse.xtext.validation.Check
+
+import forml.forml.FormlPackage
+import forml.forml.Model
+import forml.forml.DefinedClass
 
 class FormlExtensionValidator extends AbstractFormlValidator {
 /*
@@ -45,7 +46,7 @@ class FormlExtensionValidator extends AbstractFormlValidator {
 			if (!collectedClasses.contains(c)) collectedClasses.add(c)
 			if (c.extendedClasses !== null)
 				for (extendedClass : c.extendedClasses) 
-					if (extendedClass.definedClass !== null)
+					if (extendedClass.^class !== null)
 						collectExtendedClasses(collectedClasses, visitedClasses, extendedClass.definedClass)
 		}		
 	}

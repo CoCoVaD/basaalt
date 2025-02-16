@@ -12,9 +12,6 @@ import forml.forml.FormlPackage
 
 import forml.forml.Models
 import org.eclipse.xtext.scoping.IScopeProvider
-import forml.forml.DefinedClass
-import forml.forml.PartialModel
-import forml.forml.Object
 
 @ExtendWith(InjectionExtension)
 
@@ -42,6 +39,7 @@ class FormlScopingLearningTest {
 	
 	@Test
 	def void FormlScoping_01 () {
+		System.out.println("FormlScoping_01")
 		val result = parseHelper.parse('''
 			Model TestModel begin
 				partial Model Partial begin 
@@ -64,6 +62,7 @@ class FormlScopingLearningTest {
 	
 	@Test
 	def void FormlScoping_02 () {
+		System.out.println("FormlScoping_02")
 		val result = parseHelper.parse('''
 			Model TestModel begin
 				partial Model Partial1 begin 
@@ -84,6 +83,8 @@ class FormlScopingLearningTest {
 				Class E;
 				C, D instance;
 			end TestModel;
+			Class X;
+			Class Y;
 		''')
 		val model = result.models.head
 		System.out.println("Model name = " + model.name)
@@ -92,16 +93,61 @@ class FormlScopingLearningTest {
 			var s = model.statements.get(i)
 			if (s.partialModel !== null) 
 				System.out.println("Partial Model name = " + s.partialModel.name)
-			if (s.object !== null) 
-				System.out.println("Object name = " + s.object.name)
 			if (s.definedClass !== null) 
 				System.out.println("Class name = " + s.definedClass.name)
-			}
-		val reference = FormlPackage.eINSTANCE.objectClass_DefinedClass
+			if (s.object !== null) 
+				System.out.println("Object name = " + s.object.name)
+		}
+		val reference = FormlPackage.eINSTANCE.classOfObject_DefinedClass
+		System.out.println("Reference = " + reference)
 		val instance = model.statements.get(5)
 		val scope = instance.getScope(reference)
-		System.out.println("Reference = " + reference)
 		for (s : scope.allElements.map[name]) 
 			System.out.println("Scope " + s)
+	}
+	
+	@Test
+	def void FormlScoping_03 () {
+		System.out.println("FormlScoping_03")
+		val result = parseHelper.parse('''
+			Model TestModel begin
+				Class A;
+				Class B;
+			end TestModel;
+			Class C;
+			refined class P.E begin
+				Integer i;
+			end A;
+			Class D;
+			partial Model P begin
+				Class E;
+			end P;
+		''')
+		val model = result.models.head
+		System.out.println("Model name = " + model.name)
+		System.out.println(model.statements.length + " statements")
+		for (var i=0 ; i < model.statements.length ; i++) {
+			var s = model.statements.get(i)
+			if (s.partialModel !== null) 
+				System.out.println("  - Statement " + (i+1) + ": Partial Model name = " + s.partialModel.name)
+			if (s.definedClass !== null) 
+				System.out.println("  - Statement " + (i+1) + ": Class name = " + s.definedClass.name)
+			if (s.object !== null) 
+				System.out.println("  - Statement " + (i+1) + ": Object name = " + s.object.name)
+			if (s.partialModelDefinition !== null) 
+				System.out.println("  - Statement " + (i+1) + ": Partial model definition is " + s.partialModelDefinition)
+			if (s.classDefinition !== null) 
+				System.out.println("  - Statement " + (i+1) + ": Class definition is " + s.classDefinition)
+			if (s.objectDefinition !== null) 
+				System.out.println("  - Statement " + (i+1) + ": Class definition is " + s.classDefinition)
+		}
+		val reference = FormlPackage.eINSTANCE.classDefinition_Item
+		val definition = model.statements.get(3).classDefinition 
+		val scope = definition.getScope(reference).allElements
+		System.out.println(" ")
+		System.out.println(scope.length + " elements in scope of definition block for statement 4")
+		var i = 1
+		for (s : scope.map[name]) 
+			System.out.println("  - Scope element " + (i++) + " : " + s)
 	}
 }

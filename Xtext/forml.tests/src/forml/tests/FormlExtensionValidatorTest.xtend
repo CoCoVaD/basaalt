@@ -82,8 +82,8 @@ class FormlExtensionValidatorTest {
 			end ModelName;
 		''')
 		val model = models.models.get(0)
-		val definedClass = model.statements.get(0).definedClass
-		val name = definedClass.name
+		val statement = model.statements.get(0)
+		val name = statement.definedClass.name
 		models.assertError (
 			FormlPackage.eINSTANCE.definedClass,
 			FormlExtensionValidator.CYCLE_WITH_EXTENDED_CLASSES,
@@ -99,10 +99,10 @@ class FormlExtensionValidatorTest {
 			end ModelName;
 		''')
 		val model = models.models.get(0)
-		val definedClass1 = model.statements.get(0).definedClass
-		val definedClass2 = model.statements.get(1).definedClass
-		val name1 = definedClass1.name
-		val name2 = definedClass2.name
+		val statement1 = model.statements.get(0)
+		val statement2 = model.statements.get(1)
+		val name1 = statement1.definedClass.name
+		val name2 = statement2.definedClass.name
 		models.assertError (
 			FormlPackage.eINSTANCE.definedClass,
 			FormlExtensionValidator.CYCLE_WITH_EXTENDED_CLASSES,
@@ -123,12 +123,12 @@ class FormlExtensionValidatorTest {
 			end ModelName;
 		''')
 		val model = models.models.get(0)
-		val definedClass1 = model.statements.get(0).definedClass
-		val definedClass2 = model.statements.get(1).definedClass
-		val definedClass3 = model.statements.get(2).definedClass
-		val name1 = definedClass1.name
-		val name2 = definedClass2.name
-		val name3 = definedClass3.name
+		val statement1 = model.statements.get(0)
+		val statement2 = model.statements.get(1)
+		val statement3 = model.statements.get(2)
+		val name1 = statement1.definedClass.name
+		val name2 = statement2.definedClass.name
+		val name3 = statement3.definedClass.name
 		models.assertError (
 			FormlPackage.eINSTANCE.definedClass,
 			FormlExtensionValidator.CYCLE_WITH_EXTENDED_CLASSES,

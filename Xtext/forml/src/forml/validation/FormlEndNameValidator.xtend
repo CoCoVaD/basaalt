@@ -19,7 +19,7 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 	public static val NO_MODEL_END_NAME = FormlValidator.ISSUE_PREFIX + "NoModelEndName"
 	@Check
 	def checkModelEndNameExists(Model model) {
-		if (model.block)
+		if (model.blockEnd)
 			if (model.endName === null)
 				warning(
 					"No end name", 
@@ -31,7 +31,7 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 	public static val NO_PARTIAL_MODEL_END_NAME = FormlValidator.ISSUE_PREFIX + "NoPartialModelEndName"
 	@Check
 	def checkPartialModelEndNameExists(PartialModel partialModel) {
-		if (partialModel.block)
+		if (partialModel.blockEnd)
 			if (partialModel.endName === null)
 				warning(
 					"No end name", 
@@ -71,7 +71,7 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 	public static val INCORRECT_MODEL_END_NAME = FormlValidator.ISSUE_PREFIX + "IncorrectModelEndName"
 	@Check
 	def checkModelEndName(Model model) {
-		if (model.block) {
+		if (model.blockEnd) {
 			val name = model.name
 			val endName = model.endName
 			if (model.endName != name)
@@ -87,7 +87,7 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 	public static val INCORRECT_PARTIAL_MODEL_END_NAME = FormlValidator.ISSUE_PREFIX + "IncorrectPartialModelEndName"
 	@Check
 	def checkPartialModelEndName(PartialModel partialModel) {
-		if (partialModel.block)
+		if (partialModel.blockEnd)
 			if (partialModel.endName != partialModel.name)
 				error(
 					"End name " + partialModel.endName + " different from name " + partialModel.name, 
