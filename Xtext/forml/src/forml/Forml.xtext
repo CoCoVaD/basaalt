@@ -6,104 +6,108 @@ import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 
 Models:
 	models+=Model+
-	// Verify one and only one Model (the Root Model) is not extended
+	//- Check that one and only one Model (the Root Model) is not extended
 ;
 	
 Model:
-	'Model' name=ID comments+=STRING*
+	'Model' Name
 	('extends' extendedModels+=ExtendedModel (',' extendedModels+=ExtendedModel)*)? 
-	(	':' statements+=Statement
-	|	 'begin' statements+=Statement* blockEnd?='end' endName=ID? ';' 
-	|	';'
-	)	statements+=Statement*
-	/// Verify that Model is not in extension closure
+	ItemizedDefinition	statements+=Statement*
+	/// Check that Model is not in extension closure
 	/// Warning if 'name' begins with a lower case, with a quick fix
 	/// Warning if 'name' begins with a ° or an _
 	/// Warning if a begin-end block is not provided with an 'endName', with a quick fix
-	/// Verify that if a begin-end block is provided with an 'endName', 
-	/// 	it is equal to 'name', with a quick fix
+	/// Check that if an 'endName' is provided, it is equal to 'name', with a quick fix
+;
+
+fragment Name:
+	name=ID comments+=STRING*
 ;
 
 ExtendedModel:
 	model=[Model] comments+=STRING*
 ;
 
+fragment ItemizedDefinition:
+	(	':' statements+=Statement	//- Check that is not a comment
+	|	 'begin' statements+=Statement* blockEnd?='end' endName=ID? ';' 
+	|	';'
+	)
+;
+
 Statement:
-(	partialModel=PartialModel
-|	definedClass=DefinedClass
+	partialModel=PartialModel
+|	simpleClass=SimpleClass
+|	enumeration=Enumeration
 |	object=Object
-|	partialModelDefinition=PartialModelDefinition
-|	classDefinition=ClassDefinition
-|	objectDefinition=ObjectDefinition
-//|	acknowledgment=Acknowledgment
-)	comments+=STRING*
+|	definition=Definition
+|	objectGlobalDefinition=[Object | QualifiedName] 'is' value=Value ';'
+|	comments+=STRING+
+;
+
+Declaration:
+	PartialModel
+|	ClassDeclaration
+|	Object
+;
+
+ClassDeclaration:
+	SimpleClass
+|	Enumeration
+//|	QuantityClass
+//|	SetClass
 ;
 
 PartialModel:
-	'partial' 'Model' name=ID comments+=STRING*
-	(	':' statements+=Statement
-	|	 'begin' statements+=Statement* blockEnd?='end' endName=ID? ';' 
-	|	';'
-	)	
+	'partial' 'Model' Name ItemizedDefinition
 	/// Warning if 'name' begins with a lower case, with a quick fix
 	/// Warning if 'name' begins with a °
 	/// Warning if a begin-end block is not provided with an 'endName', with a quick fix
-	/// Verify that if a begin-end block is provided with an 'endName', 
-	/// 	it is equal to 'name', with a quick fix
+	/// Check that if an 'endName' is provided, it is equal to 'name', with a quick fix
 ;
 
-PartialModelDefinition:
-	'refined' 'partial' 'model' item=[PartialModel | QualifiedName] comments+=STRING*
-	(	':' statements+=Statement
-	|	 'begin' statements+=Statement* blockEnd?='end' endName=ID? ';' 
-	)
-	// Warning if a begin-end block is not provided with an 'endName', with a quick fix
-	// Verify that if a begin-end block is provided with an 'endName', 
-	// 	it is equal to 'item.name', with a quick fix
-;
-
-DefinedClass:
-	((main?='main' | external?='external')? & (private?='private')? & (abstract?='abstract')?)
-	(normalClass?='Class' | enumeration?='Enumeration' states=States)
-//|	quantityClass=QuantityClass
-//|	setClass=SetClass
-	(determiner=Determiner)? name=ID comments+=STRING*
-	('extends' extendedClasses+=ExtendedClass (',' extendedClasses+=ExtendedClass)*)? 
-	(	':' statements+=Statement
-	|	 block?='begin' statements+=Statement* blockEnd?='end' endName=ID? ';' 
-	|	';'
-	)
-	/// Verify that 'name' is not in the closure of 'extendedClasses'
+SimpleClass:
+	ClassModifier 'Class' (determiner=Determiner)? Name
+	ExtendedClasses? 
+	ItemizedDefinition
+	/// Check that 'name' is not in the closure of 'extendedClasses'
 	/// Warning if 'name' begins with a lower case, with a quick fix
 	/// Warning if 'name' begins with a ° or an _
 	/// Warning if a begin-end block is not provided with an 'endName', with a quick fix
-	/// Verify that if a begin-end block is provided with an 'endName', 
-	/// 	it is equal to 'name', with a quick fix
-	//  Verify that 'statements' does not contain any partial model
+	/// Check that if an 'endName' is provided, it is equal to 'name', with a quick fix
+	//- Check that 'statements' contains no partial model declaration / definition
 ;
 
-ClassDefinition:
-	'refined' 'class' item=[DefinedClass | QualifiedName] comments+=STRING*
-	(	':' statements+=Statement
-	|	 'begin' statements+=Statement* blockEnd?='end' endName=ID? ';' 
-	)
-	// Warning if a begin-end block is not provided with an 'endName', with a quick fix
-	// Verify that if a begin-end block is provided with an 'endName', 
-	// 	it is equal to 'item.name', with a quick fix
+Enumeration:
+	ClassModifier 'Enumeration' states=States (determiner=Determiner)? Name
+	ExtendedClasses? 
+	ItemizedDefinition
+	/// Check that 'name' is not in the closure of 'extendedClasses'
+	/// Warning if 'name' begins with a lower case, with a quick fix
+	/// Warning if 'name' begins with a ° or an _
+	/// Warning if a begin-end block is not provided with an 'endName', with a quick fix
+	/// Check that if an 'endName' is provided, it is equal to 'name', with a quick fix
+	//- Check that 'statements' contains no partial model declaration / definition
 ;
 
-Determiner: '#' | '@' | '~' | '^' | '!' | '?';
+fragment ClassModifier:
+	(main?='main' | external?='external')? & (private?='private')? & (abstract?='abstract')?
+;
+
+fragment ExtendedClasses:
+	'extends' extendedClasses+=ClassReference (',' extendedClasses+=ClassReference)*
+;
+
+ClassReference:
+(	preDefinedClass=PredefinedClass
+|	definedClass=[ClassDeclaration]
+)	comments+=STRING*
+;
 
 PredefinedClass:
 	'Boolean'  | 'Integer'    | 'Real'      | 'String'      | 'Event'
 |	'Property' | 'Assumption' | 'Objective' | 'Requirement' | 'Guarantee'
 |	'Guard'    | 'Object'
-;
-
-ExtendedClass:
-(	preDefinedClass=PredefinedClass
-|	definedClass=[DefinedClass]
-)	comments+=STRING*
 ;
 
 States:
@@ -115,22 +119,18 @@ States:
 
 State:
 (	states=States 				// Composite state on the fly
-|	enumeration=[DefinedClass]			// Composite state on existing enumeration
+|	enumeration=[Enumeration]	// Composite state on existing enumeration
 )?	name=ID
 	comments+=STRING*
-	// Verify that the 'DefinedClass' is an Enumeration
 ;
+
+Determiner: '#' | '@' | '~' | '^' | '!' | '?';
  
 Object:
 	(main?='main'? | (external?='external'? & private?='private'? & (constant?='constant' | fixed?='fixed')?))
-	class=Classes
-	(determiner=Determiner)? name=ID
-	comments+=STRING*
-	(	is?='is' value=Value ';' valueComments+=STRING*
-	|	':' statements+=Statement
-	|	 block?='begin' statements+=Statement* blockEnd?='end' endName=ID? ';' 
-	|	';'
-	)
+	classes+=ClassReference (',' classes+=ClassReference)*
+	(determiner=Determiner)? Name
+	(is?='is' value=Value ';' valueComments+=STRING* | ItemizedDefinition)
 	/// Warning if 'name' begins with an upper case, with a quick fix
 	/// Warning if a begin-end block is not provided with an 'endName', with a quick fix
 	/// Verify that if a begin-end block is provided with an 'endName', 
@@ -139,24 +139,10 @@ Object:
 	//  Verify that 'statements' does not contain any partial model
 ;
 
-Classes:
-	classes+=ClassOfObject (',' classes+=ClassOfObject)*
-;
-
-ClassOfObject:
-(	preDefined=PredefinedClass
-|	definedClass=[DefinedClass]
-)	comments+=STRING*
-;
-
-ObjectDefinition:
-	'refined' 'object' item=[Object | QualifiedName] comments+=STRING*
-	(	':' statements+=Statement
-	|	 'begin' statements+=Statement* blockEnd?='end' endName=ID? ';' 
-	)
-	// Warning if a begin-end block is not provided with an 'endName', with a quick fix
-	// Verify that if a begin-end block is provided with an 'endName', 
-	// 	it is equal to 'item.name', with a quick fix
+Definition:
+	item=[Declaration | QualifiedName] comments+=STRING* ItemizedDefinition
+	/// Warning if a begin-end block is not provided with an 'endName', with a quick fix
+	/// Check that if an 'endName' is provided, it is equal to 'item.name', with a quick fix
 ;
 
 Value:

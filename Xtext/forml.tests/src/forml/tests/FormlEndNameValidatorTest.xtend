@@ -54,8 +54,22 @@ class FormlEndNameValidatorTest {
 			end ModelName;
 		''')
 		models.assertWarning (
-			FormlPackage.eINSTANCE.definedClass,
+			FormlPackage.eINSTANCE.simpleClass,
 			FormlEndNameValidator.NO_CLASS_END_NAME,
+			"No end name"
+		)
+	}
+	
+	@Test
+	def void TestEnumerationEndNameExists () {
+		val models = parseHelper.parse('''
+			Model ModelName begin 
+				Enumeration [s1, s2] EnumerationName begin end;
+			end ModelName;
+		''')
+		models.assertWarning (
+			FormlPackage.eINSTANCE.enumeration,
+			FormlEndNameValidator.NO_ENUMERATION_END_NAME,
 			"No end name"
 		)
 	}
@@ -114,12 +128,30 @@ class FormlEndNameValidatorTest {
 			end ModelName;
 		''')
 		val model = models.models.get(0)
-		val definedClass = model.statements.get(0).definedClass
+		val definedClass = model.statements.get(0).simpleClass
 		val name = definedClass.name
 		val endName = definedClass.endName
 		models.assertError (
-			FormlPackage.eINSTANCE.definedClass,
+			FormlPackage.eINSTANCE.simpleClass,
 			FormlEndNameValidator.INCORRECT_CLASS_END_NAME,
+			"End name " + endName +" different from name " + name
+		)
+	}
+	
+	@Test
+	def void TestEnumerationEndName () {
+		val models = parseHelper.parse('''
+			Model ModelName begin 
+				Enumeration [s1, s2] EnumerationName begin end OtherName;
+			end ModelName;
+		''')
+		val model = models.models.get(0)
+		val enumeration = model.statements.get(0).enumeration
+		val name = enumeration.name
+		val endName = enumeration.endName
+		models.assertError (
+			FormlPackage.eINSTANCE.enumeration,
+			FormlEndNameValidator.INCORRECT_ENUMERATION_END_NAME,
 			"End name " + endName +" different from name " + name
 		)
 	}

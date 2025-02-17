@@ -8,7 +8,8 @@ import forml.forml.FormlPackage
 import forml.validation.FormlValidator
 import forml.forml.Model
 import forml.forml.PartialModel
-import forml.forml.DefinedClass
+import forml.forml.SimpleClass
+import forml.forml.Enumeration
 import forml.forml.Object
 
 class FormlEndNameValidator extends AbstractFormlValidator {
@@ -23,7 +24,7 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 			if (model.endName === null)
 				warning(
 					"No end name", 
-					FormlPackage.eINSTANCE.model_BlockEnd,
+					FormlPackage.eINSTANCE.itemizedDefinition_BlockEnd,
 					NO_MODEL_END_NAME,
 					model.name)
 	}
@@ -35,31 +36,43 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 			if (partialModel.endName === null)
 				warning(
 					"No end name", 
-					FormlPackage.eINSTANCE.partialModel_BlockEnd,
+					FormlPackage.eINSTANCE.itemizedDefinition_BlockEnd,
 					NO_PARTIAL_MODEL_END_NAME,
 					partialModel.name)
 	}
 	
 	public static val NO_CLASS_END_NAME = FormlValidator.ISSUE_PREFIX + "NoClassEndName"
 	@Check
-	def checkClassEndNameExists(DefinedClass definedClass) {
-		if (definedClass.block)
-			if (definedClass.endName === null)
+	def checkClassEndNameExists(SimpleClass simpleClass) {
+		if (simpleClass.blockEnd)
+			if (simpleClass.endName === null)
 				warning(
 					"No end name", 
-					FormlPackage.eINSTANCE.definedClass_BlockEnd,
+					FormlPackage.eINSTANCE.itemizedDefinition_BlockEnd,
 					NO_CLASS_END_NAME,
-					definedClass.name)
+					simpleClass.name)
+	}
+	
+	public static val NO_ENUMERATION_END_NAME = FormlValidator.ISSUE_PREFIX + "NoEnumerationEndName"
+	@Check
+	def checkEnumerationEndNameExists(Enumeration enumeration) {
+		if (enumeration.blockEnd)
+			if (enumeration.endName === null)
+				warning(
+					"No end name", 
+					FormlPackage.eINSTANCE.itemizedDefinition_BlockEnd,
+					NO_ENUMERATION_END_NAME,
+					enumeration.name)
 	}
 	
 	public static val NO_OBJECT_END_NAME = FormlValidator.ISSUE_PREFIX + "NoObjectEndName"
 	@Check
 	def checkObjectEndNameExists(Object object) {
-		if (object.block)
+		if (object.blockEnd)
 			if (object.endName === null)
 				warning(
 					"No end name", 
-					FormlPackage.eINSTANCE.object_BlockEnd,
+					FormlPackage.eINSTANCE.itemizedDefinition_BlockEnd,
 					NO_OBJECT_END_NAME,
 					object.name)
 	}
@@ -77,7 +90,7 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 			if (model.endName != name)
 				error(
 					"End name " + endName + " different from name " + name, 
-					FormlPackage.eINSTANCE.model_EndName,
+					FormlPackage.eINSTANCE.itemizedDefinition_EndName,
 					INCORRECT_MODEL_END_NAME,
 					name,
 					endName)
@@ -91,7 +104,7 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 			if (partialModel.endName != partialModel.name)
 				error(
 					"End name " + partialModel.endName + " different from name " + partialModel.name, 
-					FormlPackage.eINSTANCE.partialModel_EndName,
+					FormlPackage.eINSTANCE.itemizedDefinition_BlockEnd,
 					INCORRECT_PARTIAL_MODEL_END_NAME,
 					partialModel.name,
 					partialModel.endName)
@@ -99,25 +112,38 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 
 	public static val INCORRECT_CLASS_END_NAME = FormlValidator.ISSUE_PREFIX + "IncorrectClassEndName"
 	@Check
-	def checkClassEndName(DefinedClass definedClass) {
-		if (definedClass.block)
-			if (definedClass.endName != definedClass.name)
+	def checkClassEndName(SimpleClass simpleClass) {
+		if (simpleClass.blockEnd)
+			if (simpleClass.endName != simpleClass.name)
 				error(
-					"End name " + definedClass.endName + " different from name " + definedClass.name, 
-					FormlPackage.eINSTANCE.definedClass_EndName,
+					"End name " + simpleClass.endName + " different from name " + simpleClass.name, 
+					FormlPackage.eINSTANCE.itemizedDefinition_BlockEnd,
 					INCORRECT_CLASS_END_NAME,
-					definedClass.name,
-					definedClass.endName)
+					simpleClass.name,
+					simpleClass.endName)
+	}
+
+	public static val INCORRECT_ENUMERATION_END_NAME = FormlValidator.ISSUE_PREFIX + "IncorrectEnumerationEndName"
+	@Check
+	def checkEnumerationEndName(Enumeration enumeration) {
+		if (enumeration.blockEnd)
+			if (enumeration.endName != enumeration.name)
+				error(
+					"End name " + enumeration.endName + " different from name " + enumeration.name, 
+					FormlPackage.eINSTANCE.itemizedDefinition_BlockEnd,
+					INCORRECT_ENUMERATION_END_NAME,
+					enumeration.name,
+					enumeration.endName)
 	}
 
 	public static val INCORRECT_OBJECT_END_NAME = FormlValidator.ISSUE_PREFIX + "IncorrectObjectEndName"
 	@Check
 	def checkOjectEndName(Object object) {
-		if (object.block)
+		if (object.blockEnd)
 			if (object.endName != object.name)
 				error(
 					"End name " + object.endName + " different from name " + object.name, 
-					FormlPackage.eINSTANCE.object_EndName,
+					FormlPackage.eINSTANCE.itemizedDefinition_BlockEnd,
 					INCORRECT_OBJECT_END_NAME,
 					object.name,
 					object.endName)

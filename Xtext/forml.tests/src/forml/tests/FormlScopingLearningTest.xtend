@@ -34,7 +34,7 @@ class FormlScopingLearningTest {
 	
 	def getExportedClassesEObjectDescriptions(EObject o) {
 		o.getResourceDescription.
-		getExportedObjectsByType(FormlPackage.eINSTANCE.definedClass)
+		getExportedObjectsByType(FormlPackage.eINSTANCE.simpleClass)
 	}
 	
 	@Test
@@ -93,12 +93,12 @@ class FormlScopingLearningTest {
 			var s = model.statements.get(i)
 			if (s.partialModel !== null) 
 				System.out.println("Partial Model name = " + s.partialModel.name)
-			if (s.definedClass !== null) 
-				System.out.println("Class name = " + s.definedClass.name)
+			if (s.simpleClass !== null) 
+				System.out.println("Class name = " + s.simpleClass.name)
 			if (s.object !== null) 
 				System.out.println("Object name = " + s.object.name)
 		}
-		val reference = FormlPackage.eINSTANCE.classOfObject_DefinedClass
+		val reference = FormlPackage.eINSTANCE.object_Classes
 		System.out.println("Reference = " + reference)
 		val instance = model.statements.get(5)
 		val scope = instance.getScope(reference)
@@ -115,7 +115,7 @@ class FormlScopingLearningTest {
 				Class B;
 			end TestModel;
 			Class C;
-			refined class P.E begin
+			P.E begin
 				Integer i;
 			end A;
 			Class D;
@@ -130,19 +130,17 @@ class FormlScopingLearningTest {
 			var s = model.statements.get(i)
 			if (s.partialModel !== null) 
 				System.out.println("  - Statement " + (i+1) + ": Partial Model name = " + s.partialModel.name)
-			if (s.definedClass !== null) 
-				System.out.println("  - Statement " + (i+1) + ": Class name = " + s.definedClass.name)
+			if (s.simpleClass !== null) 
+				System.out.println("  - Statement " + (i+1) + ": Class name = " + s.simpleClass.name)
 			if (s.object !== null) 
 				System.out.println("  - Statement " + (i+1) + ": Object name = " + s.object.name)
-			if (s.partialModelDefinition !== null) 
-				System.out.println("  - Statement " + (i+1) + ": Partial model definition is " + s.partialModelDefinition)
-			if (s.classDefinition !== null) 
-				System.out.println("  - Statement " + (i+1) + ": Class definition is " + s.classDefinition)
-			if (s.objectDefinition !== null) 
-				System.out.println("  - Statement " + (i+1) + ": Class definition is " + s.classDefinition)
+			if (s.definition !== null) 
+				System.out.println("  - Statement " + (i+1) + ": Definition is " + s.definition)
+			if (s.objectGlobalDefinition !== null) 
+				System.out.println("  - Statement " + (i+1) + ": Object global definition is " + s.objectGlobalDefinition)
 		}
-		val reference = FormlPackage.eINSTANCE.classDefinition_Item
-		val definition = model.statements.get(3).classDefinition 
+		val reference = FormlPackage.eINSTANCE.definition_Item
+		val definition = model.statements.get(3).definition 
 		val scope = definition.getScope(reference).allElements
 		System.out.println(" ")
 		System.out.println(scope.length + " elements in scope of definition block for statement 4")

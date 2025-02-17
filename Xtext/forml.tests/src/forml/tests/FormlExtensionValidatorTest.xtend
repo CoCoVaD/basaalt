@@ -83,9 +83,9 @@ class FormlExtensionValidatorTest {
 		''')
 		val model = models.models.get(0)
 		val statement = model.statements.get(0)
-		val name = statement.definedClass.name
+		val name = statement.simpleClass.name
 		models.assertError (
-			FormlPackage.eINSTANCE.definedClass,
+			FormlPackage.eINSTANCE.simpleClass,
 			FormlExtensionValidator.CYCLE_WITH_EXTENDED_CLASSES,
 			"Cycle in hierarchy extension of class " + name)
 	}
@@ -101,14 +101,14 @@ class FormlExtensionValidatorTest {
 		val model = models.models.get(0)
 		val statement1 = model.statements.get(0)
 		val statement2 = model.statements.get(1)
-		val name1 = statement1.definedClass.name
-		val name2 = statement2.definedClass.name
+		val name1 = statement1.simpleClass.name
+		val name2 = statement2.simpleClass.name
 		models.assertError (
-			FormlPackage.eINSTANCE.definedClass,
+			FormlPackage.eINSTANCE.simpleClass,
 			FormlExtensionValidator.CYCLE_WITH_EXTENDED_CLASSES,
 			"Cycle in hierarchy extension of class " + name1)
 		models.assertError (
-			FormlPackage.eINSTANCE.definedClass,
+			FormlPackage.eINSTANCE.simpleClass,
 			FormlExtensionValidator.CYCLE_WITH_EXTENDED_CLASSES,
 			"Cycle in hierarchy extension of class " + name2)
 	}
@@ -126,20 +126,89 @@ class FormlExtensionValidatorTest {
 		val statement1 = model.statements.get(0)
 		val statement2 = model.statements.get(1)
 		val statement3 = model.statements.get(2)
-		val name1 = statement1.definedClass.name
-		val name2 = statement2.definedClass.name
-		val name3 = statement3.definedClass.name
+		val name1 = statement1.simpleClass.name
+		val name2 = statement2.simpleClass.name
+		val name3 = statement3.simpleClass.name
 		models.assertError (
-			FormlPackage.eINSTANCE.definedClass,
+			FormlPackage.eINSTANCE.simpleClass,
 			FormlExtensionValidator.CYCLE_WITH_EXTENDED_CLASSES,
 			"Cycle in hierarchy extension of class " + name1)
 		models.assertError (
-			FormlPackage.eINSTANCE.definedClass,
+			FormlPackage.eINSTANCE.simpleClass,
 			FormlExtensionValidator.CYCLE_WITH_EXTENDED_CLASSES,
 			"Cycle in hierarchy extension of class " + name2)
 		models.assertError (
-			FormlPackage.eINSTANCE.definedClass,
+			FormlPackage.eINSTANCE.simpleClass,
 			FormlExtensionValidator.CYCLE_WITH_EXTENDED_CLASSES,
 			"Cycle in hierarchy extension of class " + name3)
+	}
+	
+	@Test
+	def void TestEnumerationExtension_01() {
+		val models = parseHelper.parse('''
+			Model ModelName begin 
+				Enumeration [s1, s2] Class1 extends Class1;
+			end ModelName;
+		''')
+		val model = models.models.get(0)
+		val statement = model.statements.get(0)
+		val name = statement.enumeration.name
+		models.assertError (
+			FormlPackage.eINSTANCE.enumeration,
+			FormlExtensionValidator.CYCLE_WITH_EXTENDED_CLASSES,
+			"Cycle in hierarchy extension of enumeration " + name)
+	}
+	
+	@Test
+	def void TestEnumerationExtension_02() {
+		val models = parseHelper.parse('''
+			Model ModelName begin 
+				Enumeration [s1, s2] Class1 extends Class2;
+				Class Class2 extends Class1;
+			end ModelName;
+		''')
+		val model = models.models.get(0)
+		val statement1 = model.statements.get(0)
+		val statement2 = model.statements.get(1)
+		val name1 = statement1.enumeration.name
+		val name2 = statement2.simpleClass.name
+		models.assertError (
+			FormlPackage.eINSTANCE.enumeration,
+			FormlExtensionValidator.CYCLE_WITH_EXTENDED_CLASSES,
+			"Cycle in hierarchy extension of enumeration " + name1)
+		models.assertError (
+			FormlPackage.eINSTANCE.simpleClass,
+			FormlExtensionValidator.CYCLE_WITH_EXTENDED_CLASSES,
+			"Cycle in hierarchy extension of class " + name2)
+	}
+	
+	@Test
+	def void TestEnumerationExtension_03() {
+		val models = parseHelper.parse('''
+			Model ModelName begin 
+				Enumeration [s1, s2] Class1 extends Class2;
+				Class Class2 extends Class3;
+				Enumeration [s3, s4] Class3 extends Class1;
+			end ModelName;
+		''')
+		val model = models.models.get(0)
+		val statement1 = model.statements.get(0)
+		val statement2 = model.statements.get(1)
+		val statement3 = model.statements.get(2)
+		val name1 = statement1.enumeration.name
+		val name2 = statement2.simpleClass.name
+		val name3 = statement3.enumeration.name
+		models.assertError (
+			FormlPackage.eINSTANCE.enumeration,
+			FormlExtensionValidator.CYCLE_WITH_EXTENDED_CLASSES,
+			"Cycle in hierarchy extension of enumeration " + name1)
+		models.assertError (
+			FormlPackage.eINSTANCE.simpleClass,
+			FormlExtensionValidator.CYCLE_WITH_EXTENDED_CLASSES,
+			"Cycle in hierarchy extension of class " + name2)
+		models.assertError (
+			FormlPackage.eINSTANCE.enumeration,
+			FormlExtensionValidator.CYCLE_WITH_EXTENDED_CLASSES,
+			"Cycle in hierarchy extension of enumeration " + name3)
 	}
 }

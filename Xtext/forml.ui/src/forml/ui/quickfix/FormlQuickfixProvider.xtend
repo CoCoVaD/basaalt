@@ -14,7 +14,8 @@ import forml.validation.FormlNameValidator
 import forml.validation.FormlEndNameValidator
 import forml.forml.Model
 import forml.forml.PartialModel
-import forml.forml.DefinedClass
+import forml.forml.SimpleClass
+import forml.forml.Enumeration
 import forml.forml.Object
 
 /**
@@ -88,7 +89,7 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 			"Change " + issue.data.get(0) + " to " + issue.data.get(0).substring(1), 
 			""										// icon
 		) [	element, context |
-				(element as DefinedClass).name = issue.data.get(0).substring(1)
+				(element as SimpleClass).name = issue.data.get(0).substring(1)
 		  ]
 	}
 	
@@ -101,7 +102,33 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 			"Change " + issue.data.get(0) + " to " + issue.data.get(0).toFirstUpper, 
 			"upcase.png"				// icon
 		) [	element, context |
-				(element as DefinedClass).name = issue.data.get(0).toFirstUpper
+				(element as SimpleClass).name = issue.data.get(0).toFirstUpper
+		  ]
+	}
+
+	@Fix(FormlNameValidator.ENUMERATION_NAME_FIRST_CHAR_IS_DEGREE)
+	def deleteFirstCharOfEnumerationName(Issue issue, IssueResolutionAcceptor acceptor) 
+	// Model modification
+	{	acceptor.accept(
+			issue, 
+			"Delete name first character", 			// label
+			"Change " + issue.data.get(0) + " to " + issue.data.get(0).substring(1), 
+			""										// icon
+		) [	element, context |
+				(element as Enumeration).name = issue.data.get(0).substring(1)
+		  ]
+	}
+	
+@Fix(FormlNameValidator.UNCAPITALIZED_CLASS_NAME)
+	def capitalizeEnumerationName(Issue issue, IssueResolutionAcceptor acceptor) 
+	// Model modification
+	{	acceptor.accept(
+			issue, 
+			"Capitalize name", 			// label
+			"Change " + issue.data.get(0) + " to " + issue.data.get(0).toFirstUpper, 
+			"upcase.png"				// icon
+		) [	element, context |
+				(element as Enumeration).name = issue.data.get(0).toFirstUpper
 		  ]
 	}
 
@@ -159,7 +186,21 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 			"Proposed end name: " + issue.data.get(0), 
 			"",							// no icon for now
 			[ element, context |
-				(element as DefinedClass).endName = issue.data.get(0)
+				(element as SimpleClass).endName = issue.data.get(0)
+			]
+		)
+	}
+	
+	@Fix(FormlEndNameValidator.NO_ENUMERATION_END_NAME)
+	def addEnumerationEndName(Issue issue, IssueResolutionAcceptor acceptor) 
+	// Model modification
+	{	acceptor.accept(
+			issue, 
+			"Add end name", 			// label
+			"Proposed end name: " + issue.data.get(0), 
+			"",							// no icon for now
+			[ element, context |
+				(element as Enumeration).endName = issue.data.get(0)
 			]
 		)
 	}
@@ -247,7 +288,7 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 			"Proposed new end name: " + issue.data.get(0), 
 			"",							// no icon for now
 			[ element, context |
-				(element as DefinedClass).endName = issue.data.get(0)
+				(element as SimpleClass).endName = issue.data.get(0)
 			]
 		)
 	}
@@ -261,7 +302,35 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 			"Proposed new name: " + issue.data.get(1), 
 			"",							// no icon for now
 			[ element, context |
-				(element as DefinedClass).name = issue.data.get(1)
+				(element as SimpleClass).name = issue.data.get(1)
+			]
+		)
+	}
+
+	@Fix(FormlEndNameValidator.INCORRECT_ENUMERATION_END_NAME)
+	def changeEnumerationEndName(Issue issue, IssueResolutionAcceptor acceptor) 
+	// Model modification
+	{	acceptor.accept(
+			issue, 
+			"Change end name " + issue.data.get(1) + " to " + issue.data.get(0), 	// label
+			"Proposed new end name: " + issue.data.get(0), 
+			"",							// no icon for now
+			[ element, context |
+				(element as Enumeration).endName = issue.data.get(0)
+			]
+		)
+	}
+
+	@Fix(FormlEndNameValidator.INCORRECT_ENUMERATION_END_NAME)
+	def changeEnumerationName(Issue issue, IssueResolutionAcceptor acceptor) 
+	// Model modification
+	{	acceptor.accept(
+			issue, 
+			"Change name " + issue.data.get(0) + " to " + issue.data.get(1), // label
+			"Proposed new name: " + issue.data.get(1), 
+			"",							// no icon for now
+			[ element, context |
+				(element as Enumeration).name = issue.data.get(1)
 			]
 		)
 	}

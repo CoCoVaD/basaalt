@@ -106,7 +106,7 @@ class FormlNameValidatorTest {
 	}
 	
 	/*
-	 * Class names
+	 * Simple class names
 	 */
 	@Test
 	def void TestClassNameIsNotDegree () {
@@ -116,7 +116,7 @@ class FormlNameValidatorTest {
 			end TestModel;
 		''')
 		models.assertWarning (
-			FormlPackage.eINSTANCE.definedClass,
+			FormlPackage.eINSTANCE.simpleClass,
 			FormlNameValidator.INCORRECT_CLASS_NAME,
 			"Classes should not be named °"
 		)
@@ -130,7 +130,7 @@ class FormlNameValidatorTest {
 			end TestModel;
 		''')
 		models.assertWarning (
-			FormlPackage.eINSTANCE.definedClass,
+			FormlPackage.eINSTANCE.simpleClass,
 			FormlNameValidator.CLASS_NAME_FIRST_CHAR_IS_DEGREE,
 			"Class names should not begin with a °"
 		)
@@ -144,9 +144,54 @@ class FormlNameValidatorTest {
 			end TestModel;
 		''')
 		models.assertWarning (
-			FormlPackage.eINSTANCE.definedClass,
+			FormlPackage.eINSTANCE.simpleClass,
 			FormlNameValidator.UNCAPITALIZED_CLASS_NAME,
 			"Class names should not begin with a lower case letter"
+		)
+	}
+	
+	/*
+	 * Enumeration names
+	 */
+	@Test
+	def void TestEnumerationNameIsNotDegree () {
+		val models = parseHelper.parse('''
+			Model TestModel begin
+				Enumeration [s1, s2] °;
+			end TestModel;
+		''')
+		models.assertWarning (
+			FormlPackage.eINSTANCE.enumeration,
+			FormlNameValidator.INCORRECT_ENUMERATION_NAME,
+			"Enumerations should not be named °"
+		)
+	}
+	
+	@Test
+	def void TestEnumerationNameFirstCharIsNotDegree () {
+		val models = parseHelper.parse('''
+			Model TestModel begin
+				Enumeration [s1, s2] °EnumerationName;
+			end TestModel;
+		''')
+		models.assertWarning (
+			FormlPackage.eINSTANCE.enumeration,
+			FormlNameValidator.ENUMERATION_NAME_FIRST_CHAR_IS_DEGREE,
+			"Enumeration names should not begin with a °"
+		)
+	}
+	
+	@Test
+	def void TestEnumerationNameFirstCharIsNotLowerCase () {
+		val models = parseHelper.parse('''
+			Model TestModel begin
+				Enumeration [s1, s2] enumerationName;
+			end TestModel;
+		''')
+		models.assertWarning (
+			FormlPackage.eINSTANCE.enumeration,
+			FormlNameValidator.UNCAPITALIZED_ENUMERATION_NAME,
+			"Enumeration names should not begin with a lower case letter"
 		)
 	}
 	

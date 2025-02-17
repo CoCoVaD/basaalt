@@ -7,7 +7,8 @@ import forml.forml.FormlPackage
 import forml.validation.FormlValidator
 import forml.forml.Model
 import forml.forml.PartialModel
-import forml.forml.DefinedClass
+import forml.forml.SimpleClass
+import forml.forml.Enumeration
 import forml.forml.Object
 
 class FormlNameValidator extends AbstractFormlValidator {
@@ -23,7 +24,7 @@ class FormlNameValidator extends AbstractFormlValidator {
 		if (model.name.charAt(0) == degree && model.name.length == 1)
 			warning(
 				"Models should not be named °", 
-				FormlPackage.eINSTANCE.model_Name,
+				FormlPackage.eINSTANCE.name_Name,
 				INCORRECT_MODEL_NAME,
 				model.name)
 	}
@@ -35,7 +36,7 @@ class FormlNameValidator extends AbstractFormlValidator {
 		if (model.name.charAt(0) == degree && model.name.length > 1)
 			warning(
 				"Model names should not begin with a °", 
-				FormlPackage.eINSTANCE.model_Name,
+				FormlPackage.eINSTANCE.name_Name,
 				MODEL_NAME_FIRST_CHAR_IS_DEGREE,
 				model.name)
 	}
@@ -46,7 +47,7 @@ class FormlNameValidator extends AbstractFormlValidator {
 		if (model.name.charAt(0).lowerCase)
 			warning(
 				"Model names should not begin with a lower case letter", 
-				FormlPackage.eINSTANCE.model_Name,
+				FormlPackage.eINSTANCE.name_Name,
 				UNCAPITALIZED_MODEL_NAME,
 				model.name)
 	}
@@ -58,7 +59,7 @@ class FormlNameValidator extends AbstractFormlValidator {
 		if (partialModel.name.charAt(0) == degree && partialModel.name.length == 1)
 			warning(
 				"Partial models should not be named °", 
-				FormlPackage.eINSTANCE.partialModel_Name,
+				FormlPackage.eINSTANCE.name_Name,
 				INCORRECT_PARTIAL_MODEL_NAME,
 				partialModel.name)
 	}
@@ -70,7 +71,7 @@ class FormlNameValidator extends AbstractFormlValidator {
 		if (partialModel.name.charAt(0) == degree && partialModel.name.length > 1)
 			warning(
 				"Partial model names should not begin with a °", 
-				FormlPackage.eINSTANCE.partialModel_Name,
+				FormlPackage.eINSTANCE.name_Name,
 				PARTIAL_MODEL_NAME_FIRST_CHAR_IS_DEGREE,
 				partialModel.name)
 	}
@@ -81,44 +82,79 @@ class FormlNameValidator extends AbstractFormlValidator {
 		if (partialModel.name.charAt(0).lowerCase)
 			warning(
 				"Partial model names should not begin with a lower case letter", 
-				FormlPackage.eINSTANCE.partialModel_Name,
+				FormlPackage.eINSTANCE.name_Name,
 				UNCAPITALIZED_PARTIAL_MODEL_NAME,
 				partialModel.name)
 	}
 
 	public static val INCORRECT_CLASS_NAME = FormlValidator.ISSUE_PREFIX + "IncorrectClassName"
 	@Check
-	def checkClassNameIsNotDegree (DefinedClass definedClass) {
+	def checkClassNameIsNotDegree (SimpleClass simpleClass) {
 		val char degree = '°'	// This is necessary to prevent conversion of char literals into strings
-		if (definedClass.name.charAt(0) == degree && definedClass.name.length == 1)
+		if (simpleClass.name.charAt(0) == degree && simpleClass.name.length == 1)
 			warning(
 				"Classes should not be named °", 
-				FormlPackage.eINSTANCE.definedClass_Name,
+				FormlPackage.eINSTANCE.name_Name,
 				INCORRECT_CLASS_NAME,
-				definedClass.name)
+				simpleClass.name)
 	}
 
 	public static val CLASS_NAME_FIRST_CHAR_IS_DEGREE = FormlValidator.ISSUE_PREFIX + "ClassNameFirstCharIsDegree"
 	@Check
-	def checkClassNameDoesNotStartsWithDegree (DefinedClass dClass) {
+	def checkClassNameDoesNotStartsWithDegree (SimpleClass simpleClass) {
 		val char degree = '°'	// This is necessary to prevent conversion of char literals into strings
-		if (dClass.name.charAt(0) == degree && dClass.name.length > 1)
+		if (simpleClass.name.charAt(0) == degree && simpleClass.name.length > 1)
 			warning(
 				"Class names should not begin with a °", 
-				FormlPackage.eINSTANCE.definedClass_Name,
+				FormlPackage.eINSTANCE.name_Name,
 				CLASS_NAME_FIRST_CHAR_IS_DEGREE,
-				dClass.name)
+				simpleClass.name)
 	}
 	
 	public static val UNCAPITALIZED_CLASS_NAME = FormlValidator.ISSUE_PREFIX + "UncapitalizedClassName"
 	@Check
-	def checkClassNameDoesNotStartWithLowerCase (DefinedClass definedClass) {
-		if (definedClass.name.charAt(0).lowerCase)
+	def checkClassNameDoesNotStartWithLowerCase (SimpleClass simpleClass) {
+		if (simpleClass.name.charAt(0).lowerCase)
 			warning(
 				"Class names should not begin with a lower case letter", 
-				FormlPackage.eINSTANCE.definedClass_Name,
+				FormlPackage.eINSTANCE.name_Name,
 				UNCAPITALIZED_CLASS_NAME,
-				definedClass.name)
+				simpleClass.name)
+	}
+
+	public static val INCORRECT_ENUMERATION_NAME = FormlValidator.ISSUE_PREFIX + "IncorrectEnumerationName"
+	@Check
+	def checkEnumerationNameIsNotDegree (Enumeration enumeration) {
+		val char degree = '°'	// This is necessary to prevent conversion of char literals into strings
+		if (enumeration.name.charAt(0) == degree && enumeration.name.length == 1)
+			warning(
+				"Enumerations should not be named °", 
+				FormlPackage.eINSTANCE.name_Name,
+				INCORRECT_ENUMERATION_NAME,
+				enumeration.name)
+	}
+
+	public static val ENUMERATION_NAME_FIRST_CHAR_IS_DEGREE = FormlValidator.ISSUE_PREFIX + "EnumerationNameFirstCharIsDegree"
+	@Check
+	def checkEnumerationNameDoesNotStartsWithDegree (Enumeration enumeration) {
+		val char degree = '°'	// This is necessary to prevent conversion of char literals into strings
+		if (enumeration.name.charAt(0) == degree && enumeration.name.length > 1)
+			warning(
+				"Enumeration names should not begin with a °", 
+				FormlPackage.eINSTANCE.name_Name,
+				ENUMERATION_NAME_FIRST_CHAR_IS_DEGREE,
+				enumeration.name)
+	}
+	
+	public static val UNCAPITALIZED_ENUMERATION_NAME = FormlValidator.ISSUE_PREFIX + "UncapitalizedEnumerationName"
+	@Check
+	def checkEnumerationNameDoesNotStartWithLowerCase (Enumeration enumeration) {
+		if (enumeration.name.charAt(0).lowerCase)
+			warning(
+				"Enumeration names should not begin with a lower case letter", 
+				FormlPackage.eINSTANCE.name_Name,
+				UNCAPITALIZED_ENUMERATION_NAME,
+				enumeration.name)
 	}
 
 	public static val CAPITALIZED_OBJECT_NAME = FormlValidator.ISSUE_PREFIX + "IncorrectObjectName"
@@ -127,7 +163,7 @@ class FormlNameValidator extends AbstractFormlValidator {
 		if (object.name.charAt(0).upperCase)
 			warning(
 				"Object names should not begin with an upper case letter", 
-				FormlPackage.eINSTANCE.object_Name,
+				FormlPackage.eINSTANCE.name_Name,
 				CAPITALIZED_OBJECT_NAME,
 				object.name)
 	}

@@ -5,7 +5,9 @@ import org.eclipse.xtext.validation.Check
 
 import forml.forml.FormlPackage
 import forml.forml.Model
-import forml.forml.DefinedClass
+import forml.forml.SimpleClass
+import forml.forml.Enumeration
+import forml.forml.ClassReference
 
 class FormlExtensionValidator extends AbstractFormlValidator {
 /*
@@ -40,32 +42,76 @@ class FormlExtensionValidator extends AbstractFormlValidator {
 				CYCLE_WITH_EXTENDED_MODELS)
 	}
 	
-	def void collectExtendedClasses(HashSet<DefinedClass> collectedClasses, HashSet<DefinedClass> visitedClasses, DefinedClass c) {
+	def void collectExtendedClasses(HashSet<ClassReference> collectedClasses, 
+									HashSet<ClassReference> visitedClasses, 
+									ClassReference c) {
 		if (!visitedClasses.contains(c)) {
 			visitedClasses.add(c)
 			if (!collectedClasses.contains(c)) collectedClasses.add(c)
-			if (c.extendedClasses !== null)
-				for (extendedClass : c.extendedClasses) 
-					if (extendedClass.^class !== null)
-						collectExtendedClasses(collectedClasses, visitedClasses, extendedClass.definedClass)
+			val x = c.definedClass
+			if (x !== null) switch x {
+				SimpleClass: 
+					for (extendedClass : x.extendedClasses) 
+						if (extendedClass.definedClass !== null)
+							collectExtendedClasses(collectedClasses, visitedClasses, extendedClass)
+				Enumeration: 
+					for (extendedClass : x.extendedClasses) 
+						if (extendedClass.definedClass !== null)
+							collectExtendedClasses(collectedClasses, visitedClasses, extendedClass)
+			}
 		}		
 	}
  
 	public static val CYCLE_WITH_EXTENDED_CLASSES = FormlValidator.ISSUE_PREFIX + "CycleWithExtendedClasses"
 	@Check
-	def checkClassIsNotInExtensionClosure(DefinedClass c) {
-		if (c.extendedClasses === null)
+	def checkClassIsNotInExtensionClosure(SimpleClass simpleClass) {
+		if (simpleClass.extendedClasses === null)
 			return // nothing to check
 			
-		val HashSet<DefinedClass> collectedClasses = newHashSet
-		val HashSet<DefinedClass> visitedClasses = newHashSet
-		for (extendedClass : c.extendedClasses) 
-			collectExtendedClasses(collectedClasses, visitedClasses, extendedClass.definedClass)
+		val HashSet<ClassReference> collectedClasses = newHashSet
+		val HashSet<ClassReference> visitedClasses = newHashSet
+		for (extendedClass : simpleClass.extendedClasses) 
+				collectExtendedClasses(collectedClasses, visitedClasses, extendedClass)
 		
-		if (collectedClasses.contains(c)) 
-			error(
-				"Cycle in hierarchy extension of class " + c.name,
-				FormlPackage.eINSTANCE.definedClass_ExtendedClasses,
-				CYCLE_WITH_EXTENDED_CLASSES)
+		for (reference : collectedClasses) {
+			var x = reference.definedClass
+			if (x !== null) {
+				var name = switch x {
+					SimpleClass: x.name 
+					Enumeration: x.name
+				}
+				if (name == simpleClass.name)
+					error(
+						"Cycle in hierarchy extension of class " + simpleClass.name,
+						FormlPackage.eINSTANCE.extendedClasses_ExtendedClasses,
+						CYCLE_WITH_EXTENDED_CLASSES)
+			}
+		} 
+	}
+	
+	@Check
+	def checkEnumerationIsNotInExtensionClosure(Enumeration enumeration) {
+		if (enumeration.extendedClasses === null)
+			return // nothing to check
+			
+		val HashSet<ClassReference> collectedClasses = newHashSet
+		val HashSet<ClassReference> visitedClasses = newHashSet
+		for (extendedClass : enumeration.extendedClasses) 
+				collectExtendedClasses(collectedClasses, visitedClasses, extendedClass)
+		
+		for (reference : collectedClasses) {
+			var x = reference.definedClass
+			if (x !== null) {
+				var name = switch x {
+					SimpleClass: x.name 
+					Enumeration: x.name
+				}
+				if (name == enumeration.name)
+					error(
+						"Cycle in hierarchy extension of enumeration " + enumeration.name,
+						FormlPackage.eINSTANCE.extendedClasses_ExtendedClasses,
+						CYCLE_WITH_EXTENDED_CLASSES)
+			}
+		} 
 	}
 }
