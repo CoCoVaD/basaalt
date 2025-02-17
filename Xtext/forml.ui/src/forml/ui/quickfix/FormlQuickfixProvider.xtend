@@ -17,6 +17,7 @@ import forml.forml.PartialModel
 import forml.forml.SimpleClass
 import forml.forml.Enumeration
 import forml.forml.Object
+import forml.forml.Definition
 
 /**
  * Custom quickfixes.
@@ -219,6 +220,20 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 		)
 	}
 
+	@Fix(FormlEndNameValidator.NO_DEFINITION_END_NAME)
+	def addDefinitionEndName(Issue issue, IssueResolutionAcceptor acceptor) 
+	// Model modification
+	{	acceptor.accept(
+			issue, 
+			"Add end name", 			// label
+			"Proposed end name: " + issue.data.get(0), 
+			"",							// no icon for now
+			[ element, context |
+				(element as Definition).endName = issue.data.get(0)
+			]
+		)
+	}
+
 /**
  * End name different from name
  *
@@ -359,6 +374,20 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 			"",							// no icon for now
 			[ element, context |
 				(element as Object).name = issue.data.get(1)
+			]
+		)
+	}
+
+	@Fix(FormlEndNameValidator.INCORRECT_DEFINITION_END_NAME)
+	def changeDefinitionEndName(Issue issue, IssueResolutionAcceptor acceptor) 
+	// Model modification
+	{	acceptor.accept(
+			issue, 
+			"Change end name " + issue.data.get(1) + " to " + issue.data.get(0), 	// label
+			"Proposed new end name: " + issue.data.get(0), 
+			"",							// no icon for now
+			[ element, context |
+				(element as Definition).endName = issue.data.get(0)
 			]
 		)
 	}

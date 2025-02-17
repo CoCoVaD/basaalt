@@ -11,6 +11,7 @@ import forml.forml.PartialModel
 import forml.forml.SimpleClass
 import forml.forml.Enumeration
 import forml.forml.Object
+import forml.forml.Definition
 
 class FormlEndNameValidator extends AbstractFormlValidator {
 /**
@@ -75,6 +76,25 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 					FormlPackage.eINSTANCE.itemizedDefinition_BlockEnd,
 					NO_OBJECT_END_NAME,
 					object.name)
+	}
+	
+	public static val NO_DEFINITION_END_NAME = FormlValidator.ISSUE_PREFIX + "NoDefinitionEndName"
+	@Check
+	def checkDefinitionEndNameExists(Definition definition) {
+		val reference = definition.item
+		val name = switch reference {
+			PartialModel: reference.name
+			SimpleClass:  reference.name
+			Enumeration:  reference.name
+			Object:       reference.name
+		}
+		if (definition.blockEnd)
+			if (definition.endName === null)
+				warning(
+					"No end name", 
+					FormlPackage.eINSTANCE.itemizedDefinition_BlockEnd,
+					NO_DEFINITION_END_NAME,
+					name)
 	}
 
 /**
@@ -147,5 +167,25 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 					INCORRECT_OBJECT_END_NAME,
 					object.name,
 					object.endName)
+	}
+
+	public static val INCORRECT_DEFINITION_END_NAME = FormlValidator.ISSUE_PREFIX + "IncorrectDefinitionEndName"
+	@Check
+	def checkDefinitionEndName(Definition definition) {
+		val reference = definition.item
+		val name = switch reference {
+			PartialModel: reference.name
+			SimpleClass:  reference.name
+			Enumeration:  reference.name
+			Object:       reference.name
+		}
+		if (definition.blockEnd)
+			if (definition.endName != name)
+				error(
+					"End name " + definition.endName + " different from name " + name, 
+					FormlPackage.eINSTANCE.itemizedDefinition_BlockEnd,
+					INCORRECT_DEFINITION_END_NAME,
+					name,
+					definition.endName)
 	}
 }

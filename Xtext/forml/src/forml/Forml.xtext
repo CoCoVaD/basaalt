@@ -15,7 +15,7 @@ Model:
 	ItemizedDefinition	statements+=Statement*
 	/// Check that Model is not in extension closure
 	/// Warning if 'name' begins with a lower case, with a quick fix
-	/// Warning if 'name' begins with a ° or an _
+	/// Warning if 'name' begins with a °
 	/// Warning if a begin-end block is not provided with an 'endName', with a quick fix
 	/// Check that if an 'endName' is provided, it is equal to 'name', with a quick fix
 ;
@@ -61,7 +61,7 @@ ClassDeclaration:
 PartialModel:
 	'partial' 'Model' Name ItemizedDefinition
 	/// Warning if 'name' begins with a lower case, with a quick fix
-	/// Warning if 'name' begins with a °
+	/// Warning if 'name' begins with a °, with a quick fix
 	/// Warning if a begin-end block is not provided with an 'endName', with a quick fix
 	/// Check that if an 'endName' is provided, it is equal to 'name', with a quick fix
 ;
@@ -72,7 +72,7 @@ SimpleClass:
 	ItemizedDefinition
 	/// Check that 'name' is not in the closure of 'extendedClasses'
 	/// Warning if 'name' begins with a lower case, with a quick fix
-	/// Warning if 'name' begins with a ° or an _
+	/// Warning if 'name' begins with a °, with a quick fix
 	/// Warning if a begin-end block is not provided with an 'endName', with a quick fix
 	/// Check that if an 'endName' is provided, it is equal to 'name', with a quick fix
 	//- Check that 'statements' contains no partial model declaration / definition
@@ -84,7 +84,7 @@ Enumeration:
 	ItemizedDefinition
 	/// Check that 'name' is not in the closure of 'extendedClasses'
 	/// Warning if 'name' begins with a lower case, with a quick fix
-	/// Warning if 'name' begins with a ° or an _
+	/// Warning if 'name' begins with a °, with a quick fix
 	/// Warning if a begin-end block is not provided with an 'endName', with a quick fix
 	/// Check that if an 'endName' is provided, it is equal to 'name', with a quick fix
 	//- Check that 'statements' contains no partial model declaration / definition
@@ -100,7 +100,7 @@ fragment ExtendedClasses:
 
 ClassReference:
 (	preDefinedClass=PredefinedClass
-|	definedClass=[ClassDeclaration]
+|	definedClass=[ClassDeclaration | QualifiedName]
 )	comments+=STRING*
 ;
 

@@ -62,6 +62,8 @@ class FormlScopingLearningTest {
 	
 	@Test
 	def void FormlScoping_02 () {
+		System.out.println("")
+		System.out.println("=============================================")
 		System.out.println("FormlScoping_02")
 		val result = parseHelper.parse('''
 			Model TestModel begin
@@ -108,14 +110,18 @@ class FormlScopingLearningTest {
 	
 	@Test
 	def void FormlScoping_03 () {
+		System.out.println("")
+		System.out.println("=============================================")
 		System.out.println("FormlScoping_03")
 		val result = parseHelper.parse('''
 			Model TestModel begin
 				Class A;
-				Class B;
+				Class B begin
+					Boolean b1;
+				end B;
 			end TestModel;
 			Class C;
-			P.E begin
+			A begin
 				Integer i;
 			end A;
 			Class D;
@@ -123,9 +129,14 @@ class FormlScopingLearningTest {
 				Class E;
 			end P;
 		''')
+		System.out.println("Index of all qualified names")
+		for (s : result.getExportedEObjectDescriptions.map[qualifiedName]) {
+			System.out.println(s)
+		}
+		System.out.println("")
 		val model = result.models.head
 		System.out.println("Model name = " + model.name)
-		System.out.println(model.statements.length + " statements")
+		System.out.println(model.statements.length + " statements in TestModel")
 		for (var i=0 ; i < model.statements.length ; i++) {
 			var s = model.statements.get(i)
 			if (s.partialModel !== null) 
