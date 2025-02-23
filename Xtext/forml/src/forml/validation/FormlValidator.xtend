@@ -17,7 +17,7 @@ import forml.validation.FormlExtensionValidator
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 
-@ComposedChecks(validators = #[FormlNameValidator, FormlEndNameValidator, FormlExtensionValidator])
+@ComposedChecks(validators = #[FormlNameValidator, FormlEndNameValidator, FormlExtensionValidator, FormlMultipleDeclarationsValidator])
 
 class FormlValidator extends AbstractFormlValidator {
 	
