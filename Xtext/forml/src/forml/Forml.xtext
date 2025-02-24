@@ -111,17 +111,18 @@ PredefinedClass:
 ;
 
 States:
-	'[' states+=State
-(	list?=',' states+=State (',' states+=State)* 
-|	product?='&' states+=State ('&' states+=State)+
+	'[' states+=State 
+(	list?=','    states+=State (',' states+=State)*
+|	product?='&' states+=State ('&' states+=State)* 
 )	']'
+	//- In case of product, check that all states are composite
+	//- Check that state names are all different
 ;
 
 State:
 (	states=States 				// Composite state on the fly
 |	enumeration=[Enumeration]	// Composite state on existing enumeration
-)?	name=ID
-	comments+=STRING*
+)?	name=ID comments+=STRING*
 ;
 
 Determiner: '#' | '@' | '~' | '^' | '!' | '?';
@@ -135,7 +136,7 @@ Object:
 	/// Warning if a begin-end block is not provided with an 'endName', with a quick fix
 	/// Verify that if a begin-end block is provided with an 'endName', 
 	/// 	it is equal to 'name', with a quick fix
-	// Verify that the same 'name' is not declared with different types
+	/// Verify that the same 'name' is not declared with different types
 	//  Verify that 'statements' does not contain any partial model
 ;
 
