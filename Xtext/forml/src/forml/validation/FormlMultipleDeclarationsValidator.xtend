@@ -8,7 +8,7 @@ import com.google.inject.Inject
 import org.eclipse.xtext.naming.QualifiedName
 
 import forml.validation.FormlValidator
-import forml.forml.PartialModel
+import forml.forml.Section
 import forml.forml.SimpleClass
 import forml.forml.Enumeration
 import forml.forml.Object
@@ -25,11 +25,11 @@ class FormlMultipleDeclarationsValidator extends AbstractFormlValidator {
 	}
 	
 	def getExportedEObjectDescriptions(EObject o) {
-		o.getResourceDescription.getExportedObjects
+		o.resourceDescription.getExportedObjects
 	}
 	
 	def getExportedClassesEObjectDescriptions(EObject o) {
-		o.getResourceDescription.
+		o.resourceDescription.
 		getExportedObjectsByType(FormlPackage.eINSTANCE.simpleClass)
 	}
 	
@@ -40,7 +40,7 @@ class FormlMultipleDeclarationsValidator extends AbstractFormlValidator {
 		while (current !== null) {
 			switch current {
 				Model,
-				PartialModel,
+				Section,
 				SimpleClass,
 				Enumeration,
 				Object:       qName = QualifiedName.create(current.name).append(qName)
@@ -54,7 +54,7 @@ class FormlMultipleDeclarationsValidator extends AbstractFormlValidator {
 		if (ref.preDefinedClass !== null) QualifiedName.create(ref.preDefinedClass) 
 		else switch ref.definedClass {
 				SimpleClass, Enumeration: {
-					ref.definedClass.getQualifiedName
+					ref.definedClass.qualifiedName
 				}
 			}	
 	}
@@ -72,8 +72,8 @@ class FormlMultipleDeclarationsValidator extends AbstractFormlValidator {
 		val states2 = s2.states.sortBy[name].map[states]
 		for (var i=0 ; i< states1.length ; i++) 
 			if (!states1.get(i).isEqualTo(states2.get(i))) return false
- 		val enum1 = s1.states.sortBy[name].map[enumeration.getQualifiedName]
-		val enum2 = s2.states.sortBy[name].map[enumeration.getQualifiedName]
+ 		val enum1 = s1.states.sortBy[name].map[enumeration.qualifiedName]
+		val enum2 = s2.states.sortBy[name].map[enumeration.qualifiedName]
 		for (var i=0 ; i< states1.length ; i++) 
 			if (!enum1.get(i).equals(enum2.get(i))) return false
 		true
@@ -85,15 +85,15 @@ class FormlMultipleDeclarationsValidator extends AbstractFormlValidator {
 	public static val INCONSISTENT_CLASS_LIST  = FormlValidator.ISSUE_PREFIX + "InconsistentClassLIst"
 	public static val INCONSISTENT_STATES      = FormlValidator.ISSUE_PREFIX + "InconsistentStates"
 	@Check
-	def checkDeclarationsCategories(PartialModel item) {
- 		for (description : item.getExportedEObjectDescriptions) {
+	def checkDeclarationsCategories(Section item) {
+ 		for (description : item.exportedEObjectDescriptions) {
 			switch description.EObjectOrProxy {
 				Model, SimpleClass, Enumeration, Object: {
-					if (description.qualifiedName == item.getQualifiedName) error(
-						"Inconsistent categories declared for " + item.getQualifiedName, 
+					if (description.qualifiedName == item.qualifiedName) error(
+						"Inconsistent categories declared for " + item.qualifiedName, 
 						FormlPackage.eINSTANCE.name_Name,
 						INCONSISTENT_CATEGORIES,
-						item.getQualifiedName.toString)
+						item.qualifiedName.toString)
 				} 
 			}
 		}
@@ -101,7 +101,7 @@ class FormlMultipleDeclarationsValidator extends AbstractFormlValidator {
 	
 	@Check
 	def checkDeclarationsCategories(SimpleClass item) {
- 		for (description : item.getExportedEObjectDescriptions) {
+ 		for (description : item.exportedEObjectDescriptions) {
  			var other = description.EObjectOrProxy
  			if (other.eIsProxy)
  				other = item.eResource.resourceSet.getEObject(description.EObjectURI, true)
@@ -109,45 +109,45 @@ class FormlMultipleDeclarationsValidator extends AbstractFormlValidator {
 				SimpleClass: {
 					if (description.qualifiedName == item.getQualifiedName) {
 						if (item.main != other.main) error(
-							"Inconsistent 'main' modifier declared for " + item.getQualifiedName, 
+							"Inconsistent 'main' modifier declared for " + item.qualifiedName, 
 							FormlPackage.eINSTANCE.classModifier_Main,
 							INCONSISTENT_MODIFIERS,
-							item.getQualifiedName.toString)
+							item.qualifiedName.toString)
 						if (item.external != other.external) error(
-							"Inconsistent 'external' modifiers declared for " + item.getQualifiedName, 
+							"Inconsistent 'external' modifiers declared for " + item.qualifiedName, 
 							FormlPackage.eINSTANCE.classModifier_External,
 							INCONSISTENT_MODIFIERS,
-							item.getQualifiedName.toString)
+							item.qualifiedName.toString)
 						if (item.private != other.private) error(
-							"Inconsistent 'private' modifiers declared for " + item.getQualifiedName, 
+							"Inconsistent 'private' modifiers declared for " + item.qualifiedName, 
 							FormlPackage.eINSTANCE.classModifier_Private,
 							INCONSISTENT_MODIFIERS,
-							item.getQualifiedName.toString)
+							item.qualifiedName.toString)
 						if (item.abstract != other.abstract) error(
-							"Inconsistent 'abstract' modifiers declared for " + item.getQualifiedName, 
+							"Inconsistent 'abstract' modifiers declared for " + item.qualifiedName, 
 							FormlPackage.eINSTANCE.classModifier_Abstract,
 							INCONSISTENT_MODIFIERS,
-							item.getQualifiedName.toString)
+							item.qualifiedName.toString)
 						if (item.determiner  != "" && other.determiner != "" && item.determiner != other.determiner) error(
-							"Inconsistent determiners declared for " + item.getQualifiedName, 
+							"Inconsistent determiners declared for " + item.qualifiedName, 
 							FormlPackage.eINSTANCE.simpleClass_Determiner,
 							INCONSISTENT_DETERMINERS,
-							item.getQualifiedName.toString)
+							item.qualifiedName.toString)
  						val itemClassQNames  = item.extendedClasses.map[classReferenceQName].sort
 						val otherClassQNames = other.extendedClasses.map[classReferenceQName].sort
 						if (!itemClassQNames.equals(otherClassQNames)) error(
-							"Inconsistent sets of extended classes declared for " + item.getQualifiedName, 
+							"Inconsistent sets of extended classes declared for " + item.qualifiedName, 
 							FormlPackage.eINSTANCE.extendedClasses_ExtendedClasses,
 							INCONSISTENT_CLASS_LIST,
-							item.getQualifiedName.toString)
+							item.qualifiedName.toString)
 					}
 				}
-				Model, PartialModel, Enumeration, Object: {
-					if (description.qualifiedName == item.getQualifiedName) error(
-						"Inconsistent categories declared for " + item.getQualifiedName, 
+				Model, Section, Enumeration, Object: {
+					if (description.qualifiedName == item.qualifiedName) error(
+						"Inconsistent categories declared for " + item.qualifiedName, 
 						FormlPackage.eINSTANCE.name_Name,
 						INCONSISTENT_CATEGORIES,
-						item.getQualifiedName.toString)
+						item.qualifiedName.toString)
 				}
 			}
 		}
@@ -155,58 +155,58 @@ class FormlMultipleDeclarationsValidator extends AbstractFormlValidator {
 	
 	@Check
 	def checkDeclarationsCategories(Enumeration item) {
- 		for (description : item.getExportedEObjectDescriptions) {
+ 		for (description : item.exportedEObjectDescriptions) {
  			var other = description.EObjectOrProxy
  			if (other.eIsProxy)
  				other = item.eResource.resourceSet.getEObject(description.EObjectURI, true)
 			switch other {
 				Enumeration: {
-					if (description.qualifiedName == item.getQualifiedName) {
+					if (description.qualifiedName == item.qualifiedName) {
 						if (item.main != other.main) error(
-							"Inconsistent 'main' modifier declared for " + item.getQualifiedName, 
+							"Inconsistent 'main' modifier declared for " + item.qualifiedName, 
 							FormlPackage.eINSTANCE.classModifier_Main,
 							INCONSISTENT_MODIFIERS,
-							item.getQualifiedName.toString)
+							item.qualifiedName.toString)
 						if (item.external != other.external) error(
-							"Inconsistent 'external' modifiers declared for " + item.getQualifiedName, 
+							"Inconsistent 'external' modifiers declared for " + item.qualifiedName, 
 							FormlPackage.eINSTANCE.classModifier_External,
 							INCONSISTENT_MODIFIERS,
-							item.getQualifiedName.toString)
+							item.qualifiedName.toString)
 						if (item.private != other.private) error(
-							"Inconsistent 'private' modifiers declared for " + item.getQualifiedName, 
+							"Inconsistent 'private' modifiers declared for " + item.qualifiedName, 
 							FormlPackage.eINSTANCE.classModifier_Private,
 							INCONSISTENT_MODIFIERS,
-							item.getQualifiedName.toString)
+							item.qualifiedName.toString)
 						if (item.abstract != other.abstract) error(
-							"Inconsistent 'abstract' modifiers declared for " + item.getQualifiedName, 
+							"Inconsistent 'abstract' modifiers declared for " + item.qualifiedName, 
 							FormlPackage.eINSTANCE.classModifier_Abstract,
 							INCONSISTENT_MODIFIERS,
 							item.name)
 						if (item.determiner  != "" && other.determiner != "" && item.determiner != other.determiner) error(
-							"Inconsistent determiners declared for " + item.getQualifiedName, 
+							"Inconsistent determiners declared for " + item.qualifiedName, 
 							FormlPackage.eINSTANCE.enumeration_Determiner,
 							INCONSISTENT_DETERMINERS,
-							item.getQualifiedName.toString)
+							item.qualifiedName.toString)
  						val itemClassQNames  = item.extendedClasses.map[classReferenceQName].sort
 						val otherClassQNames = other.extendedClasses.map[classReferenceQName].sort
 						if (!itemClassQNames.equals(otherClassQNames)) error(
-							"Inconsistent sets of extended classes declared for " + item.getQualifiedName, 
+							"Inconsistent sets of extended classes declared for " + item.qualifiedName, 
 							FormlPackage.eINSTANCE.extendedClasses_ExtendedClasses,
 							INCONSISTENT_CLASS_LIST,
-							item.getQualifiedName.toString)
+							item.qualifiedName.toString)
 						if (!item.states.isEqualTo(other.states)) error(
-							"Inconsistent sets of states declared for " + item.getQualifiedName, 
+							"Inconsistent sets of states declared for " + item.qualifiedName, 
 							FormlPackage.eINSTANCE.enumeration_States,
 							INCONSISTENT_STATES,
-							item.getQualifiedName.toString)
+							item.qualifiedName.toString)
 					}
 				}
-				Model, PartialModel, SimpleClass, Object: {
-					if (description.qualifiedName == item.getQualifiedName) error(
-						"Inconsistent categories declared for " + item.getQualifiedName, 
+				Model, Section, SimpleClass, Object: {
+					if (description.qualifiedName == item.qualifiedName) error(
+						"Inconsistent categories declared for " + item.qualifiedName, 
 						FormlPackage.eINSTANCE.name_Name,
 						INCONSISTENT_CATEGORIES,
-						item.getQualifiedName.toString)
+						item.qualifiedName.toString)
 				}
 			}
 		}
@@ -214,59 +214,59 @@ class FormlMultipleDeclarationsValidator extends AbstractFormlValidator {
 	
 	@Check
 	def checkDeclarationsCategories(Object item) {
- 		for (description : item.getExportedEObjectDescriptions) {
+ 		for (description : item.exportedEObjectDescriptions) {
  			var other = description.EObjectOrProxy
  			if (other.eIsProxy)
  				other = item.eResource.resourceSet.getEObject(description.EObjectURI, true)
 			switch other {
 				Object: {
-					if (description.qualifiedName == item.getQualifiedName) {
+					if (description.qualifiedName == item.qualifiedName) {
 						if (item.main != other.main) error(
-							"Inconsistent 'main' modifier declared for " + item.getQualifiedName, 
+							"Inconsistent 'main' modifier declared for " + item.qualifiedName, 
 							FormlPackage.eINSTANCE.object_Main,
 							INCONSISTENT_MODIFIERS,
-							item.getQualifiedName.toString)
+							item.qualifiedName.toString)
 						if (item.external != other.external) error(
-							"Inconsistent 'external' modifiers declared for " + item.getQualifiedName, 
+							"Inconsistent 'external' modifiers declared for " + item.qualifiedName, 
 							FormlPackage.eINSTANCE.object_External,
 							INCONSISTENT_MODIFIERS,
-							item.getQualifiedName.toString)
+							item.qualifiedName.toString)
 						if (item.private != other.private) error(
-							"Inconsistent 'private' modifiers declared for " + item.getQualifiedName, 
+							"Inconsistent 'private' modifiers declared for " + item.qualifiedName, 
 							FormlPackage.eINSTANCE.object_Private,
 							INCONSISTENT_MODIFIERS,
-							item.getQualifiedName.toString)
+							item.qualifiedName.toString)
 					if (item.constant != other.constant) error(
-							"Inconsistent 'constant' modifiers declared for " + item.getQualifiedName, 
+							"Inconsistent 'constant' modifiers declared for " + item.qualifiedName, 
 							FormlPackage.eINSTANCE.object_Constant,
 							INCONSISTENT_MODIFIERS,
-							item.getQualifiedName.toString)
+							item.qualifiedName.toString)
 						if (item.fixed != other.fixed) error(
-							"Inconsistent 'fixed' modifiers declared for " + item.getQualifiedName, 
+							"Inconsistent 'fixed' modifiers declared for " + item.qualifiedName, 
 							FormlPackage.eINSTANCE.object_Fixed,
 							INCONSISTENT_MODIFIERS,
-							item.getQualifiedName.toString)
+							item.qualifiedName.toString)
 						if (item.determiner  != "" && other.determiner != "" && item.determiner != other.determiner) error(
-							"Inconsistent determiners declared for " + item.getQualifiedName, 
+							"Inconsistent determiners declared for " + item.qualifiedName, 
 							FormlPackage.eINSTANCE.object_Determiner,
 							INCONSISTENT_DETERMINERS,
-							item.getQualifiedName.toString)
+							item.qualifiedName.toString)
  						val itemClassQNames  = item.classes.map[classReferenceQName].sort
 						val otherClassQNames = other.classes.map[classReferenceQName].sort
 						if (!itemClassQNames.equals(otherClassQNames)) error(
-							"Inconsistent class lists declared for " + item.getQualifiedName, 
+							"Inconsistent class lists declared for " + item.qualifiedName, 
 							FormlPackage.eINSTANCE.object_Determiner,
 							INCONSISTENT_CLASS_LIST,
-							item.getQualifiedName.toString)
+							item.qualifiedName.toString)
 					}
 					
 				}
-				Model, PartialModel, SimpleClass, Enumeration: {
-					if (description.qualifiedName == item.getQualifiedName) error(
-						"Inconsistent categories declared for " + item.getQualifiedName, 
+				Model, Section, SimpleClass, Enumeration: {
+					if (description.qualifiedName == item.qualifiedName) error(
+						"Inconsistent categories declared for " + item.qualifiedName, 
 						FormlPackage.eINSTANCE.name_Name,
 						INCONSISTENT_CATEGORIES,
-						item.getQualifiedName.toString)
+						item.qualifiedName.toString)
 				}
 			}
 		}

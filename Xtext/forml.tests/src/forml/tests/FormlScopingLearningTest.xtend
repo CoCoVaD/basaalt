@@ -12,7 +12,7 @@ import forml.forml.FormlPackage
 
 import forml.forml.Models
 import org.eclipse.xtext.scoping.IScopeProvider
-import forml.forml.PartialModel
+import forml.forml.Section
 import forml.forml.Object
 import forml.forml.SimpleClass
 import forml.forml.Enumeration
@@ -99,8 +99,8 @@ class FormlScopingLearningTest {
 		System.out.println(model.statements.length + " statements")
 		for (var i=0 ; i < model.statements.length ; i++) {
 			var s = model.statements.get(i)
-			if (s.partialModel !== null) 
-				System.out.println("Partial Model name = " + s.partialModel.name)
+			if (s.section !== null) 
+				System.out.println("Partial Model name = " + s.section.name)
 			if (s.simpleClass !== null) 
 				System.out.println("Class name = " + s.simpleClass.name)
 			if (s.object !== null) 
@@ -145,8 +145,8 @@ class FormlScopingLearningTest {
 		System.out.println(model.statements.length + " statements in TestModel")
 		for (var i=0 ; i < model.statements.length ; i++) {
 			var s = model.statements.get(i)
-			if (s.partialModel !== null) 
-				System.out.println("  - Statement " + (i+1) + ": Partial Model name = " + s.partialModel.name)
+			if (s.section !== null) 
+				System.out.println("  - Statement " + (i+1) + ": Partial Model name = " + s.section.name)
 			if (s.simpleClass !== null) 
 				System.out.println("  - Statement " + (i+1) + ": Class name = " + s.simpleClass.name)
 			if (s.object !== null) 
@@ -161,7 +161,7 @@ class FormlScopingLearningTest {
 		val item = definition.item
 		System.out.println(" ")
 		switch item {
-			PartialModel: System.out.println("Name of referenced partial model in definition (statement 4): " + item.name)
+			Section: System.out.println("Name of referenced partial model in definition (statement 4): " + item.name)
 			SimpleClass:  System.out.println("Name of referenced class in definition (statement 4): " + item.name)
 			Enumeration:  System.out.println("Name of referenced enumeration in definition (statement 4): " + item.name)
 			Object:       System.out.println("Name of referenced object in definition (statement 4): " + item.name)
@@ -203,8 +203,8 @@ class FormlScopingLearningTest {
 		System.out.println(model.statements.length + " statements in TestModel")
 		for (var i=0 ; i < model.statements.length ; i++) {
 			var s = model.statements.get(i)
-			if (s.partialModel !== null) 
-				System.out.println("  - Statement " + (i+1) + ": Partial Model name = " + s.partialModel.name)
+			if (s.section !== null) 
+				System.out.println("  - Statement " + (i+1) + ": Partial Model name = " + s.section.name)
 			if (s.simpleClass !== null) 
 				System.out.println("  - Statement " + (i+1) + ": Class name = " + s.simpleClass.name)
 			if (s.object !== null) 
@@ -218,7 +218,7 @@ class FormlScopingLearningTest {
 			for (objectDescription: exportedObjects) {
 				var object=objectDescription.EObjectOrProxy
 				switch object {
-					PartialModel: System.out.println("Exported EObject: name=" + objectDescription.name + ", class=PartialModel")
+					Section: System.out.println("Exported EObject: name=" + objectDescription.name + ", class=PartialModel")
 					SimpleClass:  System.out.println("Exported EObject: name=" + objectDescription.name + ", class=SimpleClass")
 					Enumeration:  System.out.println("Exported EObject: name=" + objectDescription.name + ", class=Enumeration")
 					Object:       System.out.println("Exported EObject: name=" + objectDescription.name + ", class=O")
@@ -256,8 +256,8 @@ class FormlScopingLearningTest {
 		
 		for (var i=0 ; i < model.statements.length ; i++) {
 			var s = model.statements.get(i)
-			if (s.partialModel !== null) 
-				System.out.println("  - Statement " + (i+1) + ": Partial Model name = " + s.partialModel.name)
+			if (s.section !== null) 
+				System.out.println("  - Statement " + (i+1) + ": Partial Model name = " + s.section.name)
 			if (s.simpleClass !== null) 
 				System.out.println("  - Statement " + (i+1) + ": Class name = " + s.simpleClass.name)
 			if (s.object !== null) 
@@ -282,7 +282,7 @@ class FormlScopingLearningTest {
 			for (objectDescription: exportedObjects) {
 				var object=objectDescription.EObjectOrProxy
 				switch object {
-					PartialModel: System.out.println("Exported EObject: name=" + objectDescription.name + ", class=PartialModel")
+					Section: System.out.println("Exported EObject: name=" + objectDescription.name + ", class=PartialModel")
 					SimpleClass:  System.out.println("Exported EObject: name=" + objectDescription.name + ", class=SimpleClass")
 					Enumeration:  System.out.println("Exported EObject: name=" + objectDescription.name + ", class=Enumeration")
 					Object:       System.out.println("Exported EObject: name=" + objectDescription.name + ", class=O")
@@ -315,7 +315,7 @@ class FormlScopingLearningTest {
 		while (current !== null) {
 			switch current {
 				Model,
-				PartialModel,
+				Section,
 				SimpleClass,
 				Enumeration,
 				Object:       qName = QualifiedName.create(current.name).append(qName)

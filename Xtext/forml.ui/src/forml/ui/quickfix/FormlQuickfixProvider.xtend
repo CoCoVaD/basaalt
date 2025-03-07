@@ -13,7 +13,7 @@ import org.eclipse.xtext.validation.Issue
 import forml.validation.FormlNameValidator
 import forml.validation.FormlEndNameValidator
 import forml.forml.Model
-import forml.forml.PartialModel
+import forml.forml.Section
 import forml.forml.SimpleClass
 import forml.forml.Enumeration
 import forml.forml.Object
@@ -55,7 +55,7 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 		  ]
 	}
 
-	@Fix(FormlNameValidator.PARTIAL_MODEL_NAME_FIRST_CHAR_IS_DEGREE)
+	@Fix(FormlNameValidator.SECTION_NAME_FIRST_CHAR_IS_DEGREE)
 	def deleteFirstCharOfPartialModelName(Issue issue, IssueResolutionAcceptor acceptor) 
 	// Model modification
 	{	acceptor.accept(
@@ -64,11 +64,11 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 			"Change " + issue.data.get(0) + " to " + issue.data.get(0).substring(1), 
 			""										// icon
 		) [	element, context |
-				(element as PartialModel).name = issue.data.get(0).substring(1)
+				(element as Section).name = issue.data.get(0).substring(1)
 		  ]
 	}
 
-	@Fix(FormlNameValidator.UNCAPITALIZED_PARTIAL_MODEL_NAME)
+	@Fix(FormlNameValidator.UNCAPITALIZED_SECTION_NAME)
 	def capitalizePartialModelName(Issue issue, IssueResolutionAcceptor acceptor) 
 	// Model modification
 	{	acceptor.accept(
@@ -77,7 +77,7 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 			"Change " + issue.data.get(0) + " to " + issue.data.get(0).toFirstUpper, 
 			"upcase.png"				// icon
 		) [	element, context |
-				(element as PartialModel).name = issue.data.get(0).toFirstUpper
+				(element as Section).name = issue.data.get(0).toFirstUpper
 		  ]
 	}
 
@@ -164,7 +164,7 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 		)
 	}
 	
-	@Fix(FormlEndNameValidator.NO_PARTIAL_MODEL_END_NAME)
+	@Fix(FormlEndNameValidator.NO_SECTION_END_NAME)
 	def addPartialModelEndName(Issue issue, IssueResolutionAcceptor acceptor) 
 	// Model modification
 	{	acceptor.accept(
@@ -173,7 +173,7 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 			"Proposed end name: " + issue.data.get(0), 
 			"",							// no icon for now
 			[ element, context |
-				(element as PartialModel).endName = issue.data.get(0)
+				(element as Section).endName = issue.data.get(0)
 			]
 		)
 	}
@@ -266,7 +266,7 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 		)
 	}
 
-	@Fix(FormlEndNameValidator.INCORRECT_PARTIAL_MODEL_END_NAME)
+	@Fix(FormlEndNameValidator.INCORRECT_SECTION_END_NAME)
 	def changePartialModelEndName(Issue issue, IssueResolutionAcceptor acceptor) 
 	// Model modification
 	{	acceptor.accept(
@@ -275,12 +275,12 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 			"Proposed new end name: " + issue.data.get(0), 
 			"",							// no icon for now
 			[ element, context |
-				(element as PartialModel).endName = issue.data.get(0)
+				(element as Section).endName = issue.data.get(0)
 			]
 		)
 	}
 
-	@Fix(FormlEndNameValidator.INCORRECT_PARTIAL_MODEL_END_NAME)
+	@Fix(FormlEndNameValidator.INCORRECT_SECTION_END_NAME)
 	def changePartialModelName(Issue issue, IssueResolutionAcceptor acceptor) 
 	// Model modification
 	{	acceptor.accept(
@@ -289,7 +289,7 @@ class FormlQuickfixProvider extends DefaultQuickfixProvider {
 			"Proposed new name: " + issue.data.get(1), 
 			"",							// no icon for now
 			[ element, context |
-				(element as PartialModel).name = issue.data.get(1)
+				(element as Section).name = issue.data.get(1)
 			]
 		)
 	}

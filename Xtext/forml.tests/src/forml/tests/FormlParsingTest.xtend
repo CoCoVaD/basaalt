@@ -3,8 +3,6 @@
  */
 package forml.tests
 
-// 29 January 2025
-
 import com.google.inject.Inject
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
@@ -206,7 +204,7 @@ class FormlParsingTest {
 	def void Test01_16() {
 		val result = parseHelper.parse('''
 			Model TestModel begin 
-				partial Model P;
+				Section P;
 			end TestModel;
 		''')
 		Assertions.assertNotNull(result)
@@ -230,7 +228,7 @@ class FormlParsingTest {
 	def void Test01_18() {
 		val result = parseHelper.parse('''
 			Model TestModel begin 
-				partial Model P begin end P;
+				Section P begin end P;
 			end TestModel;
 		''')
 		Assertions.assertNotNull(result)
@@ -263,7 +261,7 @@ class FormlParsingTest {
 		val result = parseHelper.parse('''
 			Model TestModel begin 
 				Real r5 is 5;
-				partial Model Partial;
+				Section Partial;
 			end TestModel;
 		''')
 		Assertions.assertNotNull(result)
@@ -276,7 +274,7 @@ class FormlParsingTest {
 		val result = parseHelper.parse('''
 			Model TestModel begin 
 				Real r5 is 5;
-				partial Model Partial "comment";
+				Section Partial "comment";
 			end TestModel;
 		''')
 		Assertions.assertNotNull(result)
@@ -289,7 +287,7 @@ class FormlParsingTest {
 		val result = parseHelper.parse('''
 			Model TestModel begin 
 				Real r5 is 5;
-				partial Model Partial "comment" "other comment";
+				Section Partial "comment" "other comment";
 			end TestModel;
 		''')
 		Assertions.assertNotNull(result)
@@ -302,7 +300,7 @@ class FormlParsingTest {
 		val result = parseHelper.parse('''
 			Model TestModel begin 
 				Real r5 is 5;
-				partial Model Partial: Integer i;
+				Section Partial: Integer i;
 			end TestModel;
 		''')
 		Assertions.assertNotNull(result)
@@ -315,7 +313,7 @@ class FormlParsingTest {
 		val result = parseHelper.parse('''
 			Model TestModel begin 
 				Real r5 is 5;
-				partial Model Partial "coment": Integer i;
+				Section Partial "coment": Integer i;
 			end TestModel;
 		''')
 		Assertions.assertNotNull(result)
@@ -328,7 +326,7 @@ class FormlParsingTest {
 		val result = parseHelper.parse('''
 			Model TestModel begin 
 				Real r5 is 5;
-				partial Model Partial "comment" begin
+				Section Partial "comment" begin
 					Integer i;
 					end;
 			end TestModel;

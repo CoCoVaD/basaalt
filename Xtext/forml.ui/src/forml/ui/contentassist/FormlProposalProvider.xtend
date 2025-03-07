@@ -3,10 +3,129 @@
  */
 package forml.ui.contentassist
 
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.Assignment
+import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
+import forml.forml.Model
+import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
+import forml.forml.Section
+import forml.forml.SimpleClass
+import forml.forml.Enumeration
+import forml.forml.Object
+import forml.forml.Definition
+import org.eclipse.xtext.RuleCall
 
 /**
  * See https://www.eclipse.org/Xtext/documentation/310_eclipse_support.html#content-assist
  * on how to customize the content assistant.
  */
 class FormlProposalProvider extends AbstractFormlProposalProvider {
+	
+/* 	override completeItemizedDefinition_Block 
+	(	EObject object, 
+		Assignment assignment,
+		ContentAssistContext context,
+		ICompletionProposalAcceptor acceptor
+	) {
+		switch object {
+			Model, 
+			PartialModel, 
+			SimpleClass, 
+			Enumeration, 
+			Object: {
+				acceptor.accept (createCompletionProposal (
+					"begin end " + object.name + ";",
+					"begin end " + object.name + ";",
+					null,
+					context))
+			}		
+			Definition: {
+				val item = object.item
+				switch item {
+					Model, 
+					PartialModel, 
+					SimpleClass, 
+					Enumeration, 
+					Object: 
+						acceptor.accept (createCompletionProposal (
+							"begin end " + item.name + ";",
+							"begin end " + item.name + ";",
+							null,
+							context))
+				}
+			}
+		}
+	}
+*/	
+	override complete_ItemizedDefinition
+	(	EObject object, 
+		RuleCall ruleCall, 
+		ContentAssistContext context, 
+		ICompletionProposalAcceptor acceptor
+	) {
+		switch object {
+			Model, 
+			Section, 
+			SimpleClass, 
+			Enumeration, 
+			Object: {
+				acceptor.accept (createCompletionProposal (
+					"begin end " + object.name + ";",
+					"begin end " + object.name + ";",
+					null,
+					context))
+			}		
+			Definition: {
+				val item = object.item
+				switch item {
+					Model, 
+					Section, 
+					SimpleClass, 
+					Enumeration, 
+					Object: 
+						acceptor.accept (createCompletionProposal (
+							"begin end " + item.name + ";",
+							"begin end " + item.name + ";",
+							null,
+							context))
+				}
+			}
+		}
+	}
+	
+	override completeItemizedDefinition_BlockEnd 
+	(	EObject object, 
+		Assignment assignment,
+		ContentAssistContext context,
+		ICompletionProposalAcceptor acceptor
+	) {
+		switch object {
+			Model, 
+			Section, 
+			SimpleClass, 
+			Enumeration, 
+			Object: 
+				acceptor.accept (createCompletionProposal (
+					"end " + object.name + ";",
+					"end " + object.name + ";",
+					null,
+					context))
+			Definition: {
+				val item = object.item
+				switch item {
+					Model, 
+					Section, 
+					SimpleClass, 
+					Enumeration, 
+					Object: 
+						acceptor.accept (createCompletionProposal (
+							"end " + item.name + ";",
+							"end " + item.name + ";",
+							null,
+							context))
+				}
+			}
+		}
+	}
+
 }

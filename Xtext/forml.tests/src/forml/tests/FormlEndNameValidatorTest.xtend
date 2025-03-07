@@ -36,12 +36,12 @@ class FormlEndNameValidatorTest {
 	def void TestPartialModelEndNameExists () {
 		val models = parseHelper.parse('''
 			Model ModelName begin 
-				partial Model PartialModelName begin end;
+				Section PartialModelName begin end;
 			end ModelName;
 		''')
 		models.assertWarning (
-			FormlPackage.eINSTANCE.partialModel,
-			FormlEndNameValidator.NO_PARTIAL_MODEL_END_NAME,
+			FormlPackage.eINSTANCE.section,
+			FormlEndNameValidator.NO_SECTION_END_NAME,
 			"No end name"
 		)
 	}
@@ -106,16 +106,16 @@ class FormlEndNameValidatorTest {
 	def void TestPartialModelEndName () {
 		val models = parseHelper.parse('''
 			Model ModelName begin 
-				partial Model PartialModelName begin end OtherName;
+				Section PartialModelName begin end OtherName;
 			end ModelName;
 		''')
 		val model = models.models.get(0)
-		val partialModel = model.statements.get(0).partialModel
-		val name = partialModel.name
-		val endName = partialModel.endName
+		val section = model.statements.get(0).section
+		val name = section.name
+		val endName = section.endName
 		models.assertError (
-			FormlPackage.eINSTANCE.partialModel,
-			FormlEndNameValidator.INCORRECT_PARTIAL_MODEL_END_NAME,
+			FormlPackage.eINSTANCE.section,
+			FormlEndNameValidator.INCORRECT_SECTION_END_NAME,
 			"End name " + endName +" different from name " + name
 		)
 	}

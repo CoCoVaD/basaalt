@@ -30,13 +30,15 @@ ExtendedModel:
 
 fragment ItemizedDefinition:
 	(	':' statements+=Statement	//- Check that is not a comment
-	|	 'begin' statements+=Statement* blockEnd?='end' endName=ID? ';' 
+	|	 block='begin' statements+=Statement* blockEnd?='end' endName=ID? ';' 
 	|	';'
 	)
+	/// Assist: "begin end 'name';"
+	/// Assist: "end 'name';"
 ;
 
 Statement:
-	partialModel=PartialModel
+	section=Section
 |	simpleClass=SimpleClass
 |	enumeration=Enumeration
 |	object=Object
@@ -46,7 +48,8 @@ Statement:
 ;
 
 Declaration:
-	PartialModel
+	Model
+|	Section
 |	ClassDeclaration
 |	Object
 ;
@@ -58,8 +61,8 @@ ClassDeclaration:
 //|	SetClass
 ;
 
-PartialModel:
-	'partial' 'Model' Name ItemizedDefinition
+Section:
+	'Section' Name ItemizedDefinition
 	/// Warning if 'name' begins with a lower case, with a quick fix
 	/// Warning if 'name' begins with a °, with a quick fix
 	/// Warning if a begin-end block is not provided with an 'endName', with a quick fix

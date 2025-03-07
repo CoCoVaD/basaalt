@@ -5,7 +5,7 @@ import org.eclipse.xtext.validation.Check
 import forml.forml.FormlPackage
 import forml.validation.FormlValidator
 import forml.forml.Model
-import forml.forml.PartialModel
+import forml.forml.Section
 import forml.forml.SimpleClass
 import forml.forml.Enumeration
 import forml.forml.Object
@@ -28,16 +28,16 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 					model.name)
 	}
 	
-	public static val NO_PARTIAL_MODEL_END_NAME = FormlValidator.ISSUE_PREFIX + "NoPartialModelEndName"
+	public static val NO_SECTION_END_NAME = FormlValidator.ISSUE_PREFIX + "NoSectionEndName"
 	@Check
-	def checkPartialModelEndNameExists(PartialModel partialModel) {
-		if (partialModel.blockEnd)
-			if (partialModel.endName === null)
+	def checkPartialModelEndNameExists(Section section) {
+		if (section.blockEnd)
+			if (section.endName === null)
 				warning(
 					"No end name", 
 					FormlPackage.eINSTANCE.itemizedDefinition_BlockEnd,
-					NO_PARTIAL_MODEL_END_NAME,
-					partialModel.name)
+					NO_SECTION_END_NAME,
+					section.name)
 	}
 	
 	public static val NO_CLASS_END_NAME = FormlValidator.ISSUE_PREFIX + "NoClassEndName"
@@ -81,7 +81,8 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 	def checkDefinitionEndNameExists(Definition definition) {
 		val reference = definition.item
 		val name = switch reference {
-			PartialModel: reference.name
+			Model:        reference.name
+			Section:      reference.name
 			SimpleClass:  reference.name
 			Enumeration:  reference.name
 			Object:       reference.name
@@ -115,17 +116,17 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 		}			
 	}
 
-	public static val INCORRECT_PARTIAL_MODEL_END_NAME = FormlValidator.ISSUE_PREFIX + "IncorrectPartialModelEndName"
+	public static val INCORRECT_SECTION_END_NAME = FormlValidator.ISSUE_PREFIX + "IncorrectSectionEndName"
 	@Check
-	def checkPartialModelEndName(PartialModel partialModel) {
-		if (partialModel.blockEnd)
-			if (partialModel.endName != partialModel.name)
+	def checkPartialModelEndName(Section section) {
+		if (section.blockEnd)
+			if (section.endName != section.name)
 				error(
-					"End name " + partialModel.endName + " different from name " + partialModel.name, 
+					"End name " + section.endName + " different from name " + section.name, 
 					FormlPackage.eINSTANCE.itemizedDefinition_BlockEnd,
-					INCORRECT_PARTIAL_MODEL_END_NAME,
-					partialModel.name,
-					partialModel.endName)
+					INCORRECT_SECTION_END_NAME,
+					section.name,
+					section.endName)
 	}
 
 	public static val INCORRECT_CLASS_END_NAME = FormlValidator.ISSUE_PREFIX + "IncorrectClassEndName"
@@ -172,7 +173,8 @@ class FormlEndNameValidator extends AbstractFormlValidator {
 	def checkDefinitionEndName(Definition definition) {
 		val reference = definition.item
 		val name = switch reference {
-			PartialModel: reference.name
+			Model:        reference.name
+			Section:      reference.name
 			SimpleClass:  reference.name
 			Enumeration:  reference.name
 			Object:       reference.name

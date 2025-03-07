@@ -1,7 +1,5 @@
 package forml.tests
 
-// 29 January 2025
-
 import com.google.inject.Inject
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
@@ -68,13 +66,13 @@ class FormlNameValidatorTest {
 	def void TestPartialModelNameIsNotDegree () {
 		val models = parseHelper.parse('''
 			Model TestModel begin
-				partial Model °;
+				Section °;
 			end TestModel;
 		''')
 		models.assertWarning (
-			FormlPackage.eINSTANCE.partialModel,
-			FormlNameValidator.INCORRECT_PARTIAL_MODEL_NAME,
-			"Partial models should not be named °"
+			FormlPackage.eINSTANCE.section,
+			FormlNameValidator.INCORRECT_SECTION_NAME,
+			"Sections should not be named °"
 		)
 	}
 	
@@ -82,26 +80,26 @@ class FormlNameValidatorTest {
 	def void TestPartialModelNameFirstCharIsNotDegree () {
 		val models = parseHelper.parse('''
 			Model TestModel begin
-				partial Model °PartialModelName;
+				Section °PartialModelName;
 			end TestModel;
 		''')
 		models.assertWarning (
-			FormlPackage.eINSTANCE.partialModel,
-			FormlNameValidator.PARTIAL_MODEL_NAME_FIRST_CHAR_IS_DEGREE,
-			"Partial model names should not begin with a °"
+			FormlPackage.eINSTANCE.section,
+			FormlNameValidator.SECTION_NAME_FIRST_CHAR_IS_DEGREE,
+			"Section names should not begin with a °"
 		)
 	}
 	@Test
 	def void TestPartialkModelNameFirstCharIsNotLowerCase () {
 		val models = parseHelper.parse('''
 			Model TestModel begin
-				partial Model partialModelName;
+				Section partialModelName;
 			end TestModel;
 		''')
 		models.assertWarning (
-			FormlPackage.eINSTANCE.partialModel,
-			FormlNameValidator.UNCAPITALIZED_PARTIAL_MODEL_NAME,
-			"Partial model names should not begin with a lower case letter"
+			FormlPackage.eINSTANCE.section,
+			FormlNameValidator.UNCAPITALIZED_SECTION_NAME,
+			"Section names should not begin with a lower case letter"
 		)
 	}
 	

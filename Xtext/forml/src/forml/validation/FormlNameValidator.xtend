@@ -6,7 +6,7 @@ import static extension java.lang.Character.*
 import forml.forml.FormlPackage
 import forml.validation.FormlValidator
 import forml.forml.Model
-import forml.forml.PartialModel
+import forml.forml.Section
 import forml.forml.SimpleClass
 import forml.forml.Enumeration
 import forml.forml.Object
@@ -52,39 +52,39 @@ class FormlNameValidator extends AbstractFormlValidator {
 				model.name)
 	}
 
-	public static val INCORRECT_PARTIAL_MODEL_NAME = FormlValidator.ISSUE_PREFIX + "IncorrectPartialModelName"
+	public static val INCORRECT_SECTION_NAME = FormlValidator.ISSUE_PREFIX + "IncorrectSectionName"
 	@Check
-	def checkPartialModelNameIsNotDegree (PartialModel partialModel) {
+	def checkPartialModelNameIsNotDegree (Section partialModel) {
 		val char degree = '°'	// This is necessary to prevent conversion of char literals into strings
 		if (partialModel.name.charAt(0) == degree && partialModel.name.length == 1)
 			warning(
-				"Partial models should not be named °", 
+				"Sections should not be named °", 
 				FormlPackage.eINSTANCE.name_Name,
-				INCORRECT_PARTIAL_MODEL_NAME,
+				INCORRECT_SECTION_NAME,
 				partialModel.name)
 	}
 
-	public static val PARTIAL_MODEL_NAME_FIRST_CHAR_IS_DEGREE = FormlValidator.ISSUE_PREFIX + "PartialModelNameFirstCharIsDegree"
+	public static val SECTION_NAME_FIRST_CHAR_IS_DEGREE = FormlValidator.ISSUE_PREFIX + "SectionNameFirstCharIsDegree"
 	@Check
-	def checkPartialModelNameDoesNotStartsWithDegree (PartialModel partialModel) {
+	def checkPartialModelNameDoesNotStartsWithDegree (Section partialModel) {
 		val char degree = '°'	// This is necessary to prevent conversion of char literals into strings
 		if (partialModel.name.charAt(0) == degree && partialModel.name.length > 1)
 			warning(
-				"Partial model names should not begin with a °", 
+				"Section names should not begin with a °", 
 				FormlPackage.eINSTANCE.name_Name,
-				PARTIAL_MODEL_NAME_FIRST_CHAR_IS_DEGREE,
+				SECTION_NAME_FIRST_CHAR_IS_DEGREE,
 				partialModel.name)
 	}
 
-	public static val UNCAPITALIZED_PARTIAL_MODEL_NAME = FormlValidator.ISSUE_PREFIX + "UncapitalizedPartialModelName"
+	public static val UNCAPITALIZED_SECTION_NAME = FormlValidator.ISSUE_PREFIX + "UncapitalizedSectionName"
 	@Check
-	def checkPartialModelNameDoesNotStartWithLowerCase (PartialModel partialModel) {
-		if (partialModel.name.charAt(0).lowerCase)
+	def checkPartialModelNameDoesNotStartWithLowerCase (Section section) {
+		if (section.name.charAt(0).lowerCase)
 			warning(
-				"Partial model names should not begin with a lower case letter", 
+				"Section names should not begin with a lower case letter", 
 				FormlPackage.eINSTANCE.name_Name,
-				UNCAPITALIZED_PARTIAL_MODEL_NAME,
-				partialModel.name)
+				UNCAPITALIZED_SECTION_NAME,
+				section.name)
 	}
 
 	public static val INCORRECT_CLASS_NAME = FormlValidator.ISSUE_PREFIX + "IncorrectClassName"
