@@ -1,0 +1,32 @@
+grammar formlS.FormlS with org.eclipse.xtext.common.Terminals
+// This grammar specifies only the FormL syntax
+
+generate formlS "http://www.FormlS.formlS"
+
+MockUp:
+	// A mock-up is a sequence of models, with at least one model
+	comments += STRING*
+	models+=Model+;
+	
+Model:
+	decl=ModelDecl 
+	(	';'
+	|	':' statements+=Statement
+	|	'begin' statements+=Statement* 'end' (endName=ModelName)? ';'
+	)
+	statements+=Statement*;
+
+ModelDecl:
+	'Model' name=ID 
+	comments += STRING*
+	('extends' extended+=ModelName (',' extended+=ModelName)*)?
+	comments += STRING*
+;
+
+ModelName:
+	id=ID
+;
+
+Statement:
+	id=ID ('is' value=INT)? ';'
+;
