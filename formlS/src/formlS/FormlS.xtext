@@ -9,24 +9,56 @@ MockUp:
 	models+=Model+;
 	
 Model:
-	decl=ModelDecl 
-	(	';'
-	|	':' statements+=Statement
-	|	'begin' statements+=Statement* 'end' (endName=ModelName)? ';'
-	)
-	statements+=Statement*;
+	ModelHeader (ModelDefinitionBlock | ';')
+	statements+=Statement*
+;
 
-ModelDecl:
+fragment ModelHeader:
 	'Model' name=ID 
 	comments += STRING*
 	('extends' extended+=ModelName (',' extended+=ModelName)*)?
 	comments += STRING*
 ;
 
-ModelName:
+fragment ModelDefinitionBlock:
+	':' statements+=Statement
+|	'begin' statements+=Statement* 'end' (endName=ModelName)? ';'
+;	
+
+ModelName:	
 	id=ID
 ;
 
 Statement:
-	id=ID ('is' value=INT)? ';'
+	decl=Declaration
+|	block=Definition
+//|	inst=Instruction
 ;
+
+Declaration:
+	type=Type
+	determiner=('!' | '#' | '@' | '^' | '~' | '?')? 
+	name=ID
+	(ItemDefinitionBlock | ';')
+;
+
+Definition:
+	ItemName
+	ItemDefinitionBlock
+;
+
+Type:
+	'Integer'
+;
+
+ItemName:	
+	determiner=('!' | '#' | '@' | '^' | '~' | '?')? 
+	id=ID
+;
+
+fragment ItemDefinitionBlock:
+	':' statements+=Statement
+|	'begin' statements+=Statement* 'end' (endName=ItemName)? ';'
+|	'is' value=INT ';'
+;	
+
