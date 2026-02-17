@@ -6,59 +6,75 @@ generate formlS "http://www.FormlS.formlS"
 MockUp:
 	// A mock-up is a sequence of models, with at least one model
 	comments += STRING*
-	models+=Model+;
+	models+=Model+
+	comments += STRING*
+;
 	
+// ========== Model ==================================================
 Model:
-	ModelHeader (ModelDefinitionBlock | ';')
+	// A model is composed of a model declaration, possibly combined
+	// with a model definition block, and possibly followed by statements 
+	// contributing to the definition of the model
+	ModelDeclaration (DefinitionBlock | ';')
 	statements+=Statement*
 ;
 
-fragment ModelHeader:
+fragment ModelDeclaration:
 	'Model' name=ID 
 	comments += STRING*
-	('extends' extended+=ModelName (',' extended+=ModelName)*)?
+	('extends' extended+=[Model] (',' extended+=[Model])*)?
 	comments += STRING*
 ;
 
-fragment ModelDefinitionBlock:
+fragment DefinitionBlock:
 	':' statements+=Statement
-|	'begin' statements+=Statement* 'end' (endName=ModelName)? ';'
+|	'begin' statements+=Statement* 'end' (endName=ID)? ';'
 ;	
 
-ModelName:	
-	id=ID
+fragment GlobalDefinition:
+	'is' value=INT ';'
 ;
 
 Statement:
-	decl=Declaration
-|	block=Definition
+	sectionDecl=Section
+|	sectionDef=SectionDefinition
+|	itemDecl=Item
+|	itemDef=GlobalItemDefinition
 //|	inst=Instruction
 ;
 
-Declaration:
-	type=Type
-	determiner=('!' | '#' | '@' | '^' | '~' | '?')? 
-	name=ID
-	(ItemDefinitionBlock | ';')
+
+// ========== Section ==================================================
+Section:
+	'Section' name=ID
+	comments+=STRING*
+	(DefinitionBlock | ';')
 ;
 
-Definition:
-	ItemName
-	ItemDefinitionBlock
+SectionDefinition:
+	id=[Section]
+	DefinitionBlock
+;
+ 
+// ========== Item ==================================================
+Item:
+	type=Type
+	Determiner? name=ID
+	comments += STRING*
+	(DefinitionBlock | GlobalDefinition | ';')
 ;
 
 Type:
 	'Integer'
 ;
 
-ItemName:	
-	determiner=('!' | '#' | '@' | '^' | '~' | '?')? 
-	id=ID
+GlobalItemDefinition:
+	// This is ugly, but it seems that Xtext parsing cannot make 
+	// the difference between references of different types
+	Determiner id=[Item] (DefinitionBlock | GlobalDefinition)
+|	id=[Item] GlobalDefinition 
 ;
 
-fragment ItemDefinitionBlock:
-	':' statements+=Statement
-|	'begin' statements+=Statement* 'end' (endName=ItemName)? ';'
-|	'is' value=INT ';'
-;	
-
+fragment Determiner:
+	determiner=('!' | '#' | '@' | '^' | '~' | '?')
+;

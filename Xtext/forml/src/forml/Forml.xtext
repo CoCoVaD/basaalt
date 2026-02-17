@@ -11,8 +11,9 @@ Models:
 	
 Model:
 	'Model' Name
-	('extends' extendedModels+=ExtendedModel (',' extendedModels+=ExtendedModel)*)? 
-	ItemizedDefinition	statements+=Statement*
+	ExtendedModels? 
+	DefinitionBlock	
+	statements+=Statement*
 	/// Check that Model is not in extension closure
 	/// Warning if 'name' begins with a lower case, with a quick fix
 	/// Warning if 'name' begins with a °
@@ -24,11 +25,15 @@ fragment Name:
 	name=ID comments+=STRING*
 ;
 
-ExtendedModel:
+fragment ExtendedModels:
+	'extends' extendedModels+=ModelReference (',' extendedModels+=ModelReference)*
+;
+
+ModelReference:
 	model=[Model] comments+=STRING*
 ;
 
-fragment ItemizedDefinition:
+fragment DefinitionBlock:
 	(	':' statements+=Statement	//- Check that is not a comment
 	|	 block='begin' statements+=Statement* blockEnd?='end' endName=ID? ';' 
 	|	';'
@@ -39,8 +44,7 @@ fragment ItemizedDefinition:
 
 Statement:
 	section=Section
-|	simpleClass=SimpleClass
-|	enumeration=Enumeration
+|	declaredClass=DeclaredClass
 |	object=Object
 |	definition=Definition
 |	objectGlobalDefinition=[Object | QualifiedName] 'is' value=Value ';'
@@ -57,22 +61,27 @@ Declaration:
 ClassDeclaration:
 	SimpleClass
 |	Enumeration
-//|	QuantityClass
-//|	SetClass
 ;
 
 Section:
-	'Section' Name ItemizedDefinition
+	'Section' Name DefinitionBlock
 	/// Warning if 'name' begins with a lower case, with a quick fix
 	/// Warning if 'name' begins with a °, with a quick fix
 	/// Warning if a begin-end block is not provided with an 'endName', with a quick fix
 	/// Check that if an 'endName' is provided, it is equal to 'name', with a quick fix
 ;
 
+DeclaredClass:
+	simpleClass=SimpleClass
+|	enumeration=Enumeration
+//|	quantityClass=QuantityClass
+//|	setClass=SetClass
+;
+
 SimpleClass:
 	ClassModifier 'Class' (determiner=Determiner)? Name
 	ExtendedClasses? 
-	ItemizedDefinition
+	DefinitionBlock
 	/// Check that 'name' is not in the closure of 'extendedClasses'
 	/// Warning if 'name' begins with a lower case, with a quick fix
 	/// Warning if 'name' begins with a °, with a quick fix
@@ -84,7 +93,7 @@ SimpleClass:
 Enumeration:
 	ClassModifier 'Enumeration' states=States (determiner=Determiner)? Name
 	ExtendedClasses? 
-	ItemizedDefinition
+	DefinitionBlock
 	/// Check that 'name' is not in the closure of 'extendedClasses'
 	/// Warning if 'name' begins with a lower case, with a quick fix
 	/// Warning if 'name' begins with a °, with a quick fix
@@ -134,7 +143,7 @@ Object:
 	(main?='main'? | (external?='external'? & private?='private'? & (constant?='constant' | fixed?='fixed')?))
 	classes+=ClassReference (',' classes+=ClassReference)*
 	(determiner=Determiner)? Name
-	(is?='is' value=Value ';' valueComments+=STRING* | ItemizedDefinition)
+	(is?='is' value=Value ';' valueComments+=STRING* | DefinitionBlock)
 	/// Warning if 'name' begins with an upper case, with a quick fix
 	/// Warning if a begin-end block is not provided with an 'endName', with a quick fix
 	/// Verify that if a begin-end block is provided with an 'endName', 
@@ -144,7 +153,7 @@ Object:
 ;
 
 Definition:
-	item=[Declaration | QualifiedName] comments+=STRING* ItemizedDefinition
+	item=[Declaration | QualifiedName] comments+=STRING* DefinitionBlock
 	/// Warning if a begin-end block is not provided with an 'endName', with a quick fix
 	/// Check that if an 'endName' is provided, it is equal to 'item.name', with a quick fix
 ;
@@ -165,6 +174,8 @@ Float hidden():
 ;
 
 QualifiedName hidden(): ID('.' ID)*;
+
+QualifiedObjectName hidden(): model?=[Model] ('.' classes+=[ClassDeclaration])* ('.' objects+=[Object])*;
 
 @Override
 terminal ID: ('a'..'z'|'A'..'Z'|'°') ('a'..'z'|'A'..'Z'|'_'|'°'|'0'..'9')*;

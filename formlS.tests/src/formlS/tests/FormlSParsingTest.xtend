@@ -62,6 +62,122 @@ class FormlSParsingTest {
 	}
 	
 	@Test
+	def void MockUpTest004a() {
+		val result = parseHelper.parse('''
+			Model TestModel : Integer a is 8;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
+	def void MockUpTest004b() {
+		val result = parseHelper.parse('''
+			Model TestModel : a is 8;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
+	def void MockUpTest004c() {
+		val result = parseHelper.parse('''
+			Model TestModel : Section PartA;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
+	def void MockUpTest004d() {
+		val result = parseHelper.parse('''
+			Model TestModel : Section PartA begin
+			end;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
+	def void MockUpTest004e() {
+		val result = parseHelper.parse('''
+			Model TestModel : Section PartA begin
+				Integer a;
+			end;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
+	def void MockUpTest004f() {
+		val result = parseHelper.parse('''
+			Model TestModel : Section PartA begin
+				Integer a is 10;
+			end;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
+	def void MockUpTest004g() {
+		val result = parseHelper.parse('''
+			Model TestModel : Section PartA begin
+				Integer #a is 10;
+			end;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
+	def void MockUpTest004h() {
+		val result = parseHelper.parse('''
+			Model TestModel : Section PartA begin
+				@a is 10;
+			end;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
+	def void MockUpTest004i() {
+		val result = parseHelper.parse('''
+			Model TestModel : Section PartA begin
+				@a is 10;
+				Section PartAA;
+			end;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
+	def void MockUpTest004j() {
+		val result = parseHelper.parse('''
+			Model TestModel : Section PartA begin
+				@a is 10;
+				Section PartAA begin
+				end PartAA;
+			end;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
 	def void MockUpTest005() {
 		val result = parseHelper.parse('''
 			Model TestModel begin
