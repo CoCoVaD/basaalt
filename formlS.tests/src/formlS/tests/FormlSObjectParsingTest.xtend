@@ -214,4 +214,17 @@ class FormlSObjectParsingTest {
 		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
 	}
 	
+	@Test
+	def void ObjectTest016() {
+		val result = parseHelper.parse('''
+			Model TestModel begin
+				Class C1;
+				C1 {@ 5 constant} obj (Integer i);
+			end;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
 }

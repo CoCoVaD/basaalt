@@ -135,6 +135,8 @@ Object:
 	(classes+=Class | '(' classes+=Class (',' classes+=Class)* ')')
 	Determiner? name=ID
 	comments += STRING*
+	Parameters?
+	comments+=STRING*
 	(DefinitionBlock | GlobalDefinition | ';')
 ;
 
