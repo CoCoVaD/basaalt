@@ -73,6 +73,7 @@ DefinedClass:
 	((private?='private' | main?='main' | external?='external')? & (abstract?='abstract')?)
 	('Class' | enumeration?='Enumeration' states=States comments+=STRING*) 
 	Determiner? name=ID
+	mySetIndication=SetIndication?
 	Parameters?
 	comments+=STRING*
 	('extends' extended+=Class (',' extended+=Class)*)?
@@ -85,11 +86,11 @@ States:
 ;
 
 State:
-	(enumeration=[DefinedClass] | states=States)?  id=ID comments+=STRING
+	(enumeration=[DefinedClass] | states=States)? id=ID comments+=STRING*
 ;
 
 Class:
-	(definedClass=[DefinedClass] Arguments? | predefinedClass=PredefinedClass) SetIndication?
+	(definedClass=[DefinedClass] Arguments? | predefinedClass=PredefinedClass) setIndication=SetIndication?
 ;
 
 fragment Determiner:
@@ -97,11 +98,11 @@ fragment Determiner:
 ;
 
 fragment Variability:
-	variability=('fixed' | 'constant')
+	(fixed?='fixed' | constant?='constant')
 ;
 
 fragment Cardinal:
-	ln=INT ('..' ub=Expression | infinity?='%')
+	ln=Expression ('..' (ub=Expression | infinity?='%'))?
 ;
 
 fragment Parameters:
@@ -122,20 +123,19 @@ Expression:
 	value=INT	// temporary
 ;
 
-fragment SetIndication:
-	domain?='$'? '{' (Determiner? & Variability? & Cardinal?) '}'
+SetIndication:
+	{SetIndication} domain?='$'? '{' (Determiner? & Variability? & Cardinal?) '}'
 ;
 
 // ========== Object =================================================
 Object:
-	type=Type
+ 	(	main?='main'
+	|	external?='external'? & private?='private'? & common?='common'? & Variability?
+	)
+	(classes+=Class | '(' classes+=Class (',' classes+=Class)* ')')
 	Determiner? name=ID
 	comments += STRING*
 	(DefinitionBlock | GlobalDefinition | ';')
-;
-
-Type:
-	'Integer'
 ;
 
 GlobalObjectDefinition:

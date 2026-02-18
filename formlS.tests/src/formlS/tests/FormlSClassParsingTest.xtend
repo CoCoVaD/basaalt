@@ -248,7 +248,7 @@ class FormlSClassParsingTest {
 			Model TestModel begin
 				abstract main Class C1;
 				external abstract Class C2;
-				private Class C3 extends Integer {4};
+				private Class C3  extends Integer {4};
 			end TestModel;
 		''')
 		Assertions.assertNotNull(result)
@@ -290,7 +290,7 @@ class FormlSClassParsingTest {
 			Model TestModel begin
 				abstract main Class C1;
 				external abstract Class C2;
-				private Class C3 extends Integer {4..% @};
+				private Class C3 extends Integer {4..5 @};
 			end TestModel;
 		''')
 		Assertions.assertNotNull(result)
