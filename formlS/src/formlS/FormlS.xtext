@@ -37,9 +37,14 @@ fragment GlobalDefinition:
 
 Statement:
 	sectionDecl=Section
+|	classDecl=DefinedClass
+|	objectDecl=Object
+//|	contractDecl=Contract
+//|	encroachmentDecl=Encroachment
+//|	tlDecl=TempotalLocator
 |	sectionDef=SectionDefinition
-|	itemDecl=Item
-|	itemDef=GlobalItemDefinition
+//|	itemDecl=Item
+|	itemDef=GlobalObjectDefinition
 //|	inst=Instruction
 ;
 
@@ -56,8 +61,64 @@ SectionDefinition:
 	DefinitionBlock
 ;
  
-// ========== Item ==================================================
-Item:
+// ========== Class ===========================================
+PredefinedClass:
+	'Boolean' | 'Integer' | 'Real' | 'String'
+|	'Event'
+|	'Property' | 'Assumption' | 'Objective' | 'Requirement' | 'Guarantee' | 'Guard'
+|	'Object'
+;
+
+DefinedClass:
+	((private?='private' | main?='main' | external?='external')? & (abstract?='abstract')?)
+	'Class' Determiner? name=ID
+	Parameters?
+	comments+=STRING*
+	('extends' extended+=Class (',' extended+=Class)*)?
+	comments += STRING*
+	';'
+;
+
+Class:
+	(definedClass=[DefinedClass] Arguments? | predefinedClass=PredefinedClass) SetIndication?
+;
+
+fragment Determiner:
+	determiner=('!' | '#' | '@' | '^' | '~' | '?')
+;
+
+fragment Variability:
+	variability=('fixed' | 'constant')
+;
+
+fragment Cardinal:
+	ln=INT ('..' ub=Expression | infinity?='%')
+;
+
+fragment Parameters:
+	'(' parameters+=Parameter (',' parameters+=Parameter)* ')'
+;
+
+Parameter:
+	class=Class 
+	Determiner? id=ID 
+	comments+=STRING*
+;
+
+fragment Arguments:
+	'(' arguments+=Expression (',' arguments+=Expression)* ')'
+;
+
+Expression:
+	value=INT	// temporary
+;
+
+fragment SetIndication:
+	domain?='$'? '{' (Determiner? & Variability? & Cardinal?) '}'
+;
+
+// ========== Object =================================================
+Object:
 	type=Type
 	Determiner? name=ID
 	comments += STRING*
@@ -68,13 +129,9 @@ Type:
 	'Integer'
 ;
 
-GlobalItemDefinition:
+GlobalObjectDefinition:
 	// This is ugly, but it seems that Xtext parsing cannot make 
 	// the difference between references of different types
-	Determiner id=[Item] (DefinitionBlock | GlobalDefinition)
-|	id=[Item] GlobalDefinition 
-;
-
-fragment Determiner:
-	determiner=('!' | '#' | '@' | '^' | '~' | '?')
+	Determiner id=[Object] (DefinitionBlock | GlobalDefinition)
+|	id=[Object] GlobalDefinition 
 ;
