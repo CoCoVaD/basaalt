@@ -71,12 +71,21 @@ PredefinedClass:
 
 DefinedClass:
 	((private?='private' | main?='main' | external?='external')? & (abstract?='abstract')?)
-	'Class' Determiner? name=ID
+	('Class' | enumeration?='Enumeration' states=States comments+=STRING*) 
+	Determiner? name=ID
 	Parameters?
 	comments+=STRING*
 	('extends' extended+=Class (',' extended+=Class)*)?
 	comments += STRING*
 	';'
+;
+
+States:
+	'[' states+=State ((',' states+=State)+ | ('&' states+=State)+) ']'
+;
+
+State:
+	(enumeration=[DefinedClass] | states=States)?  id=ID comments+=STRING
 ;
 
 Class:

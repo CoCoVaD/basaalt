@@ -444,4 +444,33 @@ class FormlSClassParsingTest {
 		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
 	}
 	
+	@Test
+	def void EnumerationTest001() {
+		val result = parseHelper.parse('''
+			Model TestModel begin
+				Enumeration [f, g, h] B;
+			end;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
+	def void EnumerationTest002() {
+		val result = parseHelper.parse('''
+			Model TestModel begin
+				Enumeration [f, g, h]   B;
+				Enumeration [i, j]      D;
+				Enumeration [m, n, o]   K;
+				Enumeration [p, q]      L;
+				Enumeration [K k & L l] E;    // Cartesian product of k and l
+				Enumeration [B b, c, [D d1 & D d2 & D d3] d, E e] A;	
+			end;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
 }
