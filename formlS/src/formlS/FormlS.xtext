@@ -39,8 +39,9 @@ Statement:
 	sectionDecl=Section
 |	classDecl=DefinedClass
 |	objectDecl=Object
-//|	contractDecl=Contract
-//|	encroachmentDecl=Encroachment
+|	contractDecl=Contract
+|	contractAck=ContractAcknowledgment
+|	encroachmentDecl=Encroachment
 //|	tlDecl=TempotalLocator
 |	refinedment=Refinement
 //|	inst=Instruction
@@ -92,7 +93,10 @@ State:
 ;
 
 Class:
-	(definedClass=[DefinedClass] Arguments? | predefinedClass=PredefinedClass) setIndication=SetIndication?
+	(	definedClass=[DefinedClass] Arguments? 
+	| 	predefinedClass=PredefinedClass
+	|	automaton?='Automaton' states=States comments+=STRING*
+	) setIndication=SetIndication?
 ;
 
 fragment Determiner:
@@ -140,4 +144,32 @@ Object:
 	Parameters?
 	comments+=STRING*
 	(DefinitionBlock | GlobalDefinition | ';')
+;
+
+// ========== Contract =================================================
+Contract:
+	'Contract' name=ID 
+	comments += STRING*
+	'(' parties+=Party (',' parties+=Party)* ')'
+	comments += STRING*
+	(DefinitionBlock | ';')
+;
+
+Party:
+//	(class=[DefinedClass] | object=[Object]) comments+=STRING*
+	party=ID comments+=STRING*
+;
+
+ContractAcknowledgment:
+//	'acknowledged' id=[Contract | Encroachment] comments+=STRING*
+	'acknowledged' id=ID comments+=STRING* ';'
+;
+
+// ========== Encroachment =================================================
+Encroachment:
+	'Encroachment' name=ID 
+	comments += STRING*
+	'(' origin=Party ',' target=Party ')'
+	comments += STRING*
+	(DefinitionBlock | ';')
 ;
