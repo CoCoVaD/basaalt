@@ -40,10 +40,10 @@ Statement:
 |	classDecl=DefinedClass
 |	objectDecl=Object
 |	contractDecl=Contract
-|	contractAck=ContractAcknowledgment
+|	acknowledment=Acknowledgment
 |	encroachmentDecl=Encroachment
 //|	tlDecl=TempotalLocator
-|	refinedment=Refinement
+|	refinement=Refinement
 //|	inst=Instruction
 ;
 
@@ -57,11 +57,17 @@ Section:
 
 // ========== Refinement ==================================================
 Refinement:
-	// Applies to sections, classes, objects, interfaces, temporal locators
-	// Ugly, but due to the fact that Xtext parsing does not distinguish between
-	// references of different types
-	'refined'? Determiner? id=ID comments += STRING* (DefinitionBlock | GlobalDefinition)
-|	'refined'  Determiner? id=ID comments += STRING* ';'
+	'refined'? Determiner? refined=[Refinable]         comments += STRING* DefinitionBlock
+|	'refined'? Determiner? refined=[GloballyRefinable] comments += STRING* GlobalDefinition
+|	'refined'  Determiner? refined=[Refinable]         comments += STRING* ';'
+;
+
+Refinable:
+	Section | DefinedClass | Object | Contract | Encroachment
+;
+
+GloballyRefinable:
+	DefinedClass | Object
 ;
 
 // ========== Class ===========================================
@@ -160,9 +166,13 @@ Party:
 	party=ID comments+=STRING*
 ;
 
-ContractAcknowledgment:
-//	'acknowledged' id=[Contract | Encroachment] comments+=STRING*
-	'acknowledged' id=ID comments+=STRING* ';'
+Acknowledgment:
+	'acknowledged' id=[Interface] comments+=STRING* ';'
+;
+
+Interface:
+	Contract
+|	Encroachment
 ;
 
 // ========== Encroachment =================================================
