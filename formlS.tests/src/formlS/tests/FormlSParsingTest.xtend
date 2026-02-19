@@ -62,7 +62,7 @@ class FormlSParsingTest {
 	}
 	
 	@Test
-	def void MockUpTest004a() {
+	def void MockUpTest005() {
 		val result = parseHelper.parse('''
 			Model TestModel : Integer a is 8;
 		''')
@@ -72,7 +72,7 @@ class FormlSParsingTest {
 	}
 	
 	@Test
-	def void MockUpTest004b() {
+	def void MockUpTest006() {
 		val result = parseHelper.parse('''
 			Model TestModel : a is 8;
 		''')
@@ -82,103 +82,7 @@ class FormlSParsingTest {
 	}
 	
 	@Test
-	def void MockUpTest004c() {
-		val result = parseHelper.parse('''
-			Model TestModel : Section PartA;
-		''')
-		Assertions.assertNotNull(result)
-		val errors = result.eResource.errors
-		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
-	}
-	
-	@Test
-	def void MockUpTest004d() {
-		val result = parseHelper.parse('''
-			Model TestModel : Section PartA begin
-			end;
-		''')
-		Assertions.assertNotNull(result)
-		val errors = result.eResource.errors
-		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
-	}
-	
-	@Test
-	def void MockUpTest004e() {
-		val result = parseHelper.parse('''
-			Model TestModel : Section PartA begin
-				Integer a;
-			end;
-		''')
-		Assertions.assertNotNull(result)
-		val errors = result.eResource.errors
-		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
-	}
-	
-	@Test
-	def void MockUpTest004f() {
-		val result = parseHelper.parse('''
-			Model TestModel : Section PartA begin
-				Integer a is 10;
-			end;
-		''')
-		Assertions.assertNotNull(result)
-		val errors = result.eResource.errors
-		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
-	}
-	
-	@Test
-	def void MockUpTest004g() {
-		val result = parseHelper.parse('''
-			Model TestModel : Section PartA begin
-				Integer #a is 10;
-			end;
-		''')
-		Assertions.assertNotNull(result)
-		val errors = result.eResource.errors
-		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
-	}
-	
-	@Test
-	def void MockUpTest004h() {
-		val result = parseHelper.parse('''
-			Model TestModel : Section PartA begin
-				@a is 10;
-			end;
-		''')
-		Assertions.assertNotNull(result)
-		val errors = result.eResource.errors
-		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
-	}
-	
-	@Test
-	def void MockUpTest004i() {
-		val result = parseHelper.parse('''
-			Model TestModel : Section PartA begin
-				@a is 10;
-				Section PartAA;
-			end;
-		''')
-		Assertions.assertNotNull(result)
-		val errors = result.eResource.errors
-		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
-	}
-	
-	@Test
-	def void MockUpTest004j() {
-		val result = parseHelper.parse('''
-			Model TestModel : Section PartA begin
-				@a is 10;
-				Section PartAA begin
-				end PartAA;
-			end;
-		''')
-		Assertions.assertNotNull(result)
-		val errors = result.eResource.errors
-		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
-	}
-	
-	@Test
-	def void MockUpTest005() {
+	def void MockUpTest007() {
 		val result = parseHelper.parse('''
 			Model TestModel begin
 			end;
@@ -189,7 +93,7 @@ class FormlSParsingTest {
 	}
 	
 	@Test
-	def void MockUpTest006() {
+	def void MockUpTest008() {
 		val result = parseHelper.parse('''
 			Model TestModel begin
 			end TestModel;
@@ -200,7 +104,7 @@ class FormlSParsingTest {
 	}
 	
 	@Test
-	def void MockUpTest007() {
+	def void MockUpTest009() {
 		val result = parseHelper.parse('''
 			Model TestModel begin
 				Integer b is 7; 
@@ -212,7 +116,7 @@ class FormlSParsingTest {
 	}
 	
 	@Test
-	def void MockUpTest008() {
+	def void MockUpTest010() {
 		val result = parseHelper.parse('''
 			Model TestModel begin
 				Integer b is 7; 
@@ -226,7 +130,7 @@ class FormlSParsingTest {
 	}
 	
 	@Test
-	def void MockUpTest009() {
+	def void MockUpTest011() {
 		val result = parseHelper.parse('''
 			Model TestModel begin
 				Integer b is 7; 
@@ -238,7 +142,7 @@ class FormlSParsingTest {
 	}
 	
 	@Test
-	def void MockUpTest010() {
+	def void MockUpTest012() {
 		val result = parseHelper.parse('''
 			Model TestModel begin
 				Integer b is 7; 
@@ -251,7 +155,7 @@ class FormlSParsingTest {
 	}
 	
 	@Test
-	def void MockUpTest011() {
+	def void MockUpTest013() {
 		val result = parseHelper.parse('''
 			Model TestModel extends Standard begin
 				Integer b is 7; 
@@ -264,7 +168,7 @@ class FormlSParsingTest {
 	}
 	
 	@Test
-	def void MockUpTest012() {
+	def void MockUpTest014() {
 		val result = parseHelper.parse('''
 			Model TestModel extends Standard, Other begin
 				Integer b is 7; 
@@ -277,7 +181,7 @@ class FormlSParsingTest {
 	}
 	
 	@Test
-	def void MockUpTest013() {
+	def void MockUpTest015() {
 		val result = parseHelper.parse('''
 			Model TestModel 'comment' 'comment'
 				extends Standard 
@@ -292,7 +196,7 @@ class FormlSParsingTest {
 	}
 	
 	@Test
-	def void MockUpTest014() {
+	def void MockUpTest016() {
 		val result = parseHelper.parse('''
 			Model TestModel 'comment' 'comment'
 				extends Standard 
@@ -308,7 +212,7 @@ class FormlSParsingTest {
 	}
 	
 	@Test
-	def void MockUpTest015() {
+	def void MockUpTest017() {
 		val result = parseHelper.parse('''
 			Model TestModel extends Standard, Other begin
 				b is 7; 
@@ -322,7 +226,7 @@ class FormlSParsingTest {
 	}
 	
 	@Test
-	def void MockUpTest016() {
+	def void MockUpTest018() {
 		val result = parseHelper.parse('''
 			Model TestModel extends Standard, Other begin
 				b is 7; 
@@ -337,7 +241,7 @@ class FormlSParsingTest {
 	}
 	
 	@Test
-	def void MockUpTest017() {
+	def void MockUpTest019() {
 		val result = parseHelper.parse('''
 			Model TestModel 'comment' 'comment'
 				extends Standard 
@@ -360,7 +264,7 @@ class FormlSParsingTest {
 	}
 	
 	@Test
-	def void MockUpTest018() {
+	def void MockUpTest020() {
 		val result = parseHelper.parse('''
 			Model TestModel 'comment' 'comment'
 				extends Standard 
@@ -385,7 +289,7 @@ class FormlSParsingTest {
 	}
 	
 	@Test
-	def void MockUpTest019() {
+	def void MockUpTest021() {
 		val result = parseHelper.parse('''
 			Model TestModel 'comment' 'comment'
 				extends Standard 
@@ -409,4 +313,5 @@ class FormlSParsingTest {
 		val errors = result.eResource.errors
 		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
 	}
+	
 }

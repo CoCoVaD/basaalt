@@ -42,9 +42,7 @@ Statement:
 //|	contractDecl=Contract
 //|	encroachmentDecl=Encroachment
 //|	tlDecl=TempotalLocator
-|	sectionDef=SectionDefinition
-//|	itemDecl=Item
-|	itemDef=GlobalObjectDefinition
+|	refinedment=Refinement
 //|	inst=Instruction
 ;
 
@@ -56,11 +54,15 @@ Section:
 	(DefinitionBlock | ';')
 ;
 
-SectionDefinition:
-	id=[Section]
-	DefinitionBlock
+// ========== Refinement ==================================================
+Refinement:
+	// Applies to sections, classes, objects, interfaces, temporal locators
+	// Ugly, but due to the fact that Xtext parsing does not distinguish between
+	// references of different types
+	'refined'? Determiner? id=ID comments += STRING* (DefinitionBlock | GlobalDefinition)
+|	'refined'  Determiner? id=ID comments += STRING* ';'
 ;
- 
+
 // ========== Class ===========================================
 PredefinedClass:
 	'Boolean' | 'Integer' | 'Real' | 'String'
@@ -78,7 +80,7 @@ DefinedClass:
 	comments+=STRING*
 	('extends' extended+=Class (',' extended+=Class)*)?
 	comments += STRING*
-	';'
+	(DefinitionBlock | ';')
 ;
 
 States:
@@ -138,11 +140,4 @@ Object:
 	Parameters?
 	comments+=STRING*
 	(DefinitionBlock | GlobalDefinition | ';')
-;
-
-GlobalObjectDefinition:
-	// This is ugly, but it seems that Xtext parsing cannot make 
-	// the difference between references of different types
-	Determiner id=[Object] (DefinitionBlock | GlobalDefinition)
-|	id=[Object] GlobalDefinition 
 ;

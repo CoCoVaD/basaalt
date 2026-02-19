@@ -445,6 +445,19 @@ class FormlSClassParsingTest {
 	}
 	
 	@Test
+	def void ClassTest032() {
+		val result = parseHelper.parse('''
+			Model TestModel :
+				Class C1 begin
+					Integer i1;
+				end C1;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
 	def void EnumerationTest001() {
 		val result = parseHelper.parse('''
 			Model TestModel begin

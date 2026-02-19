@@ -124,10 +124,10 @@ class FormlSObjectParsingTest {
 		val result = parseHelper.parse('''
 			Model TestModel begin
 				private Object o1;
-			//	fixed Object o2;
+				fixed Object o2;
 				fixed private Object o3;
-			//	common constant Object o4;
-			//	fixed common private Object o5;
+				common constant Object o4;
+				fixed common private Object o5;
 			end;
 		''')
 		Assertions.assertNotNull(result)
@@ -220,6 +220,99 @@ class FormlSObjectParsingTest {
 			Model TestModel begin
 				Class C1;
 				C1 {@ 5 constant} obj (Integer i);
+			end;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
+	def void ObjectTest017() {
+		val result = parseHelper.parse('''
+			Model TestModel begin
+				Class C1 (Integer i1, Real r1);
+				C1 (3, 4) {@ 5 constant} obj (Integer i);
+			end;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
+	def void ObjectTest018() {
+		val result = parseHelper.parse('''
+			Model TestModel begin
+				Class C1 (Integer i1, Real r1);
+				C1 (3, 4) {@ 5 constant} obj (Integer i, Real r);
+			end;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
+	def void ObjectTest019() {
+		val result = parseHelper.parse('''
+			Model TestModel begin
+				Integer i1 is 4;
+			end;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
+	def void ObjectTest020() {
+		val result = parseHelper.parse('''
+			Model TestModel begin
+				Integer i1;
+				i1 is 4;
+			end;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
+	def void ObjectTest021() {
+		val result = parseHelper.parse('''
+			Model TestModel begin
+				Object obj;
+				obj: Integer i1;
+			end;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
+	def void ObjectTest022() {
+		val result = parseHelper.parse('''
+			Model TestModel begin
+				Object obj;
+				obj begin
+					Integer i1 is 4;
+				end obj;
+			end;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
+	def void ObjectTest023() {
+		val result = parseHelper.parse('''
+			Model TestModel begin
+				Object obj begin
+					Integer i1 is 4;
+				end obj;
 			end;
 		''')
 		Assertions.assertNotNull(result)
