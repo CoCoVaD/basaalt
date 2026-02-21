@@ -3,6 +3,8 @@ grammar formlS.FormlS with org.eclipse.xtext.common.Terminals
 
 generate formlS "http://www.FormlS.formlS"
 
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
 MockUp:
 	// A mock-up is a sequence of models, with at least one model
 	comments += STRING*
@@ -32,7 +34,7 @@ fragment DefinitionBlock:
 ;	
 
 fragment GlobalDefinition:
-	'is' value=INT ';'
+	'is' value=Expression ';'
 ;
 
 Statement:
@@ -95,7 +97,7 @@ States:
 ;
 
 State:
-	(enumeration=[DefinedClass] | states=States)? id=ID comments+=STRING*
+	(enumeration=[DefinedClass] | states=States)? name=ID comments+=STRING*
 ;
 
 Class:
@@ -123,16 +125,12 @@ fragment Parameters:
 
 Parameter:
 	class=Class 
-	Determiner? id=ID 
+	Determiner? name=ID 
 	comments+=STRING*
 ;
 
 fragment Arguments:
 	'(' arguments+=Expression (',' arguments+=Expression)* ')'
-;
-
-Expression:
-	value=INT	// temporary
 ;
 
 SetIndication:
@@ -183,3 +181,28 @@ Encroachment:
 	comments += STRING*
 	(DefinitionBlock | ';')
 ;
+
+// ========== Expression =================================================
+Expression:
+	value=Number	// temporary
+;
+
+// ========== Number =================================================
+
+Number:  
+(	whole=INT ((float?='.' (decimal=INT | exp1=EXPONENT1)?) | exp2=EXPONENT2)?
+|	'.' (decimal=INT | exp1=EXPONENT1)
+|	exp1=EXPONENT1
+|	exp2=EXPONENT2
+)
+;
+
+@Override
+terminal ID: ('a'..'z'|'A'..'Z'|'_'|'°') ('a'..'z'|'A'..'Z'|'_'|'°'|'0'..'9')*;
+
+terminal EXPONENT2: '.'         ('E' | 'e') ('+' | '-')? ('0'..'9')+;
+terminal EXPONENT1: ('0'..'9')+ ('E' | 'e') ('+' | '-')? ('0'..'9')+;
+
+@Override
+terminal INT returns ecore::EInt: ('0'..'9')+;
+
