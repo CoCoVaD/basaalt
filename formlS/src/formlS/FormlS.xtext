@@ -4,75 +4,74 @@ grammar formlS.FormlS with org.eclipse.xtext.common.Terminals
 generate formlS "http://www.FormlS.formlS"
 
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
-
+/*  
 MockUp:
-	// A mock-up is a sequence of models, with at least one model
 	comments += STRING*
 	models+=Model+
 	comments += STRING*
 ;
-	
-// ========== Model ==================================================
-Model:
-	// A model is composed of a model declaration, possibly combined
-	// with a model definition block, and possibly followed by statements 
-	// contributing to the definition of the model
-	ModelDeclaration (DefinitionBlock | ';')
-	statements+=Statement*
-;
 
-fragment ModelDeclaration:
-	'Model' name=ID 
+// ========== Model =================================================
+Model:
+	'Model' name=ID
 	comments += STRING*
 	('extends' extended+=[Model] (',' extended+=[Model])*)?
 	comments += STRING*
+	(block=DefinitionBlock | ';')
+	statements+=Statement*
 ;
 
-fragment DefinitionBlock:
+DefinitionBlock:
 	':' statements+=Statement
-|	'begin' statements+=Statement* 'end' (endName=ID)? ';'
+|	{DefinitionBlock} 'begin' statements+=Statement* 'end' (endName=ID)? ';'
 ;	
-
-fragment GlobalDefinition:
-	'is' value=Expression ';'
-;
 
 Statement:
 	sectionDecl=Section
 |	classDecl=DefinedClass
 |	objectDecl=Object
 |	contractDecl=Contract
-|	acknowledment=Acknowledgment
+|	acknowledgment=Acknowledgment
 |	encroachmentDecl=Encroachment
 //|	tlDecl=TempotalLocator
-|	refinement=Refinement
-//|	inst=Instruction
+|	inst=Instruction
 ;
 
-
-// ========== Section ==================================================
+// ========== Section =================================================
 Section:
 	'Section' name=ID
 	comments+=STRING*
-	(DefinitionBlock | ';')
+	(block=DefinitionBlock | ';')
 ;
 
-// ========== Refinement ==================================================
-Refinement:
-	'refined'? Determiner? refined=[Refinable]         comments += STRING* DefinitionBlock
-|	'refined'? Determiner? refined=[GloballyRefinable] comments += STRING* GlobalDefinition
-|	'refined'  Determiner? refined=[Refinable]         comments += STRING* ';'
+// ========== Class =================================================
+Class:
+(	definedClass=[DefinedClass] Arguments? 
+| 	predefinedClass=PredefinedClass
+|	automaton?='Automaton' chartStates=ChartStates comments+=STRING*
+) 
+ 	setIndication=SetIndication?
 ;
 
-Refinable:
-	Section | DefinedClass | Object | Contract | Encroachment
+ChartStates:
+	{orList}  '[' nodes+=AtomicOrCompositeNode (',' nodes+=AtomicOrCompositeNode)+ ']'
+|	{andList} '[' nodes+=CompositeNode         ('&' nodes+=CompositeNode        )+ ']'
 ;
 
-GloballyRefinable:
-	DefinedClass | Object
+AtomicOrCompositeNode:
+	stateChart=[DefinedClass]? name=ID
 ;
 
-// ========== Class ===========================================
+CompositeNode:
+	stateChart=[DefinedClass]  name=ID
+;
+
+Node:
+	AtomicOrCompositeNode
+|	CompositeNode
+;
+
+
 PredefinedClass:
 	'Boolean' | 'Integer' | 'Real' | 'String'
 |	'Event'
@@ -82,29 +81,14 @@ PredefinedClass:
 
 DefinedClass:
 	((private?='private' | main?='main' | external?='external')? & (abstract?='abstract')?)
-	('Class' | enumeration?='Enumeration' states=States comments+=STRING*) 
+	('Class' | enumeration?='Enumeration' chartStates=ChartStates comments+=STRING*) 
 	Determiner? name=ID
 	mySetIndication=SetIndication?
 	Parameters?
 	comments+=STRING*
 	('extends' extended+=Class (',' extended+=Class)*)?
 	comments += STRING*
-	(DefinitionBlock | ';')
-;
-
-States:
-	'[' states+=State ((',' states+=State)+ | ('&' states+=State)+) ']'
-;
-
-State:
-	(enumeration=[DefinedClass] | states=States)? name=ID comments+=STRING*
-;
-
-Class:
-	(	definedClass=[DefinedClass] Arguments? 
-	| 	predefinedClass=PredefinedClass
-	|	automaton?='Automaton' states=States comments+=STRING*
-	) setIndication=SetIndication?
+	(block=DefinitionBlock | GlobalDefinition | ';')
 ;
 
 fragment Determiner:
@@ -137,6 +121,10 @@ SetIndication:
 	{SetIndication} domain?='$'? '{' (Determiner? & Variability? & Cardinal?) '}'
 ;
 
+fragment GlobalDefinition:
+	'is' value=Expression ';'
+;
+
 // ========== Object =================================================
 Object:
  	(	main?='main'
@@ -147,7 +135,7 @@ Object:
 	comments += STRING*
 	Parameters?
 	comments+=STRING*
-	(DefinitionBlock | GlobalDefinition | ';')
+	(block=DefinitionBlock | GlobalDefinition | ';')
 ;
 
 // ========== Contract =================================================
@@ -156,14 +144,24 @@ Contract:
 	comments += STRING*
 	'(' parties+=Party (',' parties+=Party)* ')'
 	comments += STRING*
-	(DefinitionBlock | ';')
+	(block=DefinitionBlock | ';')
 ;
 
 Party:
 //	(class=[DefinedClass] | object=[Object]) comments+=STRING*
-	party=ID comments+=STRING*
+	name=ID comments+=STRING*
 ;
 
+// ========== Encroachment =================================================
+Encroachment:
+	'Encroachment' name=ID 
+	comments += STRING*
+	'(' origin=Party ',' target=Party ')'
+	comments += STRING*
+	(block=DefinitionBlock | ';')
+;
+
+// ========== Acknowledgment =================================================
 Acknowledgment:
 	'acknowledged' id=[Interface] comments+=STRING* ';'
 ;
@@ -173,36 +171,343 @@ Interface:
 |	Encroachment
 ;
 
+// ========== Instruction =================================================
+Instruction:						// Temporary
+	receiver=ReceiverPath (GlobalDefinition | block=DefinitionBlock)
+;
+
+ReceiverPath:
+	item=ItemPath
+|	item=ItemPath? attribute=Attribute
+//|	item=ItemPath? state=ReceiverState
+;
+
+ItemPath:
+	 (model=[Model] '.')? 
+	 (path+=[PathElement] '.')*
+	 item=DeterminedItem
+;
+
+PathElement:
+	Section
+|	DeterminedItem
+;
+
+DeterminedItem:
+	Determiner? item=[Item]
+;
+
+Item:
+	DefinedClass | Object
+;
+
+// ========== Expression =================================================
+Expression:	// temporary
+// 	numLit=Number
+//|	true?='true' | false?='false'
+//|	string=STRING
+//|	item=ItemPath ('¨' state=StateLiteral)?
+//|	(item=ItemPath '.')? attribute=Attribute
+//|	
+	state=StateLiteral
+;
+
+// ========== States =================================================
+MockUp:
+	(models+=StateLiteral ';')+
+;
+
+StateLiteral:
+	('¨' atoms+=AtomicStateLiteral)+
+;
+
+AtomicStateLiteral:
+	id=ID
+|	'[' values+=StateLiteral ('&' values+=StateLiteral)+ ']'
+;
+ 
+// ========== Attribute =================================================
+Attribute: id=
+(	'value'        | 'previous'       | 'next'     | 'default'
+|	'quantity'     | 'unit'           | 'scale'    | 'offset'
+|	'memory'
+|	'occurrence'   | 'rate'           | 'inPValue' | 'clockValue' | 'inPClockValue'
+|	'substitution' | 'concretisation' | 'justification'
+|	'pfd' 
+|	'satisfied'    | 'satisfaction'   | 'inPSatisfaction'
+|	'violated'     | 'violation'      | 'inPViolation'
+|	'untested'     | 'inPUntested'
+|	'clock'        | 'identity'       | 'values'
+)
+|	id=('derivative' | 'integral' | 'inPIntegral') ('[' rank=INT ']')?
+|	id=('eSatisfaction' | 'eInPSatisfaction' | 'eViolation' | 'eInPViolation' | 'eNew' | 'eDelete') 
+		('.' id2=('value' | 'inPValue' | 'clockValue' | 'inPClockValue' | 'occurrence' | 'rate'))?
+;
+
+AssignableAttribute: id=
+(	'value'                           | 'next'     | 'default'
+|	'quantity'     | 'unit'           | 'scale'    | 'offset'
+|	'memory'
+|	'substitution' | 'concretisation' | 'justification'
+|	'clock'       
+)
+|	id=('derivative' | 'integral' | 'inPIntegral') ('[' rank=INT ']')?
+;
+
+*/
+
+// ========== MockUp =================================================
+MockUp:
+	comments += STRING*
+	models+=Model+
+	comments += STRING*
+;
+
+// ========== Model =================================================
+Model:
+	'Model' name=ID
+	comments += STRING*
+	('extends' extended+=[Model] (',' extended+=[Model])*)?
+	comments += STRING*
+	(block=DefinitionBlock | ';')
+	statements+=Statement*
+;
+
+DefinitionBlock:
+	':' statements+=Statement
+|	{DefinitionBlock} 'begin' statements+=Statement* 'end' (endName=ID)? ';'
+;	
+
+Statement:
+	sectionDecl=Section
+|	classDecl=DefinedClass
+|	objectDecl=Object
+|	contractDecl=Contract
+|	encroachmentDecl=Encroachment
+|	acknowledgment=Acknowledgment
+//|	tlDecl=TempotalLocator
+|	inst=Instruction
+;
+
+
+// ========== Section =================================================
+Section:
+	'Section' name=ID
+	comments+=STRING*
+	(block=DefinitionBlock | ';')
+;
+
+// ========== Class =================================================
+Class:
+(	definedClass=[DefinedClass] Arguments? 
+| 	predefinedClass=PredefinedClass
+|	automaton?='Automaton' chartStates=ChartStates comments+=STRING*
+) 
+ 	setIndication=SetIndication?
+;
+
+fragment Arguments:
+	'(' arguments+=Expression (',' arguments+=Expression)* ')'
+;
+
+SetIndication:
+	{SetIndication} domain?='$'? '{' (Determiner? & Variability? & Cardinal?) '}'
+;
+fragment Determiner:
+	determiner=('!' | '#' | '@' | '^' | '~' | '?')
+;
+
+fragment Cardinal:
+	ln=INT ('..' (ub=INT | infinity?='%'))?
+;
+
+fragment Variability:
+	(fixed?='fixed' | constant?='constant')
+;
+
+ChartStates:
+	{orList}  '[' nodes+=AtomicOrCompositeNode (',' nodes+=AtomicOrCompositeNode)+ ']'
+|	{andList} '[' nodes+=CompositeNode         ('&' nodes+=CompositeNode        )+ ']'
+;
+
+AtomicOrCompositeNode:
+	stateChart=[DefinedClass]? name=ID
+;
+
+CompositeNode:
+	stateChart=[DefinedClass]  name=ID
+;
+
+Node:
+	AtomicOrCompositeNode
+|	CompositeNode
+;
+
+PredefinedClass:
+	'Boolean' | 'Integer' | 'Real' | 'String'
+|	'Event'
+|	'Property' | 'Assumption' | 'Objective' | 'Requirement' | 'Guarantee' | 'Guard'
+|	'Object'
+;
+
+// ========== DefinedClass =================================================
+DefinedClass:
+	((private?='private' | main?='main' | external?='external')? & (abstract?='abstract')?)
+	('Class' | enumeration?='Enumeration' chartStates=ChartStates comments+=STRING*) 
+	Determiner? name=ID
+	mySetIndication=SetIndication?
+	Parameters?
+	comments+=STRING*
+	('extends' extended+=Class (',' extended+=Class)*)?
+	comments += STRING*
+	(block=DefinitionBlock | GlobalDefinition | ';')
+;
+fragment Parameters:
+	'(' parameters+=Parameter (',' parameters+=Parameter)* ')'
+;
+
+Parameter:
+	class=Class 
+	Determiner? name=ID 
+	comments+=STRING*
+;
+
+fragment GlobalDefinition:
+	'is' value=Expression ';'
+;
+
+// ========== Object =================================================
+Object:
+ 	(	main?='main'
+	|	external?='external'? & private?='private'? & common?='common'? & Variability?
+	)
+	(classes+=Class | '(' classes+=Class (',' classes+=Class)* ')')
+	Determiner? name=ID
+	comments += STRING*
+	Parameters?
+	comments+=STRING*
+	(block=DefinitionBlock | GlobalDefinition | ';')
+;
+
+// ========== Contract =================================================
+Contract:
+	'Contract' name=ID 
+	comments += STRING*
+	'(' parties+=Party (',' parties+=Party)* ')'
+	comments += STRING*
+	(block=DefinitionBlock | ';')
+;
+
+Party:
+//	(class=[DefinedClass] | object=[Object]) comments+=STRING*
+	name=ID comments+=STRING*
+;
+
 // ========== Encroachment =================================================
 Encroachment:
 	'Encroachment' name=ID 
 	comments += STRING*
 	'(' origin=Party ',' target=Party ')'
 	comments += STRING*
-	(DefinitionBlock | ';')
+	(block=DefinitionBlock | ';')
+;
+
+// ========== Acknowledgment =================================================
+Acknowledgment:
+	'acknowledged' id=[Interface] comments+=STRING* ';'
+;
+
+Interface:
+	Contract
+|	Encroachment
+;
+
+// ========== Instruction =================================================
+Instruction:						// Temporary
+	receiver=ItemPath (GlobalDefinition | block=DefinitionBlock)
+;
+
+ItemPath:
+	 (model=[Model] '.')? 
+	 (path+=[PathElement] '.')*
+	 item=DeterminedItem
+;
+
+PathElement:
+	Section
+|	DeterminedItem
+;
+
+DeterminedItem:
+	Determiner? item=[Item]
+;
+
+Item:
+	DefinedClass | Object
 ;
 
 // ========== Expression =================================================
-Expression:
-	value=Number	// temporary
+Expression:	// temporary
+	true?='true' | false?='false'
+|	numLit=Number
+|	string=STRING
+|	'¨' state=StateLiteral
+|	item=ItemPath ('¨' state=StateLiteral)?
+|	(item=ItemPath '.')? attribute=Attribute
 ;
+
+// ========== Attribute =================================================
+Attribute: id=
+(	'value'        | 'previous'       | 'next'     | 'default'
+|	'quantity'     | 'unit'           | 'scale'    | 'offset'
+|	'memory'
+|	'occurrence'   | 'rate'           | 'inPValue' | 'clockValue' | 'inPClockValue'
+|	'substitution' | 'concretisation' | 'justification'
+|	'pfd' 
+|	'satisfied'    | 'satisfaction'   | 'inPSatisfaction'
+|	'violated'     | 'violation'      | 'inPViolation'
+|	'untested'     | 'inPUntested'
+|	'clock'        | 'identity'       | 'values'
+)
+|	id=('derivative' | 'integral' | 'inPIntegral') ('[' rank=INT ']')?
+|	id=('eSatisfaction' | 'eInPSatisfaction' | 'eViolation' | 'eInPViolation' | 'eNew' | 'eDelete') 
+		('.' id2=('value' | 'inPValue' | 'clockValue' | 'inPClockValue' | 'occurrence' | 'rate'))?
+;
+
+AssignableAttribute: id=
+(	'value'                           | 'next'     | 'default'
+|	'quantity'     | 'unit'           | 'scale'    | 'offset'
+|	'memory'
+|	'substitution' | 'concretisation' | 'justification'
+|	'clock'       
+)
+|	id=('derivative' | 'integral' | 'inPIntegral') ('[' rank=INT ']')?
+;
+
+
+// ========== StateLiteral =================================================
+StateLiteral:
+	atoms+=AtomicStateLiteral ('.' atoms+=AtomicStateLiteral)*
+;
+
+AtomicStateLiteral:
+	id=[Node]
+|	'[' values+=StateLiteral ('&' values+=StateLiteral)+ ']'
+;
+
 
 // ========== Number =================================================
-
 Number:  
-(	whole=INT ((float?='.' (decimal=INT | exp1=EXPONENT1)?) | exp2=EXPONENT2)?
-|	'.' (decimal=INT | exp1=EXPONENT1)
-|	exp1=EXPONENT1
-|	exp2=EXPONENT2
+(	whole=INT ('.' (decimal=INT | exp1=EXPONENT1)?)?	// 5 5. 5.7 5.7e10
+|	'.' (decimal=INT | exp1=EXPONENT1)					// .7 .7e10
+|	exp1=EXPONENT1										// 5e10
 )
 ;
-
+ 
 @Override
 terminal ID: ('a'..'z'|'A'..'Z'|'_'|'°') ('a'..'z'|'A'..'Z'|'_'|'°'|'0'..'9')*;
 
-terminal EXPONENT2: '.'         ('E' | 'e') ('+' | '-')? ('0'..'9')+;
-terminal EXPONENT1: ('0'..'9')+ ('E' | 'e') ('+' | '-')? ('0'..'9')+;
+terminal EXPONENT1: INT ('E' | 'e') ('+' | '-')? INT;
 
 @Override
 terminal INT returns ecore::EInt: ('0'..'9')+;
-

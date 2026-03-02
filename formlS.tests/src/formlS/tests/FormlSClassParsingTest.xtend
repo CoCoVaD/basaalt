@@ -478,7 +478,8 @@ class FormlSClassParsingTest {
 				Enumeration [m, n, o]   K;
 				Enumeration [p, q]      L;
 				Enumeration [K k & L l] E;    // Cartesian product of k and l
-				Enumeration [B b, c, [D d1 & D d2 & D d3] d, E e] A;	
+				Enumeration [D d1 & D d2 & D d3] F;
+				Enumeration [B b, c, F d, E e] A;	
 			end;
 		''')
 		Assertions.assertNotNull(result)

@@ -29,7 +29,62 @@ class FormlSContractParsingTest {
 	}
 	
 	@Test
+	def void ContractTest001a() {
+		val result = parseHelper.parse('''
+			Model TestModel begin
+				Contract contr (A, c) begin
+				end;
+			end;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
+	def void ContractTest001b() {
+		val result = parseHelper.parse('''
+			Model TestModel begin
+				Contract contr (mps) : Integer i;
+			end;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
 	def void ContractTest002() {
+		val result = parseHelper.parse('''
+			Model TestModel begin
+				Contract contr (A, c) begin
+					A : Integer i;
+				end;
+			end;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
+	def void ContractTest002a() {
+		val result = parseHelper.parse('''
+			Model TestModel begin
+				Contract contr (A, c) begin
+					A begin
+						Guarantee g1;
+					end A;
+				end;
+			end;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+	@Test
+	def void ContractTest002b() {
 		val result = parseHelper.parse('''
 			Model TestModel begin
 				Contract contr (A, c) begin

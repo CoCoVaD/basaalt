@@ -54,7 +54,7 @@ class FormlSParsingTest {
 	@Test
 	def void MockUpTest004() {
 		val result = parseHelper.parse('''
-			Model TestModel : Integer a;
+			Model TestModel : Integer @a;
 		''')
 		Assertions.assertNotNull(result)
 		val errors = result.eResource.errors
@@ -64,7 +64,7 @@ class FormlSParsingTest {
 	@Test
 	def void MockUpTest005() {
 		val result = parseHelper.parse('''
-			Model TestModel : Integer a is 8;
+			Model TestModel : Integer #a is 8;
 		''')
 		Assertions.assertNotNull(result)
 		val errors = result.eResource.errors
@@ -107,7 +107,7 @@ class FormlSParsingTest {
 	def void MockUpTest009() {
 		val result = parseHelper.parse('''
 			Model TestModel begin
-				Integer b is 7; 
+				Integer !b is 7; 
 			end;
 		''')
 		Assertions.assertNotNull(result)
@@ -120,8 +120,8 @@ class FormlSParsingTest {
 		val result = parseHelper.parse('''
 			Model TestModel begin
 				Integer b is 7; 
-				Integer c;
-				c is 8;
+				Integer !c;
+				@c is 8;
 			end;
 		''')
 		Assertions.assertNotNull(result)

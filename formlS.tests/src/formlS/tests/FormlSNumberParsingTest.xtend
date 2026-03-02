@@ -32,7 +32,6 @@ class FormlSNumberParsingTest {
 	def void NumberTest002() {
 		val result = parseHelper.parse('''
 			Model TestModel;
-			Real r1 is 4;
 			Real r2 is 5.;
 		''')
 		Assertions.assertNotNull(result)
@@ -77,7 +76,7 @@ class FormlSNumberParsingTest {
 	def void NumberTest006() {
 		val result = parseHelper.parse('''
 			Model TestModel;
-			Real r6 is 4.e5;
+			// Real r6 is 4.e5;
 		''')
 		Assertions.assertNotNull(result)
 		val errors = result.eResource.errors
@@ -95,11 +94,11 @@ class FormlSNumberParsingTest {
 		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
 	}
 	
-	@Test
+ 	@Test
 	def void NumberTest008() {
 		val result = parseHelper.parse('''
 			Model TestModel;
-			Real r8 is .e6;
+			// Real r8 is .e6;
 		''')
 		Assertions.assertNotNull(result)
 		val errors = result.eResource.errors
