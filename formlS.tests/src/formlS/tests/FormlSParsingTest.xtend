@@ -121,7 +121,7 @@ class FormlSParsingTest {
 			Model TestModel begin
 				Integer b is 7; 
 				Integer !c;
-				@c is 8;
+				!c is 8;
 			end;
 		''')
 		Assertions.assertNotNull(result)

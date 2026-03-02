@@ -4,257 +4,6 @@ grammar formlS.FormlS with org.eclipse.xtext.common.Terminals
 generate formlS "http://www.FormlS.formlS"
 
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
-/*  
-MockUp:
-	comments += STRING*
-	models+=Model+
-	comments += STRING*
-;
-
-// ========== Model =================================================
-Model:
-	'Model' name=ID
-	comments += STRING*
-	('extends' extended+=[Model] (',' extended+=[Model])*)?
-	comments += STRING*
-	(block=DefinitionBlock | ';')
-	statements+=Statement*
-;
-
-DefinitionBlock:
-	':' statements+=Statement
-|	{DefinitionBlock} 'begin' statements+=Statement* 'end' (endName=ID)? ';'
-;	
-
-Statement:
-	sectionDecl=Section
-|	classDecl=DefinedClass
-|	objectDecl=Object
-|	contractDecl=Contract
-|	acknowledgment=Acknowledgment
-|	encroachmentDecl=Encroachment
-//|	tlDecl=TempotalLocator
-|	inst=Instruction
-;
-
-// ========== Section =================================================
-Section:
-	'Section' name=ID
-	comments+=STRING*
-	(block=DefinitionBlock | ';')
-;
-
-// ========== Class =================================================
-Class:
-(	definedClass=[DefinedClass] Arguments? 
-| 	predefinedClass=PredefinedClass
-|	automaton?='Automaton' chartStates=ChartStates comments+=STRING*
-) 
- 	setIndication=SetIndication?
-;
-
-ChartStates:
-	{orList}  '[' nodes+=AtomicOrCompositeNode (',' nodes+=AtomicOrCompositeNode)+ ']'
-|	{andList} '[' nodes+=CompositeNode         ('&' nodes+=CompositeNode        )+ ']'
-;
-
-AtomicOrCompositeNode:
-	stateChart=[DefinedClass]? name=ID
-;
-
-CompositeNode:
-	stateChart=[DefinedClass]  name=ID
-;
-
-Node:
-	AtomicOrCompositeNode
-|	CompositeNode
-;
-
-
-PredefinedClass:
-	'Boolean' | 'Integer' | 'Real' | 'String'
-|	'Event'
-|	'Property' | 'Assumption' | 'Objective' | 'Requirement' | 'Guarantee' | 'Guard'
-|	'Object'
-;
-
-DefinedClass:
-	((private?='private' | main?='main' | external?='external')? & (abstract?='abstract')?)
-	('Class' | enumeration?='Enumeration' chartStates=ChartStates comments+=STRING*) 
-	Determiner? name=ID
-	mySetIndication=SetIndication?
-	Parameters?
-	comments+=STRING*
-	('extends' extended+=Class (',' extended+=Class)*)?
-	comments += STRING*
-	(block=DefinitionBlock | GlobalDefinition | ';')
-;
-
-fragment Determiner:
-	determiner=('!' | '#' | '@' | '^' | '~' | '?')
-;
-
-fragment Variability:
-	(fixed?='fixed' | constant?='constant')
-;
-
-fragment Cardinal:
-	ln=Expression ('..' (ub=Expression | infinity?='%'))?
-;
-
-fragment Parameters:
-	'(' parameters+=Parameter (',' parameters+=Parameter)* ')'
-;
-
-Parameter:
-	class=Class 
-	Determiner? name=ID 
-	comments+=STRING*
-;
-
-fragment Arguments:
-	'(' arguments+=Expression (',' arguments+=Expression)* ')'
-;
-
-SetIndication:
-	{SetIndication} domain?='$'? '{' (Determiner? & Variability? & Cardinal?) '}'
-;
-
-fragment GlobalDefinition:
-	'is' value=Expression ';'
-;
-
-// ========== Object =================================================
-Object:
- 	(	main?='main'
-	|	external?='external'? & private?='private'? & common?='common'? & Variability?
-	)
-	(classes+=Class | '(' classes+=Class (',' classes+=Class)* ')')
-	Determiner? name=ID
-	comments += STRING*
-	Parameters?
-	comments+=STRING*
-	(block=DefinitionBlock | GlobalDefinition | ';')
-;
-
-// ========== Contract =================================================
-Contract:
-	'Contract' name=ID 
-	comments += STRING*
-	'(' parties+=Party (',' parties+=Party)* ')'
-	comments += STRING*
-	(block=DefinitionBlock | ';')
-;
-
-Party:
-//	(class=[DefinedClass] | object=[Object]) comments+=STRING*
-	name=ID comments+=STRING*
-;
-
-// ========== Encroachment =================================================
-Encroachment:
-	'Encroachment' name=ID 
-	comments += STRING*
-	'(' origin=Party ',' target=Party ')'
-	comments += STRING*
-	(block=DefinitionBlock | ';')
-;
-
-// ========== Acknowledgment =================================================
-Acknowledgment:
-	'acknowledged' id=[Interface] comments+=STRING* ';'
-;
-
-Interface:
-	Contract
-|	Encroachment
-;
-
-// ========== Instruction =================================================
-Instruction:						// Temporary
-	receiver=ReceiverPath (GlobalDefinition | block=DefinitionBlock)
-;
-
-ReceiverPath:
-	item=ItemPath
-|	item=ItemPath? attribute=Attribute
-//|	item=ItemPath? state=ReceiverState
-;
-
-ItemPath:
-	 (model=[Model] '.')? 
-	 (path+=[PathElement] '.')*
-	 item=DeterminedItem
-;
-
-PathElement:
-	Section
-|	DeterminedItem
-;
-
-DeterminedItem:
-	Determiner? item=[Item]
-;
-
-Item:
-	DefinedClass | Object
-;
-
-// ========== Expression =================================================
-Expression:	// temporary
-// 	numLit=Number
-//|	true?='true' | false?='false'
-//|	string=STRING
-//|	item=ItemPath ('¨' state=StateLiteral)?
-//|	(item=ItemPath '.')? attribute=Attribute
-//|	
-	state=StateLiteral
-;
-
-// ========== States =================================================
-MockUp:
-	(models+=StateLiteral ';')+
-;
-
-StateLiteral:
-	('¨' atoms+=AtomicStateLiteral)+
-;
-
-AtomicStateLiteral:
-	id=ID
-|	'[' values+=StateLiteral ('&' values+=StateLiteral)+ ']'
-;
- 
-// ========== Attribute =================================================
-Attribute: id=
-(	'value'        | 'previous'       | 'next'     | 'default'
-|	'quantity'     | 'unit'           | 'scale'    | 'offset'
-|	'memory'
-|	'occurrence'   | 'rate'           | 'inPValue' | 'clockValue' | 'inPClockValue'
-|	'substitution' | 'concretisation' | 'justification'
-|	'pfd' 
-|	'satisfied'    | 'satisfaction'   | 'inPSatisfaction'
-|	'violated'     | 'violation'      | 'inPViolation'
-|	'untested'     | 'inPUntested'
-|	'clock'        | 'identity'       | 'values'
-)
-|	id=('derivative' | 'integral' | 'inPIntegral') ('[' rank=INT ']')?
-|	id=('eSatisfaction' | 'eInPSatisfaction' | 'eViolation' | 'eInPViolation' | 'eNew' | 'eDelete') 
-		('.' id2=('value' | 'inPValue' | 'clockValue' | 'inPClockValue' | 'occurrence' | 'rate'))?
-;
-
-AssignableAttribute: id=
-(	'value'                           | 'next'     | 'default'
-|	'quantity'     | 'unit'           | 'scale'    | 'offset'
-|	'memory'
-|	'substitution' | 'concretisation' | 'justification'
-|	'clock'       
-)
-|	id=('derivative' | 'integral' | 'inPIntegral') ('[' rank=INT ']')?
-;
-
-*/
 
 // ========== MockUp =================================================
 MockUp:
@@ -266,35 +15,79 @@ MockUp:
 // ========== Model =================================================
 Model:
 	'Model' name=ID
+	//- Check that model name begins with a capital letter
+	//-   Quick fix: remove leading ° and _ if any, capitalise first letter
+	//- Check that model name is different from all existing ones
+	//-   Append X until name is unique
 	comments += STRING*
 	('extends' extended+=[Model] (',' extended+=[Model])*)?
+	//- Check that there is no cycle in the model extension graph
+	//-  Remove model names in the extension list that cause cycles
 	comments += STRING*
-	(block=DefinitionBlock | ';')
+	(DefinitionBlock | ';')
+	//- Check that if present, endName is equal to name
+	//-  Quick fix: set endName to name
 	statements+=Statement*
 ;
 
-DefinitionBlock:
+fragment DefinitionBlock:
 	':' statements+=Statement
-|	{DefinitionBlock} 'begin' statements+=Statement* 'end' (endName=ID)? ';'
+|	'begin' statements+=Statement* 'end' endName=ID? ';'
 ;	
 
 Statement:
 	sectionDecl=Section
-|	classDecl=DefinedClass
-|	objectDecl=Object
 |	contractDecl=Contract
 |	encroachmentDecl=Encroachment
 |	acknowledgment=Acknowledgment
+|	classDecl=DefinedClass
+|	objectDecl=Object
 //|	tlDecl=TempotalLocator
 |	inst=Instruction
 ;
-
 
 // ========== Section =================================================
 Section:
 	'Section' name=ID
 	comments+=STRING*
-	(block=DefinitionBlock | ';')
+	(DefinitionBlock | ';')
+;
+
+// ========== Contract =================================================
+Contract:
+	'Contract' name=ID 
+	comments += STRING*
+	'(' parties+=Party (',' parties+=Party)* ')'
+	comments += STRING*
+	(DefinitionBlock | ';')
+;
+
+Party:
+	party=[Item] comments+=STRING*
+//	name=ID comments+=STRING*
+;
+
+Item:
+	DefinedClass | Object
+;
+
+// ========== Encroachment =================================================
+Encroachment:
+	'Encroachment' name=ID 
+	comments += STRING*
+	'(' origin=Party ',' target=Party ')'
+	comments += STRING*
+	(DefinitionBlock | ';')
+;
+
+// ========== Acknowledgment =================================================
+Acknowledgment:
+	'acknowledged' id=[Interface] comments+=STRING* ';'
+;
+
+Interface:
+	Contract
+|	Encroachment
 ;
 
 // ========== Class =================================================
@@ -360,8 +153,9 @@ DefinedClass:
 	comments+=STRING*
 	('extends' extended+=Class (',' extended+=Class)*)?
 	comments += STRING*
-	(block=DefinitionBlock | GlobalDefinition | ';')
+	(DefinitionBlock | GlobalDefinition | ';')
 ;
+
 fragment Parameters:
 	'(' parameters+=Parameter (',' parameters+=Parameter)* ')'
 ;
@@ -386,45 +180,12 @@ Object:
 	comments += STRING*
 	Parameters?
 	comments+=STRING*
-	(block=DefinitionBlock | GlobalDefinition | ';')
-;
-
-// ========== Contract =================================================
-Contract:
-	'Contract' name=ID 
-	comments += STRING*
-	'(' parties+=Party (',' parties+=Party)* ')'
-	comments += STRING*
-	(block=DefinitionBlock | ';')
-;
-
-Party:
-//	(class=[DefinedClass] | object=[Object]) comments+=STRING*
-	name=ID comments+=STRING*
-;
-
-// ========== Encroachment =================================================
-Encroachment:
-	'Encroachment' name=ID 
-	comments += STRING*
-	'(' origin=Party ',' target=Party ')'
-	comments += STRING*
-	(block=DefinitionBlock | ';')
-;
-
-// ========== Acknowledgment =================================================
-Acknowledgment:
-	'acknowledged' id=[Interface] comments+=STRING* ';'
-;
-
-Interface:
-	Contract
-|	Encroachment
+	(DefinitionBlock | GlobalDefinition | ';')
 ;
 
 // ========== Instruction =================================================
 Instruction:						// Temporary
-	receiver=ItemPath (GlobalDefinition | block=DefinitionBlock)
+	receiver=ItemPath (GlobalDefinition | DefinitionBlock)
 ;
 
 ItemPath:
@@ -440,10 +201,6 @@ PathElement:
 
 DeterminedItem:
 	Determiner? item=[Item]
-;
-
-Item:
-	DefinedClass | Object
 ;
 
 // ========== Expression =================================================
