@@ -54,7 +54,7 @@ class FormlSParsingTest {
 	@Test
 	def void MockUpTest004() {
 		val result = parseHelper.parse('''
-			Model TestModel : Integer @a;
+			Model TestModel : Integer a;
 		''')
 		Assertions.assertNotNull(result)
 		val errors = result.eResource.errors
@@ -64,7 +64,7 @@ class FormlSParsingTest {
 	@Test
 	def void MockUpTest005() {
 		val result = parseHelper.parse('''
-			Model TestModel : Integer #a is 8;
+			Model TestModel : Integer a is 8;
 		''')
 		Assertions.assertNotNull(result)
 		val errors = result.eResource.errors
@@ -107,7 +107,7 @@ class FormlSParsingTest {
 	def void MockUpTest009() {
 		val result = parseHelper.parse('''
 			Model TestModel begin
-				Integer !b is 7; 
+				Integer b is 7; 
 			end;
 		''')
 		Assertions.assertNotNull(result)
@@ -120,8 +120,8 @@ class FormlSParsingTest {
 		val result = parseHelper.parse('''
 			Model TestModel begin
 				Integer b is 7; 
-				Integer !c;
-				!c is 8;
+				Integer c;
+				c is 8;
 			end;
 		''')
 		Assertions.assertNotNull(result)
@@ -216,7 +216,7 @@ class FormlSParsingTest {
 		val result = parseHelper.parse('''
 			Model TestModel extends Standard, Other begin
 				b is 7; 
-				Integer ?c;
+				Integer c;
 			end TestModel;
 			d is 5;
 		''')
@@ -230,7 +230,7 @@ class FormlSParsingTest {
 		val result = parseHelper.parse('''
 			Model TestModel extends Standard, Other begin
 				b is 7; 
-				!c is 8;
+				c is 8;
 			end TestModel;
 			d is 5;
 			Integer e;
@@ -248,7 +248,7 @@ class FormlSParsingTest {
 			'comment' 'comment'	
 			begin
 				b is 7; 
-				~c is 8;
+				c is 8;
 			end TestModel;
 			Model Other 'comment' 'comment'
 				extends Standard 
@@ -279,7 +279,7 @@ class FormlSParsingTest {
 				extends Standard 
 				'comment' 'comment'	
 			begin
-				!b is 7; 
+				b is 7; 
 				Integer c;
 			end Other;
 		''')
@@ -299,7 +299,7 @@ class FormlSParsingTest {
 				c is 8;
 			end TestModel;
 			d is 5;
-			Integer #e;
+			Integer e;
 			Model Other 'comment' 'comment'
 				extends Standard 
 				'comment' 'comment'	
@@ -307,7 +307,7 @@ class FormlSParsingTest {
 				b is 7; 
 				Integer c;
 			end Other;
-			@c is 10;
+			c is 10;
  		''')
 		Assertions.assertNotNull(result)
 		val errors = result.eResource.errors

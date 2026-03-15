@@ -42,7 +42,7 @@ class FormlSObjectParsingTest {
 		val errors = result.eResource.errors
 		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
 	}
-	
+/* 	
 	@Test
 	def void ObjectTest003() {
 		val result = parseHelper.parse('''
@@ -134,7 +134,7 @@ class FormlSObjectParsingTest {
 		val errors = result.eResource.errors
 		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
 	}
-	
+*/	
 	@Test
 	def void ObjectTest010() {
 		val result = parseHelper.parse('''
@@ -148,7 +148,7 @@ class FormlSObjectParsingTest {
 		val errors = result.eResource.errors
 		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
 	}
-	
+/* 	
 	@Test
 	def void ObjectTest011() {
 		val result = parseHelper.parse('''
@@ -252,7 +252,7 @@ class FormlSObjectParsingTest {
 		val errors = result.eResource.errors
 		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
 	}
-	
+*/	
 	@Test
 	def void ObjectTest019() {
 		val result = parseHelper.parse('''
@@ -319,7 +319,7 @@ class FormlSObjectParsingTest {
 		val errors = result.eResource.errors
 		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
 	}
-	
+/* 	
 	@Test
 	def void AutomatonTest001() {
 		val result = parseHelper.parse('''
@@ -331,5 +331,5 @@ class FormlSObjectParsingTest {
 		val errors = result.eResource.errors
 		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
 	}
-	
+*/	
 }

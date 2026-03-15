@@ -38,7 +38,7 @@ class FormlSClassParsingTest {
 		val errors = result.eResource.errors
 		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
 	}
-	
+	/* 	
 	@Test
 	def void ClassTest003() {
 		val result = parseHelper.parse('''
@@ -443,7 +443,7 @@ class FormlSClassParsingTest {
 		val errors = result.eResource.errors
 		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
 	}
-	
+*/
 	@Test
 	def void ClassTest032() {
 		val result = parseHelper.parse('''

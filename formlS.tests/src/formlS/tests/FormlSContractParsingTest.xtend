@@ -17,6 +17,17 @@ class FormlSContractParsingTest {
 	ParseHelper<MockUp> parseHelper
 	
 	@Test
+	def void ContractTest000() {
+		val result = parseHelper.parse('''
+			Model TestModel;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+	
+/* 	
+	@Test
 	def void ContractTest001() {
 		val result = parseHelper.parse('''
 			Model TestModel begin
@@ -144,5 +155,5 @@ class FormlSContractParsingTest {
 		val errors = result.eResource.errors
 		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
 	}
-	
+*/	
 }

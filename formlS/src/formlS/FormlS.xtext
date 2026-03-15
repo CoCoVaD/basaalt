@@ -1,5 +1,8 @@
 grammar formlS.FormlS with org.eclipse.xtext.common.Terminals
-// This grammar specifies only the FormL syntax
+// This grammar specifies only a simplified FormL syntax
+// supporting the construction of a Concrete Syntax Tree (CST).
+// The syntax has been simplified to concentrate on scoping
+// issues.
 
 generate formlS "http://www.FormlS.formlS"
 
@@ -10,17 +13,24 @@ MockUp:
 	comments += STRING*
 	models+=Model+
 	comments += STRING*
+	//- Check that only one model is not extended: that model is the 
+	//	root model of the mock-up
+	//  That and the absence of cycle should ensure that the graph is in a single piece
 ;
 
 // ========== Model =================================================
 Model:
 	'Model' name=ID
 	//- Check that model name begins with a capital letter
-	//-   Quick fix: remove leading ° and _ if any, capitalise first letter
-	//- Check that model name is different from all existing ones
-	//-   Append X until name is unique
+	//-   Quick fix: if first character is a lower case letter, capitalise it;
+	//				 otherwise, insert Mxx, where xx is a number ensuring uniqueness
+	//- Check that model name is different from all existing model names
+	//  (Models are directly contained in the mockUp and do not constitute a hierarchy)
+	//-   Quick fix: Append Xxx, where xx is a number ensuring uniqueness
 	comments += STRING*
-	('extends' extended+=[Model] (',' extended+=[Model])*)?
+	('extends' extended+=ID (',' extended+=ID)*)?	// ID = model name
+	//- Check that all model IDs are unique in the list 
+	//-	  Quick fix: remove redundant IDs
 	//- Check that there is no cycle in the model extension graph
 	//-  Remove model names in the extension list that cause cycles
 	comments += STRING*
@@ -28,6 +38,7 @@ Model:
 	//- Check that if present, endName is equal to name
 	//-  Quick fix: set endName to name
 	statements+=Statement*
+	// These statements are part of the model and their context if the one of the model
 ;
 
 fragment DefinitionBlock:
@@ -36,86 +47,17 @@ fragment DefinitionBlock:
 ;	
 
 Statement:
-	sectionDecl=Section
-|	contractDecl=Contract
-|	encroachmentDecl=Encroachment
-|	acknowledgment=Acknowledgment
-|	classDecl=DefinedClass
+	classDecl=DefinedClass
 |	objectDecl=Object
-//|	tlDecl=TempotalLocator
 |	inst=Instruction
-;
-
-// ========== Section =================================================
-Section:
-	'Section' name=ID
-	comments+=STRING*
-	(DefinitionBlock | ';')
-;
-
-// ========== Contract =================================================
-Contract:
-	'Contract' name=ID 
-	comments += STRING*
-	'(' parties+=Party (',' parties+=Party)* ')'
-	comments += STRING*
-	(DefinitionBlock | ';')
-;
-
-Party:
-	party=[Item] comments+=STRING*
-//	name=ID comments+=STRING*
-;
-
-Item:
-	DefinedClass | Object
-;
-
-// ========== Encroachment =================================================
-Encroachment:
-	'Encroachment' name=ID 
-	comments += STRING*
-	'(' origin=Party ',' target=Party ')'
-	comments += STRING*
-	(DefinitionBlock | ';')
-;
-
-// ========== Acknowledgment =================================================
-Acknowledgment:
-	'acknowledged' id=[Interface] comments+=STRING* ';'
-;
-
-Interface:
-	Contract
-|	Encroachment
 ;
 
 // ========== Class =================================================
 Class:
-(	definedClass=[DefinedClass] Arguments? 
+(	definedClass=ID // ID = defined class  
 | 	predefinedClass=PredefinedClass
 |	automaton?='Automaton' chartStates=ChartStates comments+=STRING*
 ) 
- 	setIndication=SetIndication?
-;
-
-fragment Arguments:
-	'(' arguments+=Expression (',' arguments+=Expression)* ')'
-;
-
-SetIndication:
-	{SetIndication} domain?='$'? '{' (Determiner? & Variability? & Cardinal?) '}'
-;
-fragment Determiner:
-	determiner=('!' | '#' | '@' | '^' | '~' | '?')
-;
-
-fragment Cardinal:
-	ln=INT ('..' (ub=INT | infinity?='%'))?
-;
-
-fragment Variability:
-	(fixed?='fixed' | constant?='constant')
 ;
 
 ChartStates:
@@ -145,25 +87,12 @@ PredefinedClass:
 
 // ========== DefinedClass =================================================
 DefinedClass:
-	((private?='private' | main?='main' | external?='external')? & (abstract?='abstract')?)
 	('Class' | enumeration?='Enumeration' chartStates=ChartStates comments+=STRING*) 
-	Determiner? name=ID
-	mySetIndication=SetIndication?
-	Parameters?
+	name=ID
 	comments+=STRING*
 	('extends' extended+=Class (',' extended+=Class)*)?
 	comments += STRING*
 	(DefinitionBlock | GlobalDefinition | ';')
-;
-
-fragment Parameters:
-	'(' parameters+=Parameter (',' parameters+=Parameter)* ')'
-;
-
-Parameter:
-	class=Class 
-	Determiner? name=ID 
-	comments+=STRING*
 ;
 
 fragment GlobalDefinition:
@@ -172,13 +101,9 @@ fragment GlobalDefinition:
 
 // ========== Object =================================================
 Object:
- 	(	main?='main'
-	|	external?='external'? & private?='private'? & common?='common'? & Variability?
-	)
 	(classes+=Class | '(' classes+=Class (',' classes+=Class)* ')')
-	Determiner? name=ID
+	name=ID
 	comments += STRING*
-	Parameters?
 	comments+=STRING*
 	(DefinitionBlock | GlobalDefinition | ';')
 ;
@@ -186,21 +111,29 @@ Object:
 // ========== Instruction =================================================
 Instruction:						// Temporary
 	receiver=ItemPath (GlobalDefinition | DefinitionBlock)
+	//- Check that the receiver is a class or an object
+	// 	The context of the global definition or the definition block is the one of the receiver
+|	receiver=ItemPath '¨' receivingState=StateLiteral 'is' StateExpression
+	//- Check that the receiver is an automaton
+	//  The context of the state literal and state expression is the one of the receiver
+	//- Check that the state literal and the state expression are legitimate in the current context
+|	'¨' receivingState=StateLiteral 'is' StateExpression
+	//- Check that the current context is an automaton
+	//- Check that the state literal and the state expression are legitimate in the current context
 ;
 
 ItemPath:
-	 (model=[Model] '.')? 
-	 (path+=[PathElement] '.')*
-	 item=DeterminedItem
-;
-
-PathElement:
-	Section
-|	DeterminedItem
-;
-
-DeterminedItem:
-	Determiner? item=[Item]
+	 pathElement+=ID ('.' pathElement+=ID)*
+	 //- Checks:
+	 //	  -	Only the first ID can be a model name
+	 //	  -	If the first ID is a model name, there must be a second ID,
+	 //		which must be an item (class or object) name
+	 //	  -	The first ID must be the name of the introductory model 
+	 //		of the second ID iff in the current context that first ID
+	 //		has two or more different introductory models
+	 //	  -	The name of an item (class or object) must be preceded by 
+	 //		the name of its introductory item iff in the current context
+	 //		that name has two or more introductory items
 ;
 
 // ========== Expression =================================================
@@ -208,9 +141,13 @@ Expression:	// temporary
 	true?='true' | false?='false'
 |	numLit=Number
 |	string=STRING
-|	'¨' state=StateLiteral
-|	item=ItemPath ('¨' state=StateLiteral)?
+|	item=ItemPath
+|	StateExpression
 |	(item=ItemPath '.')? attribute=Attribute
+;
+
+fragment StateExpression:
+	item=ItemPath? '¨' state=StateLiteral
 ;
 
 // ========== Attribute =================================================
@@ -248,7 +185,7 @@ StateLiteral:
 ;
 
 AtomicStateLiteral:
-	id=[Node]
+	id=ID // name of a node
 |	'[' values+=StateLiteral ('&' values+=StateLiteral)+ ']'
 ;
 

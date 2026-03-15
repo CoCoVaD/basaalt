@@ -54,6 +54,7 @@ class FormlSStateParsingTest {
 	def void StateTest002() {
 		val result = parseHelper.parse('''
 			Model TestModel;
+			Automaton [a, b, c] x;
 			Automaton [a, b, c] fsa;
 			x is fsa¨a;
 		''')

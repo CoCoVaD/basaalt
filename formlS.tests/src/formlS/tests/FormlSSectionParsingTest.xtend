@@ -17,6 +17,16 @@ class FormlSSectionParsingTest {
 	ParseHelper<MockUp> parseHelper
 	
 	@Test
+	def void SectionTest000() {
+		val result = parseHelper.parse('''
+			Model TestModel;
+		''')
+		Assertions.assertNotNull(result)
+		val errors = result.eResource.errors
+		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	}
+/* 	
+	@Test
 	def void SectionTest001() {
 		val result = parseHelper.parse('''
 			Model TestModel : Section PartA;
@@ -193,5 +203,5 @@ class FormlSSectionParsingTest {
 		val errors = result.eResource.errors
 		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
 	}
-	
+*/	
 }
